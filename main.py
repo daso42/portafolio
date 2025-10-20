@@ -8,6 +8,25 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
+
+st.markdown("""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+    
+    html, body, [class*="css"] {
+        font-family: 'Quicksand', sans-serif;
+    }
+    
+    .main-header {
+        font-family: 'Quicksand', sans-serif;
+        font-size: 3.5rem;
+        font-weight: 700;
+        /* ... resto de tus estilos ... */
+    }
+    /* Aplica a todos los elementos de Streamlit */
+    </style>
+""", unsafe_allow_html=True)
+
 st.markdown("""
     <style>
     .main-header {

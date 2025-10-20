@@ -2,38 +2,36 @@
 runOnSave = true
 enableStaticServing = true
 
-# Font faces - define all weights you want to use
 [[theme.fontFaces]]
 family = "Quicksand"
-url = "/app/static/Quicksand-Regular.ttf"  # Note: use /app/static (absolute path with leading /)
+url = "assets/Quicksand-Regular.ttf"
 style = "normal"
 weight = 400
 
 [[theme.fontFaces]]
 family = "Quicksand"
-url = "/app/static/Quicksand-Medium.ttf"
+url = "assets/Quicksand-Medium.ttf"
 style = "normal"
 weight = 500
 
 [[theme.fontFaces]]
 family = "Quicksand"
-url = "/app/static/Quicksand-SemiBold.ttf"
+url = "assets/Quicksand-SemiBold.ttf"
 style = "normal"
 weight = 600
 
 [[theme.fontFaces]]
 family = "Quicksand"
-url = "/app/static/Quicksand-Bold.ttf"
+url = "assets/Quicksand-Bold.ttf"
 style = "normal"
 weight = 700
 
 [[theme.fontFaces]]
 family = "Quicksand"
-url = "/app/static/Quicksand-Light.ttf"
+url = "assets/Quicksand-Light.ttf"
 style = "normal"
 weight = 300
 
-# Theme configuration
 [theme]
 font = "Quicksand"
 base = "light"
