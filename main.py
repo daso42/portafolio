@@ -5,9 +5,8 @@ st.set_page_config(
     page_title="Diego Santibáñez | Científico de Datos",
     page_icon="💼",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="expanded"
 )
-
 
 st.markdown("""
     <style>
@@ -19,17 +18,6 @@ st.markdown("""
     
     .main-header {
         font-family: 'Quicksand', sans-serif;
-        font-size: 3.5rem;
-        font-weight: 700;
-        /* ... resto de tus estilos ... */
-    }
-    /* Aplica a todos los elementos de Streamlit */
-    </style>
-""", unsafe_allow_html=True)
-
-st.markdown("""
-    <style>
-    .main-header {
         font-size: 3.5rem;
         font-weight: 700;
         text-align: center;
@@ -131,33 +119,6 @@ st.markdown("""
     .cert-card h3 {
         color: #ff4b4b;
         margin-bottom: 0.5rem;
-    }
-    .cert-card {
-        background: linear-gradient(135deg, rgba(255, 75, 75, 0.2) 0%, rgba(255, 135, 0, 0.2) 100%);
-        border: 2px solid rgba(255, 75, 75, 0.3);
-        color: var(--text-color);
-        border-radius: 15px;
-        padding: 2rem;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        transition: all 0.3s ease;
-    }
-    .cert-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 6px 12px rgba(255, 75, 75, 0.3);
-    }
-    .cert-card h3 {
-        color: #ff4b4b;
-        margin-bottom: 0.5rem;
-    }
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 2rem;
-        justify-content: center;
-    }
-    .stTabs [data-baseweb="tab"] {
-        height: 4rem;
-        font-size: 1.1rem;
-        font-weight: 600;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -278,14 +239,12 @@ PORTFOLIO_DATA = {
     ]
 }
 
-
 CONTACTO = {
     'email': 'dsantibanezo@utem.cl',
     'linkedin': 'https://www.linkedin.com/in/diego-santibanez-oyarce/',
     'github': 'https://github.com/daso42',
     'telefono': '+56 9 8434 1477'
 }
-
 
 def calcular_duracion(fecha_inicio, fecha_fin):
     inicio = datetime.strptime(fecha_inicio, '%Y-%m')
@@ -300,12 +259,31 @@ def calcular_duracion(fecha_inicio, fecha_fin):
         return f"{anos} año{'s' if anos > 1 else ''}"
     return f"{meses} mes{'es' if meses > 1 else ''}"
 
+if 'seccion' not in st.session_state:
+    st.session_state.seccion = 'Inicio'
+
+with st.sidebar:
+    st.markdown("### Navegación")
+    
+    if st.button("Inicio", use_container_width=True):
+        st.session_state.seccion = 'Inicio'
+    
+    if st.button("Experiencia", use_container_width=True):
+        st.session_state.seccion = 'Experiencia'
+    
+    if st.button("Habilidades", use_container_width=True):
+        st.session_state.seccion = 'Habilidades'
+    
+    if st.button("Educación & Certificados", use_container_width=True):
+        st.session_state.seccion = 'Educación & Certificados'
+    
+    if st.button("Contacto", use_container_width=True):
+        st.session_state.seccion = 'Contacto'
+
 st.markdown(f"<h1 class='main-header'>{PORTFOLIO_DATA['nombre']}</h1>", unsafe_allow_html=True)
 st.markdown(f"<p class='sub-header'>{PORTFOLIO_DATA['titulo']}</p>", unsafe_allow_html=True)
 
-tab1, tab2, tab3, tab4, tab5 = st.tabs(["Inicio", "Experiencia", "Habilidades", "Educación & Certificados", "Contacto"])
-
-with tab1:
+if st.session_state.seccion == 'Inicio':
     col1, col2 = st.columns([2, 1])
     
     with col1:
@@ -332,13 +310,12 @@ with tab1:
         </div>
         """, unsafe_allow_html=True)
 
-with tab2:
+elif st.session_state.seccion == 'Experiencia':
     st.markdown("## Trayectoria Profesional")
     st.markdown("---")
     
     for exp in PORTFOLIO_DATA['experiencia']:
         with st.container():
-            
             col1, col2 = st.columns([3, 1])
             
             with col1:
@@ -351,11 +328,9 @@ with tab2:
                 st.caption(f"{calcular_duracion(exp['fecha_inicio'], exp['fecha_fin'])}")
             
             st.markdown(exp['descripcion'])
-            
-            st.markdown("</div>", unsafe_allow_html=True)
             st.markdown("---")
 
-with tab3:
+elif st.session_state.seccion == 'Habilidades':
     st.markdown("## Habilidades")
     
     col1, col2 = st.columns(2)
@@ -372,7 +347,7 @@ with tab3:
         for skill in PORTFOLIO_DATA['habilidades_blandas']:
             st.markdown(f"<span class='soft-skill-badge'>{skill}</span>", unsafe_allow_html=True)
 
-with tab4:
+elif st.session_state.seccion == 'Educación & Certificados':
     st.markdown("## Formación Académica")
     
     for edu in PORTFOLIO_DATA['educacion']:
@@ -399,7 +374,7 @@ with tab4:
                 st.markdown(f"{cert['fecha']}")
                 st.markdown(f"[Ver Certificado]({cert['link']})")
 
-with tab5:
+elif st.session_state.seccion == 'Contacto':
     st.markdown("## ¡Hablemos!")
     
     col1, col2 = st.columns([1, 1])
