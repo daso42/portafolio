@@ -239,7 +239,7 @@ PORTFOLIO_DATA = {
         {
             'nombre': 'Introducción a la Ciencia de Datos',
             'institucion': 'Santander Open Academy',
-            'fecha': '2024',
+            'fecha': '2025',
             'link': 'https://drive.google.com/file/d/1vmeQuzoZEwUTC0Pz7Xl_rlobqXcreX5w/view?usp=sharing'
         }
     ]
