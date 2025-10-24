@@ -235,6 +235,12 @@ PORTFOLIO_DATA = {
             'institucion': 'Amazon Web Services',
             'fecha': '2024',
             'link': 'https://drive.google.com/file/d/1pYCaTdbJQAmruxvoknp92QbIys4Bt7Ws/view?usp=sharing'
+        },
+        {
+            'nombre': 'Introducción a la Ciencia de Datos',
+            'institucion': 'Santander Open Academy',
+            'fecha': '2024',
+            'link': 'https://drive.google.com/file/d/1vmeQuzoZEwUTC0Pz7Xl_rlobqXcreX5w/view?usp=sharing'
         }
     ]
 }
