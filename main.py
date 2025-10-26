@@ -48,6 +48,24 @@ st.markdown("""
         box-shadow: 0 4px 8px rgba(255, 75, 75, 0.2);
         border-color: rgba(255, 75, 75, 0.4);
     }
+    .project-card {
+        background: linear-gradient(135deg, rgba(255, 75, 75, 0.1) 0%, rgba(255, 135, 0, 0.1) 100%);
+        border: 2px solid rgba(255, 75, 75, 0.2);
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    .project-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(255, 75, 75, 0.25);
+        border-color: rgba(255, 75, 75, 0.4);
+    }
+    .project-card h3 {
+        color: #ff4b4b;
+        margin-bottom: 0.5rem;
+    }
     .skill-badge {
         display: inline-block;
         padding: 0.5rem 1rem;
@@ -81,6 +99,17 @@ st.markdown("""
         background-color: #ff8700;
         color: white;
         transform: scale(1.05);
+    }
+    .tech-badge {
+        display: inline-block;
+        padding: 0.4rem 0.8rem;
+        margin: 0.2rem;
+        background-color: rgba(100, 200, 255, 0.2);
+        color: #3b82f6;
+        border: 1px solid rgba(100, 200, 255, 0.4);
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 0.85rem;
     }
     .timeline-item {
         border-left: 4px solid #ff4b4b;
@@ -191,6 +220,16 @@ PORTFOLIO_DATA = {
                 '''
         }
     ],
+    'proyectos': [
+        {
+            'titulo': 'Dashboard de avance de proyecto',
+            'descripcion': 'Dashboard interactivo desarrollado con Streamlit para visualizar el avance y estado de los datos utilizados en el proyecto',
+            'tecnologias': ['Python', 'Streamlit', 'Pandas', 'Plotly', 'DuckDB', 'Plotly', 'Folium'],
+            'fecha': '2025',
+            'link': 'https://dashboarddatalake-fiut-utem.streamlit.app/',
+            'imagen': ''
+        }
+    ],
     'habilidades_duras': [
         'Python', 
         'SQL',
@@ -277,6 +316,9 @@ with st.sidebar:
     if st.button("Experiencia", use_container_width=True):
         st.session_state.seccion = 'Experiencia'
     
+    if st.button("Proyectos", use_container_width=True):
+        st.session_state.seccion = 'Proyectos'
+    
     if st.button("Habilidades", use_container_width=True):
         st.session_state.seccion = 'Habilidades'
     
@@ -335,6 +377,22 @@ elif st.session_state.seccion == 'Experiencia':
             
             st.markdown(exp['descripcion'])
             st.markdown("---")
+
+elif st.session_state.seccion == 'Proyectos':
+    st.markdown("## Mis Proyectos")
+    st.markdown("---")
+    
+    for proyecto in PORTFOLIO_DATA['proyectos']:
+        tech_badges = ' '.join([f"<span class='tech-badge'>{tech}</span>" for tech in proyecto['tecnologias']])
+        
+        st.markdown(f"""
+        <div class='project-card'>
+        <h3>{proyecto['imagen']} {proyecto['titulo']}</h3>
+        <p>{proyecto['descripcion']}</p>
+        <p><strong>Tecnologías:</strong><br>{tech_badges}</p>
+        <p style='margin-top: 1rem;'><strong>Año:</strong> {proyecto['fecha']} | <a href='{proyecto['link']}' target='_blank'><strong>Ver Proyecto →</strong></a></p>
+        </div>
+        """, unsafe_allow_html=True)
 
 elif st.session_state.seccion == 'Habilidades':
     st.markdown("## Habilidades")
