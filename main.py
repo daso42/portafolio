@@ -242,7 +242,8 @@ PORTFOLIO_DATA = {
         'Streamlit',
         'Web Scraping',
         'PostgreSQL',
-        'MariaDB'
+        'MariaDB', 
+        'SpaCy'
     ],
     'habilidades_blandas': [
         'Resolución de Problemas',
@@ -280,6 +281,12 @@ PORTFOLIO_DATA = {
             'institucion': 'Santander Open Academy',
             'fecha': '2025',
             'link': 'https://drive.google.com/file/d/1vmeQuzoZEwUTC0Pz7Xl_rlobqXcreX5w/view?usp=sharing'
+        },
+        {
+            'nombre': 'Power BI',
+            'institucion': 'Santander X',
+            'fecha': '2025',
+            'link': 'https://drive.google.com/file/d/1IOp4gjfLcW8XhqbiwwOd9dzlz8l60P5q/view?usp=drive_link'
         }
     ]
 }
