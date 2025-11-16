@@ -265,6 +265,12 @@ PORTFOLIO_DATA = {
     ],
     'certificados': [
         {
+            'nombre': 'Power BI',
+            'institucion': 'Santander X',
+            'fecha': '2025',
+            'link': 'https://drive.google.com/file/d/1IOp4gjfLcW8XhqbiwwOd9dzlz8l60P5q/view?usp=drive_link'
+        },
+        {
             'nombre': 'Inglés B2 Upper Intermediate',
             'institucion': 'Certificación Internacional',
             'fecha': '2025',
@@ -282,12 +288,7 @@ PORTFOLIO_DATA = {
             'fecha': '2025',
             'link': 'https://drive.google.com/file/d/1vmeQuzoZEwUTC0Pz7Xl_rlobqXcreX5w/view?usp=sharing'
         },
-        {
-            'nombre': 'Power BI',
-            'institucion': 'Santander X',
-            'fecha': '2025',
-            'link': 'https://drive.google.com/file/d/1IOp4gjfLcW8XhqbiwwOd9dzlz8l60P5q/view?usp=drive_link'
-        }
+        
     ]
 }
 
