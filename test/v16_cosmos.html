@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diego Santibanez Oyarce — Cientifico de Datos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; font-size: 16px; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #050510;
+            color: #e6e0ff;
+            overflow-x: hidden;
+            line-height: 1.7;
+        }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Space Grotesk', sans-serif; }
+        a { color: #4fc3f7; text-decoration: none; transition: color 0.3s, text-shadow 0.3s; }
+        a:hover { color: #ffd700; text-shadow: 0 0 8px rgba(255, 215, 0, 0.5); }
+
+        /* ===== STAR FIELD BACKGROUND ===== */
+        .starfield {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .starfield::before,
+        .starfield::after,
+        .star-layer-3 {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 200%; height: 200%;
+        }
+        .starfield::before {
+            background:
+                radial-gradient(1px 1px at 50px 80px, #fff, transparent),
+                radial-gradient(1px 1px at 150px 200px, #e6e0ff, transparent),
+                radial-gradient(1px 1px at 300px 50px, #fff, transparent),
+                radial-gradient(1.5px 1.5px at 400px 300px, #4fc3f7, transparent),
+                radial-gradient(1px 1px at 500px 120px, #fff, transparent),
+                radial-gradient(1px 1px at 600px 400px, #e6e0ff, transparent),
+                radial-gradient(1.5px 1.5px at 700px 180px, #ffd700, transparent),
+                radial-gradient(1px 1px at 100px 400px, #fff, transparent),
+                radial-gradient(1px 1px at 250px 350px, #fff, transparent),
+                radial-gradient(1px 1px at 450px 50px, #e6e0ff, transparent),
+                radial-gradient(1px 1px at 550px 280px, #fff, transparent),
+                radial-gradient(1.5px 1.5px at 750px 350px, #ff6b9d, transparent),
+                radial-gradient(1px 1px at 850px 100px, #fff, transparent),
+                radial-gradient(1px 1px at 950px 250px, #e6e0ff, transparent),
+                radial-gradient(1px 1px at 50px 500px, #fff, transparent),
+                radial-gradient(1px 1px at 200px 600px, #fff, transparent),
+                radial-gradient(1.5px 1.5px at 350px 550px, #4fc3f7, transparent),
+                radial-gradient(1px 1px at 500px 650px, #fff, transparent),
+                radial-gradient(1px 1px at 650px 580px, #e6e0ff, transparent),
+                radial-gradient(1px 1px at 800px 500px, #fff, transparent);
+            background-size: 1000px 700px;
+            animation: twinkle 4s ease-in-out infinite alternate;
+        }
+        .starfield::after {
+            background:
+                radial-gradient(1.5px 1.5px at 80px 150px, #fff, transparent),
+                radial-gradient(2px 2px at 200px 50px, #7b68ee, transparent),
+                radial-gradient(1.5px 1.5px at 350px 250px, #fff, transparent),
+                radial-gradient(1px 1px at 480px 180px, #e6e0ff, transparent),
+                radial-gradient(2px 2px at 620px 80px, #ffd700, transparent),
+                radial-gradient(1.5px 1.5px at 780px 300px, #fff, transparent),
+                radial-gradient(1px 1px at 900px 150px, #fff, transparent),
+                radial-gradient(1.5px 1.5px at 120px 350px, #ff6b9d, transparent),
+                radial-gradient(1px 1px at 280px 450px, #fff, transparent),
+                radial-gradient(2px 2px at 430px 380px, #4fc3f7, transparent),
+                radial-gradient(1px 1px at 580px 500px, #fff, transparent),
+                radial-gradient(1.5px 1.5px at 720px 420px, #e6e0ff, transparent),
+                radial-gradient(1px 1px at 860px 480px, #fff, transparent),
+                radial-gradient(1px 1px at 50px 600px, #fff, transparent),
+                radial-gradient(1.5px 1.5px at 330px 650px, #7b68ee, transparent),
+                radial-gradient(1px 1px at 560px 600px, #fff, transparent);
+            background-size: 1000px 700px;
+            animation: twinkle 6s ease-in-out 1s infinite alternate;
+            opacity: 0.8;
+        }
+        .star-layer-3 {
+            position: fixed;
+            background:
+                radial-gradient(2px 2px at 120px 100px, rgba(255,255,255,0.9), transparent),
+                radial-gradient(2.5px 2.5px at 350px 180px, rgba(255,215,0,0.8), transparent),
+                radial-gradient(2px 2px at 580px 60px, rgba(127,104,238,0.9), transparent),
+                radial-gradient(3px 3px at 800px 220px, rgba(79,195,247,0.7), transparent),
+                radial-gradient(2px 2px at 200px 400px, rgba(255,107,157,0.8), transparent),
+                radial-gradient(2.5px 2.5px at 650px 350px, rgba(255,255,255,0.9), transparent),
+                radial-gradient(2px 2px at 450px 500px, rgba(255,215,0,0.7), transparent),
+                radial-gradient(2px 2px at 900px 400px, rgba(255,255,255,0.8), transparent);
+            background-size: 1000px 600px;
+            animation: twinkle 8s ease-in-out 2s infinite alternate;
+            opacity: 0.6;
+        }
+
+        /* Nebula patches */
+        .nebula {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .nebula-1 {
+            width: 600px; height: 600px;
+            top: -100px; right: -200px;
+            background: conic-gradient(from 45deg, rgba(255,107,157,0.08), rgba(127,104,238,0.06), transparent, rgba(79,195,247,0.05));
+            animation: float 20s ease-in-out infinite;
+        }
+        .nebula-2 {
+            width: 500px; height: 500px;
+            bottom: 10%; left: -150px;
+            background: conic-gradient(from 200deg, rgba(127,104,238,0.07), rgba(79,195,247,0.06), transparent, rgba(255,107,157,0.04));
+            animation: float 25s ease-in-out 3s infinite;
+        }
+        .nebula-3 {
+            width: 400px; height: 400px;
+            top: 40%; right: 10%;
+            background: radial-gradient(circle, rgba(255,215,0,0.04), rgba(127,104,238,0.05), transparent);
+            animation: float 18s ease-in-out 5s infinite;
+        }
+
+        /* ===== KEYFRAMES ===== */
+        @keyframes twinkle {
+            0%   { opacity: 0.5; }
+            50%  { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            33% { transform: translateY(-20px) translateX(10px); }
+            66% { transform: translateY(15px) translateX(-10px); }
+        }
+        @keyframes orbit {
+            0%   { transform: rotate(0deg) translateX(6px) rotate(0deg); }
+            100% { transform: rotate(360deg) translateX(6px) rotate(-360deg); }
+        }
+        @keyframes glow-pulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(123,104,238,0.3), 0 0 30px rgba(123,104,238,0.1); }
+            50% { box-shadow: 0 0 25px rgba(123,104,238,0.5), 0 0 50px rgba(123,104,238,0.2); }
+        }
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes heading-glow {
+            0%, 100% { text-shadow: 0 0 20px rgba(123,104,238,0.4), 0 0 40px rgba(123,104,238,0.1); }
+            50% { text-shadow: 0 0 30px rgba(123,104,238,0.6), 0 0 60px rgba(123,104,238,0.2); }
+        }
+
+        /* ===== NAVIGATION ===== */
+        .nav-bar {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            background: linear-gradient(180deg, rgba(5,5,16,0.95) 0%, rgba(5,5,16,0.6) 70%, transparent 100%);
+            backdrop-filter: blur(10px);
+        }
+        .nav-constellation {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            position: relative;
+        }
+        .nav-dot-wrapper {
+            display: flex;
+            align-items: center;
+        }
+        .nav-line {
+            width: 40px;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(123,104,238,0.4), rgba(79,195,247,0.4));
+            opacity: 0.5;
+        }
+        .nav-dot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            position: relative;
+            padding: 8px;
+        }
+        .nav-dot .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(123,104,238,0.5);
+            border: 1px solid rgba(123,104,238,0.7);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+        .nav-dot:hover .dot,
+        .nav-dot.active .dot {
+            background: #7b68ee;
+            box-shadow: 0 0 12px rgba(123,104,238,0.8), 0 0 24px rgba(123,104,238,0.4);
+            transform: scale(1.3);
+        }
+        .nav-dot .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: rgba(230,224,255,0.5);
+            transition: color 0.3s;
+            white-space: nowrap;
+        }
+        .nav-dot:hover .label,
+        .nav-dot.active .label {
+            color: #e6e0ff;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+        section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 2rem 60px;
+            position: relative;
+        }
+        .section-inner {
+            max-width: 1000px;
+            width: 100%;
+            animation: fade-in-up 0.8s ease-out;
+        }
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 3rem;
+            color: #e6e0ff;
+            text-shadow: 0 0 20px rgba(123,104,238,0.4), 0 0 40px rgba(123,104,238,0.1);
+            animation: heading-glow 4s ease-in-out infinite;
+            position: relative;
+            display: inline-block;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, #7b68ee, #4fc3f7, transparent);
+        }
+
+        /* ===== CARDS ===== */
+        .cosmos-card {
+            background: rgba(10,22,40,0.4);
+            border: 1px solid rgba(123,104,238,0.15);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.4s ease;
+            animation: glow-pulse 6s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+        .cosmos-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle at top right, rgba(123,104,238,0.05), transparent 60%);
+            pointer-events: none;
+        }
+        .cosmos-card:hover {
+            border-color: rgba(123,104,238,0.4);
+            box-shadow: 0 0 30px rgba(123,104,238,0.2), 0 0 60px rgba(123,104,238,0.05);
+            transform: translateY(-3px);
+        }
+
+        /* ===== HERO / INICIO ===== */
+        #inicio {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 80px;
+        }
+        .hero-orbit {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        .hero-ring {
+            width: 140px;
+            height: 140px;
+            border: 1px solid rgba(123,104,238,0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: glow-pulse 4s ease-in-out infinite;
+        }
+        .hero-ring::before {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #ffd700;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255,215,0,0.8);
+            animation: orbit 6s linear infinite;
+            top: 0; left: 50%;
+        }
+        .hero-ring::after {
+            content: '';
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: #ff6b9d;
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(255,107,157,0.8);
+            animation: orbit 10s linear reverse infinite;
+            top: 50%; left: 0;
+        }
+        .hero-initials {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #7b68ee;
+            text-shadow: 0 0 20px rgba(123,104,238,0.5);
+        }
+        .hero-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            color: #e6e0ff;
+            text-shadow: 0 0 30px rgba(123,104,238,0.3);
+            margin-bottom: 0.5rem;
+            line-height: 1.1;
+        }
+        .hero-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            font-weight: 500;
+            color: #7b68ee;
+            margin-bottom: 2rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        .hero-bio {
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.05rem;
+            color: rgba(230,224,255,0.75);
+            line-height: 1.8;
+        }
+        .scroll-hint {
+            margin-top: 3rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.5;
+            animation: float 3s ease-in-out infinite;
+        }
+        .scroll-hint span {
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(230,224,255,0.5);
+        }
+        .scroll-arrow {
+            width: 20px;
+            height: 20px;
+            border-right: 2px solid rgba(123,104,238,0.5);
+            border-bottom: 2px solid rgba(123,104,238,0.5);
+            transform: rotate(45deg);
+        }
+
+        /* ===== EXPERIENCE: ORBITAL TIMELINE ===== */
+        .orbital-timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+        .orbital-timeline::before {
+            content: '';
+            position: absolute;
+            left: 14px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, rgba(123,104,238,0.5), rgba(79,195,247,0.3), rgba(255,107,157,0.3), rgba(123,104,238,0.5));
+        }
+        .timeline-node {
+            position: relative;
+            margin-bottom: 2.5rem;
+        }
+        .timeline-node::before {
+            content: '';
+            position: absolute;
+            left: -33px;
+            top: 2rem;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #7b68ee;
+            border: 2px solid #0a1628;
+            box-shadow: 0 0 12px rgba(123,104,238,0.6), 0 0 24px rgba(123,104,238,0.2);
+        }
+        .timeline-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 0.5rem 1rem;
+            margin-bottom: 0.75rem;
+        }
+        .timeline-role {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #e6e0ff;
+        }
+        .timeline-org {
+            color: #4fc3f7;
+            font-weight: 500;
+        }
+        .timeline-date {
+            font-size: 0.85rem;
+            color: rgba(230,224,255,0.5);
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: 1px;
+        }
+        .timeline-details {
+            list-style: none;
+            padding: 0;
+        }
+        .timeline-details li {
+            position: relative;
+            padding-left: 1.2rem;
+            margin-bottom: 0.6rem;
+            font-size: 0.95rem;
+            color: rgba(230,224,255,0.75);
+        }
+        .timeline-details li::before {
+            content: '◆';
+            position: absolute;
+            left: 0;
+            color: #7b68ee;
+            font-size: 0.5rem;
+            top: 0.4rem;
+        }
+        .timeline-links {
+            display: inline;
+        }
+        .timeline-links a {
+            font-size: 0.85rem;
+            margin-right: 0.5rem;
+            padding: 2px 8px;
+            border: 1px solid rgba(79,195,247,0.3);
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        .timeline-links a:hover {
+            border-color: #ffd700;
+            background: rgba(255,215,0,0.1);
+        }
+
+        /* ===== PROJECTS: SPACE STATION ===== */
+        .station-card {
+            background: rgba(10,22,40,0.5);
+            border: 1px solid rgba(123,104,238,0.2);
+            border-radius: 20px;
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+            animation: glow-pulse 6s ease-in-out infinite;
+        }
+        .station-card::before {
+            content: '';
+            position: absolute;
+            top: -1px; left: 30px;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #4fc3f7, transparent);
+            border-radius: 0 0 4px 4px;
+        }
+        .station-card::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; right: 30px;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #ff6b9d, transparent);
+            border-radius: 4px 4px 0 0;
+        }
+        .station-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(230,224,255,0.5);
+            margin-bottom: 1rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .station-status .pulse-dot {
+            width: 6px;
+            height: 6px;
+            background: #4fc3f7;
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(79,195,247,0.6);
+            animation: twinkle 2s ease-in-out infinite;
+        }
+        .station-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #e6e0ff;
+            margin-bottom: 0.75rem;
+        }
+        .station-desc {
+            color: rgba(230,224,255,0.7);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+        .station-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 1.5rem;
+        }
+        .tech-tag {
+            font-size: 0.8rem;
+            padding: 4px 14px;
+            border: 1px solid rgba(123,104,238,0.3);
+            border-radius: 20px;
+            color: #7b68ee;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .tech-tag:hover {
+            border-color: #7b68ee;
+            background: rgba(123,104,238,0.1);
+            box-shadow: 0 0 10px rgba(123,104,238,0.2);
+        }
+        .station-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            border: 1px solid rgba(79,195,247,0.4);
+            border-radius: 30px;
+            color: #4fc3f7;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 500;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+        .station-link:hover {
+            background: rgba(79,195,247,0.1);
+            box-shadow: 0 0 20px rgba(79,195,247,0.2);
+            color: #4fc3f7;
+        }
+        .station-link svg { transition: transform 0.3s; }
+        .station-link:hover svg { transform: translateX(4px); }
+
+        /* ===== SKILLS: CONSTELLATION ===== */
+        .skills-section-group {
+            margin-bottom: 3rem;
+        }
+        .skills-group-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #7b68ee;
+            margin-bottom: 1.5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .constellation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1rem;
+            position: relative;
+        }
+        .constellation-node {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            border: 1px solid rgba(123,104,238,0.15);
+            border-radius: 12px;
+            background: rgba(10,22,40,0.3);
+            transition: all 0.4s;
+            position: relative;
+        }
+        .constellation-node::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #4fc3f7;
+            box-shadow: 0 0 8px rgba(79,195,247,0.5);
+            flex-shrink: 0;
+        }
+        .constellation-node:hover {
+            border-color: rgba(123,104,238,0.5);
+            background: rgba(10,22,40,0.6);
+            box-shadow: 0 0 20px rgba(123,104,238,0.15);
+            transform: translateY(-2px);
+        }
+        .constellation-node span {
+            font-size: 0.9rem;
+            color: rgba(230,224,255,0.85);
+        }
+        .soft-skill-node::before {
+            background: #ff6b9d;
+            box-shadow: 0 0 8px rgba(255,107,157,0.5);
+        }
+
+        /* ===== EDUCATION: MISSION LOG ===== */
+        .mission-log {
+            background: rgba(10,22,40,0.4);
+            border: 1px solid rgba(123,104,238,0.15);
+            border-radius: 16px;
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+            animation: glow-pulse 6s ease-in-out infinite;
+        }
+        .mission-log::before {
+            content: 'REGISTRO DE MISION';
+            position: absolute;
+            top: 12px; right: 16px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.65rem;
+            letter-spacing: 3px;
+            color: rgba(123,104,238,0.3);
+        }
+        .mission-label {
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(230,224,255,0.4);
+            margin-bottom: 0.25rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .mission-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #e6e0ff;
+            margin-bottom: 1.5rem;
+        }
+        .mission-org {
+            color: #4fc3f7;
+        }
+        .mission-period {
+            font-size: 1rem;
+            color: rgba(230,224,255,0.6);
+        }
+
+        /* Certificates */
+        .certificates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .cert-card {
+            background: rgba(10,22,40,0.35);
+            border: 1px solid rgba(123,104,238,0.12);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.4s;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .cert-card:hover {
+            border-color: rgba(255,215,0,0.3);
+            box-shadow: 0 0 20px rgba(255,215,0,0.08);
+            transform: translateY(-2px);
+        }
+        .cert-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: #e6e0ff;
+            font-size: 1rem;
+        }
+        .cert-issuer {
+            font-size: 0.85rem;
+            color: rgba(230,224,255,0.5);
+        }
+        .cert-year {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            color: #ffd700;
+            letter-spacing: 1px;
+        }
+        .cert-link {
+            margin-top: auto;
+            padding-top: 0.5rem;
+        }
+        .cert-link a {
+            font-size: 0.8rem;
+            color: #4fc3f7;
+        }
+
+        /* ===== CONTACT: TRANSMISSION ===== */
+        #contacto {
+            text-align: center;
+        }
+        .transmission-header {
+            font-size: 0.8rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: rgba(230,224,255,0.4);
+            margin-bottom: 0.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .contact-channel {
+            background: rgba(10,22,40,0.4);
+            border: 1px solid rgba(123,104,238,0.15);
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+            transition: all 0.4s;
+        }
+        .contact-channel:hover {
+            border-color: rgba(123,104,238,0.4);
+            box-shadow: 0 0 25px rgba(123,104,238,0.15);
+            transform: translateY(-4px);
+        }
+        .channel-icon {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid rgba(123,104,238,0.3);
+        }
+        .channel-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: #7b68ee;
+        }
+        .channel-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(230,224,255,0.4);
+            margin-bottom: 0.5rem;
+        }
+        .channel-value {
+            font-size: 0.95rem;
+            color: #e6e0ff;
+            word-break: break-word;
+        }
+        .channel-value a {
+            color: #4fc3f7;
+        }
+
+        /* Footer */
+        .cosmos-footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            position: relative;
+            z-index: 1;
+            border-top: 1px solid rgba(123,104,238,0.1);
+        }
+        .cosmos-footer p {
+            font-size: 0.8rem;
+            color: rgba(230,224,255,0.3);
+            letter-spacing: 1px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .nav-bar {
+                padding: 0.75rem 0.5rem;
+            }
+            .nav-line {
+                width: 16px;
+            }
+            .nav-dot .label {
+                display: none;
+            }
+            .nav-dot .dot {
+                width: 12px;
+                height: 12px;
+            }
+            section {
+                padding: 90px 1.25rem 40px;
+                min-height: auto;
+            }
+            #inicio {
+                min-height: 100vh;
+            }
+            .cosmos-card, .station-card, .mission-log {
+                padding: 1.5rem;
+            }
+            .orbital-timeline {
+                padding-left: 30px;
+            }
+            .orbital-timeline::before {
+                left: 10px;
+            }
+            .timeline-node::before {
+                left: -26px;
+                width: 12px;
+                height: 12px;
+            }
+            .constellation-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+            .certificates-grid {
+                grid-template-columns: 1fr;
+            }
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+            .nebula-1, .nebula-2, .nebula-3 {
+                width: 300px;
+                height: 300px;
+            }
+        }
+        @media (max-width: 480px) {
+            .hero-name {
+                font-size: 2rem;
+            }
+            .hero-title {
+                font-size: 1rem;
+                letter-spacing: 2px;
+            }
+            .section-title {
+                font-size: 1.7rem;
+            }
+            .timeline-role {
+                font-size: 1.05rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Star field -->
+    <div class="starfield"></div>
+    <div class="star-layer-3"></div>
+
+    <!-- Nebula patches -->
+    <div class="nebula nebula-1"></div>
+    <div class="nebula nebula-2"></div>
+    <div class="nebula nebula-3"></div>
+
+    <!-- Navigation -->
+    <nav class="nav-bar">
+        <div class="nav-constellation">
+            <a href="#inicio" class="nav-dot active">
+                <span class="dot"></span>
+                <span class="label">Inicio</span>
+            </a>
+            <span class="nav-line"></span>
+            <a href="#experiencia" class="nav-dot">
+                <span class="dot"></span>
+                <span class="label">Experiencia</span>
+            </a>
+            <span class="nav-line"></span>
+            <a href="#proyectos" class="nav-dot">
+                <span class="dot"></span>
+                <span class="label">Proyectos</span>
+            </a>
+            <span class="nav-line"></span>
+            <a href="#habilidades" class="nav-dot">
+                <span class="dot"></span>
+                <span class="label">Habilidades</span>
+            </a>
+            <span class="nav-line"></span>
+            <a href="#educacion" class="nav-dot">
+                <span class="dot"></span>
+                <span class="label">Educacion</span>
+            </a>
+            <span class="nav-line"></span>
+            <a href="#contacto" class="nav-dot">
+                <span class="dot"></span>
+                <span class="label">Contacto</span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="content-wrapper">
+
+        <!-- ===== INICIO ===== -->
+        <section id="inicio">
+            <div class="section-inner" style="display:flex;flex-direction:column;align-items:center;text-align:center;">
+                <div class="hero-orbit">
+                    <div class="hero-ring">
+                        <span class="hero-initials">DS</span>
+                    </div>
+                </div>
+                <h1 class="hero-name">Diego Santibanez Oyarce</h1>
+                <p class="hero-title">Cientifico de Datos</p>
+                <p class="hero-bio">
+                    Egresado de Ingenieria Civil en Ciencia de datos en Agosto 2025, apasionado por la tecnologia y con un gran interes en el uso de la inteligencia artificial como herramienta para la resolucion de problemas del mundo real. Mi formacion academica me proporciono una solida comprension de algoritmos de aprendizaje automatico, analisis y visualizacion de datos. Me gusta proponerme desafios donde pueda poner en practica mis conocimientos y donde ademas pueda aprender cosas nuevas.
+                </p>
+                <div class="scroll-hint">
+                    <span>Explorar</span>
+                    <div class="scroll-arrow"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== EXPERIENCIA ===== -->
+        <section id="experiencia">
+            <div class="section-inner">
+                <h2 class="section-title">Experiencia</h2>
+
+                <div class="orbital-timeline">
+
+                    <!-- Exp 1 -->
+                    <div class="timeline-node">
+                        <div class="cosmos-card">
+                            <div class="timeline-header">
+                                <span class="timeline-role">Asistente de Investigacion</span>
+                                <span class="timeline-org">Universidad Tecnologica Metropolitana (UTEM)</span>
+                                <span class="timeline-date">Dic 2023 — Sep 2025</span>
+                            </div>
+                            <ul class="timeline-details">
+                                <li>
+                                    Presentacion poster en "1ras Jornadas de Ciencia de Datos y Salud Publica" (U. de Chile, Ene 2024)
+                                    <span class="timeline-links">
+                                        — <a href="https://drive.google.com/file/d/124VDD5x6pBidyC1Wx4ZLehAQixdjZ9dS/view?usp=sharing" target="_blank">Certificado</a>
+                                        · <a href="https://drive.google.com/file/d/1gRjnIt9xa5CYPhbgGFTKR1o5WV3RB8H6/view?usp=drive_link" target="_blank">Poster</a>
+                                    </span>
+                                </li>
+                                <li>
+                                    Flash Talk y poster en Carla2024 (Sep 2024)
+                                    <span class="timeline-links">
+                                        — <a href="https://drive.google.com/file/d/1jHc_2fZiakh2G9t8EkiB7Z3l0iuWBJ7n/view?usp=sharing" target="_blank">Certificado</a>
+                                        · <a href="https://drive.google.com/file/d/1jfS4S75dwoBnUMZ3xeQOFfBzX6HP5gpc/view?usp=drive_link" target="_blank">Poster</a>
+                                    </span>
+                                </li>
+                                <li>
+                                    Poster en "III Congreso Vive la Investigacion 2024" (Oct 2024)
+                                    <span class="timeline-links">
+                                        — <a href="https://drive.google.com/file/d/1unqW5oOxe5wl84-vmq4Y8AhXmD1sJJL_/view?usp=sharing" target="_blank">Certificado</a>
+                                        · <a href="https://drive.google.com/file/d/1OEKXi8gl7Z9bGySQ8esoomkDJLPiBLCE/view?usp=drive_link" target="_blank">Poster</a>
+                                    </span>
+                                </li>
+                                <li>
+                                    Poster en "XIV Congreso Argentino de Bioinformatica" (Nov 2024)
+                                    <span class="timeline-links">
+                                        — <a href="https://drive.google.com/file/d/1br_Vv35RmHxvyPScFlhDCJxucFz0ckii/view?usp=sharing" target="_blank">Certificado</a>
+                                        · <a href="https://drive.google.com/file/d/1wLUe3ssEY_XcOgoTbVJj0B5C7plK-G9n/view?usp=drive_link" target="_blank">Poster</a>
+                                    </span>
+                                </li>
+                                <li>
+                                    Flash Talk en "III Reunion Sociedad Chilena de Bioinformatica" (Nov 2024). Invitacion a publicar en "Bioinformatics Advances (Oxford University Press)"
+                                    <span class="timeline-links">
+                                        — <a href="https://drive.google.com/file/d/1-dZ_CdZlYkd58OlGr3v92n8pLshnurje/view?usp=sharing" target="_blank">Certificado</a>
+                                    </span>
+                                </li>
+                                <li>
+                                    Poster en Carla2025 (Sep 2025). Premio al mejor poster
+                                    <span class="timeline-links">
+                                        — <a href="https://drive.google.com/file/d/10tcRQonSWMgKQ8FciWOsCobzQAlWCPr9/view?usp=sharing" target="_blank">Certificado</a>
+                                        · <a href="https://drive.google.com/file/d/1M_MhsoB8BCUO5LITTVvQw0Hi9l7RU4Vj/view?usp=sharing" target="_blank">Premio</a>
+                                        · <a href="https://drive.google.com/file/d/14Fc9u_zCtxiKG7RKW3W85Rv6X4OJy5HP/view?usp=drive_link" target="_blank">Poster</a>
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Exp 2 -->
+                    <div class="timeline-node">
+                        <div class="cosmos-card">
+                            <div class="timeline-header">
+                                <span class="timeline-role">Tecnico para Analisis de Datos Avanzado</span>
+                                <span class="timeline-org">UTEM</span>
+                                <span class="timeline-date">Feb 2025 — Sep 2025</span>
+                            </div>
+                            <ul class="timeline-details">
+                                <li>Web scrapping con Python (Selenium y BeautifulSoup)</li>
+                                <li>Dashboard interactivos con Plotly y Streamlit</li>
+                                <li>Bases de datos en MariaDB y PostgreSQL</li>
+                                <li>Procesamiento de lenguaje natural para analisis de datos</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Exp 3 -->
+                    <div class="timeline-node">
+                        <div class="cosmos-card">
+                            <div class="timeline-header">
+                                <span class="timeline-role">Ayudante de Catedra — Visualizacion de Datos</span>
+                                <span class="timeline-org">UTEM</span>
+                                <span class="timeline-date">Mar 2025 — Jul 2025</span>
+                            </div>
+                            <ul class="timeline-details">
+                                <li>Ensenanza y mentoria a estudiantes en tecnicas de visualizacion de datos</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Exp 4 -->
+                    <div class="timeline-node">
+                        <div class="cosmos-card">
+                            <div class="timeline-header">
+                                <span class="timeline-role">Practicante Profesional</span>
+                                <span class="timeline-org">Contraloria General de la Republica</span>
+                                <span class="timeline-date">Ago 2024 — Ene 2025</span>
+                            </div>
+                            <ul class="timeline-details">
+                                <li>Analisis de datos con Impala y Oracle</li>
+                                <li>Consultas SQL y automatizacion con Python</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== PROYECTOS ===== -->
+        <section id="proyectos">
+            <div class="section-inner">
+                <h2 class="section-title">Proyectos</h2>
+
+                <div class="station-card">
+                    <div class="station-status">
+                        <span class="pulse-dot"></span>
+                        Estacion activa — 2025
+                    </div>
+                    <h3 class="station-name">Dashboard de Avance de Proyecto</h3>
+                    <p class="station-desc">
+                        Dashboard interactivo con Streamlit para visualizar avance y estado de datos del proyecto.
+                    </p>
+                    <div class="station-tech">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Streamlit</span>
+                        <span class="tech-tag">Pandas</span>
+                        <span class="tech-tag">Plotly</span>
+                        <span class="tech-tag">DuckDB</span>
+                        <span class="tech-tag">Folium</span>
+                    </div>
+                    <a href="https://dashboarddatalake-fiut-utem.streamlit.app/" target="_blank" class="station-link">
+                        Acceder a la estacion
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== HABILIDADES ===== -->
+        <section id="habilidades">
+            <div class="section-inner">
+                <h2 class="section-title">Habilidades</h2>
+
+                <div class="skills-section-group">
+                    <h3 class="skills-group-title">Habilidades Tecnicas</h3>
+                    <div class="constellation-grid">
+                        <div class="constellation-node"><span>Python</span></div>
+                        <div class="constellation-node"><span>SQL</span></div>
+                        <div class="constellation-node"><span>TensorFlow</span></div>
+                        <div class="constellation-node"><span>scikit-learn</span></div>
+                        <div class="constellation-node"><span>Pandas</span></div>
+                        <div class="constellation-node"><span>Jupyter Notebooks</span></div>
+                        <div class="constellation-node"><span>Visualizacion de datos</span></div>
+                        <div class="constellation-node"><span>Plotly</span></div>
+                        <div class="constellation-node"><span>Streamlit</span></div>
+                        <div class="constellation-node"><span>Web Scraping</span></div>
+                        <div class="constellation-node"><span>PostgreSQL</span></div>
+                        <div class="constellation-node"><span>MariaDB</span></div>
+                        <div class="constellation-node"><span>SpaCy</span></div>
+                    </div>
+                </div>
+
+                <div class="skills-section-group">
+                    <h3 class="skills-group-title">Habilidades Blandas</h3>
+                    <div class="constellation-grid">
+                        <div class="constellation-node soft-skill-node"><span>Resolucion de Problemas</span></div>
+                        <div class="constellation-node soft-skill-node"><span>Pensamiento Critico</span></div>
+                        <div class="constellation-node soft-skill-node"><span>Adaptabilidad</span></div>
+                        <div class="constellation-node soft-skill-node"><span>Mentoria</span></div>
+                        <div class="constellation-node soft-skill-node"><span>Curiosidad intelectual</span></div>
+                        <div class="constellation-node soft-skill-node"><span>Responsabilidad</span></div>
+                        <div class="constellation-node soft-skill-node"><span>Mentalidad de experimentacion</span></div>
+                        <div class="constellation-node soft-skill-node"><span>Mentalidad analitica</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== EDUCACION & CERTIFICADOS ===== -->
+        <section id="educacion">
+            <div class="section-inner">
+                <h2 class="section-title">Educacion & Certificados</h2>
+
+                <div class="mission-log">
+                    <div class="mission-label">Titulo obtenido</div>
+                    <div class="mission-value">Ingeniero Civil en Ciencia de Datos</div>
+                    <div class="mission-label">Institucion</div>
+                    <div class="mission-value mission-org">Universidad Tecnologica Metropolitana (UTEM)</div>
+                    <div class="mission-label">Periodo de mision</div>
+                    <div class="mission-value mission-period">2020 — 2025</div>
+                </div>
+
+                <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;color:#ffd700;margin-top:3rem;margin-bottom:1rem;letter-spacing:2px;text-transform:uppercase;">Certificados</h3>
+
+                <div class="certificates-grid">
+                    <div class="cert-card">
+                        <span class="cert-year">2025</span>
+                        <span class="cert-name">Power BI</span>
+                        <span class="cert-issuer">Santander X</span>
+                        <span class="cert-link"><a href="https://drive.google.com/file/d/1IOp4gjfLcW8XhqbiwwOd9dzlz8l60P5q/view?usp=drive_link" target="_blank">Ver certificado &rarr;</a></span>
+                    </div>
+                    <div class="cert-card">
+                        <span class="cert-year">2025</span>
+                        <span class="cert-name">Ingles B2 Upper Intermediate</span>
+                        <span class="cert-issuer">Certificacion Internacional</span>
+                        <span class="cert-link"><a href="https://drive.google.com/file/d/1KT12-fKSs20wCu_AO6c6nEHYi5_v0mK1/view?usp=sharing" target="_blank">Ver certificado &rarr;</a></span>
+                    </div>
+                    <div class="cert-card">
+                        <span class="cert-year">2024</span>
+                        <span class="cert-name">AWS Data Center Technician</span>
+                        <span class="cert-issuer">Amazon Web Services</span>
+                        <span class="cert-link"><a href="https://drive.google.com/file/d/1pYCaTdbJQAmruxvoknp92QbIys4Bt7Ws/view?usp=sharing" target="_blank">Ver certificado &rarr;</a></span>
+                    </div>
+                    <div class="cert-card">
+                        <span class="cert-year">2025</span>
+                        <span class="cert-name">Introduccion a la Ciencia de Datos</span>
+                        <span class="cert-issuer">Santander Open Academy</span>
+                        <span class="cert-link"><a href="https://drive.google.com/file/d/1vmeQuzoZEwUTC0Pz7Xl_rlobqXcreX5w/view?usp=sharing" target="_blank">Ver certificado &rarr;</a></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== CONTACTO ===== -->
+        <section id="contacto">
+            <div class="section-inner">
+                <p class="transmission-header">/// Frecuencia de contacto abierta ///</p>
+                <h2 class="section-title" style="display:block;text-align:center;">Transmision</h2>
+
+                <div class="contact-grid">
+                    <div class="contact-channel">
+                        <div class="channel-icon">
+                            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                        </div>
+                        <div class="channel-label">Email</div>
+                        <div class="channel-value"><a href="mailto:dsantibanezo@utem.cl" target="_blank">dsantibanezo@utem.cl</a></div>
+                    </div>
+                    <div class="contact-channel">
+                        <div class="channel-icon">
+                            <svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.76 0-5 2.24-5 5v14c0 2.76 2.24 5 5 5h14c2.76 0 5-2.24 5-5v-14c0-2.76-2.24-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.27c-.97 0-1.75-.79-1.75-1.76s.78-1.76 1.75-1.76 1.75.79 1.75 1.76-.78 1.76-1.75 1.76zm13.5 11.27h-3v-5.6c0-3.37-4-3.12-4 0v5.6h-3v-10h3v1.77c1.4-2.59 7-2.78 7 2.48v5.75z"/></svg>
+                        </div>
+                        <div class="channel-label">LinkedIn</div>
+                        <div class="channel-value"><a href="https://www.linkedin.com/in/diego-santibanez-oyarce/" target="_blank">diego-santibanez-oyarce</a></div>
+                    </div>
+                    <div class="contact-channel">
+                        <div class="channel-icon">
+                            <svg viewBox="0 0 24 24"><path d="M12 0c-6.63 0-12 5.37-12 12 0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.23c-3.34.73-4.03-1.41-4.03-1.41-.55-1.39-1.33-1.76-1.33-1.76-1.09-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23.96-.27 1.98-.4 3-.41 1.02.01 2.04.14 3 .41 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58 4.76-1.59 8.2-6.09 8.2-11.39 0-6.63-5.37-12-12-12z"/></svg>
+                        </div>
+                        <div class="channel-label">GitHub</div>
+                        <div class="channel-value"><a href="https://github.com/daso42" target="_blank">daso42</a></div>
+                    </div>
+                    <div class="contact-channel">
+                        <div class="channel-icon">
+                            <svg viewBox="0 0 24 24"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1v3.49c0 .55-.45 1-1 1C10.07 22 2 13.93 2 3c0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.02l-2.21 2.2z"/></svg>
+                        </div>
+                        <div class="channel-label">Telefono</div>
+                        <div class="channel-value"><a href="tel:+56984341477" target="_blank">+56 9 8434 1477</a></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <footer class="cosmos-footer">
+        <p>&copy; 2025 Diego Santibanez Oyarce — Navegando el cosmos de los datos</p>
+    </footer>
+
+    <!-- Active nav highlight on scroll -->
+    <script>
+        (function() {
+            const navDots = document.querySelectorAll('.nav-dot');
+            const sections = document.querySelectorAll('section');
+
+            function updateNav() {
+                let current = '';
+                sections.forEach(section => {
+                    const top = section.offsetTop - 150;
+                    if (window.scrollY >= top) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                navDots.forEach(dot => {
+                    dot.classList.remove('active');
+                    if (dot.getAttribute('href') === '#' + current) {
+                        dot.classList.add('active');
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', updateNav, { passive: true });
+            updateNav();
+        })();
+    </script>
+
+</body>
+</html>

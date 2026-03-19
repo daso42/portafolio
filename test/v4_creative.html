@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diego Santibanez Oyarce — Cientifico de Datos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ===========================
+       CUSTOM PROPERTIES
+    =========================== */
+    :root {
+      --bg:          #20212B;
+      --surface:     #2D4354;
+      --surface-alt: #263545;
+      --warm-glow:   rgba(254, 215, 165, 0.05);
+      --text-primary: #FED7A5;
+      --text-secondary: #73766A;
+      --accent1:     #9E6752;
+      --accent2:     #D3A376;
+      --border:      rgba(115, 118, 106, 0.2);
+      --font-serif:  'DM Serif Display', Georgia, serif;
+      --font-sans:   'Inter', system-ui, sans-serif;
+      --radius:      10px;
+      --transition:  0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ===========================
+       RESET & BASE
+    =========================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-secondary);
+      font-family: var(--font-sans);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: var(--accent1);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+    a:hover { color: var(--accent2); }
+
+    img { display: block; max-width: 100%; }
+
+    ul { list-style: none; }
+
+    ::selection {
+      background: var(--accent1);
+      color: var(--bg);
+    }
+
+    /* ===========================
+       UTILITY
+    =========================== */
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(to right, var(--accent1), transparent);
+      border: none;
+      margin: 0;
+    }
+
+    /* reveal animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===========================
+       NAVIGATION
+    =========================== */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      background: rgba(32, 33, 43, 0.75);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .nav-logo {
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      letter-spacing: 0.04em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      letter-spacing: 0.03em;
+      transition: color var(--transition);
+    }
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--accent1); }
+
+    /* hamburger */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 6px;
+      background: none;
+      border: none;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text-primary);
+      transition: var(--transition);
+    }
+    .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .nav-mobile {
+      display: none;
+      flex-direction: column;
+      gap: 0;
+      background: rgba(32, 33, 43, 0.97);
+      border-top: 1px solid var(--border);
+      padding: 1rem 0;
+    }
+    .nav-mobile.open { display: flex; }
+    .nav-mobile a {
+      padding: 0.75rem 2rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+    .nav-mobile a:hover { color: var(--accent1); }
+
+    /* ===========================
+       HERO
+    =========================== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 64px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* terracotta radial glow top-right */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -120px;
+      right: -100px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(158, 103, 82, 0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 3rem;
+      align-items: start;
+      padding: 5rem 0 3rem;
+    }
+
+    .hero-name {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(3rem, 7vw, 6.5rem);
+      color: var(--text-primary);
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+    }
+
+    .hero-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-top: 1rem;
+    }
+
+    .hero-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      align-items: flex-end;
+      padding-top: 0.5rem;
+    }
+
+    .stat-item {
+      text-align: right;
+    }
+
+    .stat-number {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-top: 0.25rem;
+    }
+
+    .hero-bio-row {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 3rem;
+      align-items: end;
+      border-top: 1px solid var(--border);
+      padding-top: 2.5rem;
+      margin-top: 1rem;
+    }
+
+    .hero-bio {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      max-width: 600px;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      flex-shrink: 0;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.6rem;
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--accent1);
+      color: #fff;
+      border: 2px solid var(--accent1);
+    }
+    .btn-primary:hover {
+      background: var(--accent2);
+      border-color: var(--accent2);
+      color: var(--bg);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text-primary);
+      border: 2px solid var(--border);
+    }
+    .btn-outline:hover {
+      border-color: var(--accent1);
+      color: var(--accent1);
+    }
+
+    /* ===========================
+       SECTION COMMON
+    =========================== */
+    section {
+      padding: 6rem 0;
+    }
+
+    section.warm-bg {
+      background: var(--warm-glow);
+    }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 3rem;
+      position: relative;
+    }
+
+    .section-number {
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--accent2);
+      white-space: nowrap;
+    }
+
+    .section-title {
+      font-family: var(--font-sans);
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.15;
+    }
+
+    /* ghosted large number behind section label */
+    .section-ghost {
+      position: absolute;
+      left: -0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 8rem;
+      font-weight: 900;
+      color: var(--text-primary);
+      opacity: 0.04;
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+      z-index: 0;
+    }
+
+    .section-label > * { position: relative; z-index: 1; }
+
+    /* ===========================
+       EXPERIENCE
+    =========================== */
+    .experience-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .exp-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color var(--transition), transform var(--transition);
+    }
+
+    .exp-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(135deg, rgba(158,103,82,0.12), transparent);
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    .exp-card:hover {
+      border-color: var(--accent1);
+      transform: translateY(-3px);
+    }
+    .exp-card:hover::before { opacity: 1; }
+
+    .exp-company {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 0.4rem;
+    }
+
+    .exp-role {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+
+    .exp-dates {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .exp-dates::before {
+      content: '';
+      display: inline-block;
+      width: 16px;
+      height: 1px;
+      background: var(--accent1);
+    }
+
+    .exp-desc {
+      font-size: 0.875rem;
+      line-height: 1.65;
+      color: var(--text-secondary);
+    }
+
+    .exp-desc li {
+      padding: 0.2rem 0 0.2rem 1rem;
+      position: relative;
+    }
+    .exp-desc li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.65em;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--accent1);
+    }
+
+    /* ===========================
+       PROJECTS
+    =========================== */
+    .project-featured {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) * 1.5);
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color var(--transition);
+    }
+
+    .project-featured::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(to right, var(--accent1), var(--accent2));
+      border-radius: calc(var(--radius) * 1.5) calc(var(--radius) * 1.5) 0 0;
+    }
+
+    /* CSS background texture */
+    .project-featured::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 40%;
+      height: 100%;
+      background:
+        repeating-linear-gradient(
+          45deg,
+          rgba(158,103,82,0.04) 0px,
+          rgba(158,103,82,0.04) 1px,
+          transparent 1px,
+          transparent 12px
+        );
+      pointer-events: none;
+    }
+
+    .project-featured:hover { border-color: rgba(158,103,82,0.5); }
+
+    .project-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent1);
+      margin-bottom: 1rem;
+    }
+
+    .project-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .project-desc {
+      font-size: 0.95rem;
+      line-height: 1.75;
+      color: var(--text-secondary);
+      max-width: 680px;
+      margin-bottom: 1.75rem;
+    }
+
+    .tech-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .pill {
+      padding: 0.3rem 0.85rem;
+      background: rgba(158,103,82,0.12);
+      border: 1px solid rgba(158,103,82,0.25);
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--accent2);
+      letter-spacing: 0.02em;
+    }
+
+    /* ===========================
+       SKILLS BENTO
+    =========================== */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-auto-rows: minmax(80px, auto);
+      gap: 1rem;
+    }
+
+    .bento-cell {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      transition: border-color var(--transition), background var(--transition), transform var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bento-cell:hover {
+      border-color: var(--accent1);
+      background: var(--surface-alt);
+      transform: translateY(-2px);
+    }
+
+    .bento-cell-wide { grid-column: span 2; }
+    .bento-cell-3    { grid-column: span 3; }
+    .bento-cell-tall { grid-row: span 2; }
+
+    .bento-category {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent1);
+      margin-bottom: 0.35rem;
+    }
+
+    .bento-skill {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .bento-sub {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 0.2rem;
+    }
+
+    .bento-soft {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .bento-soft span {
+      padding: 0.25rem 0.65rem;
+      background: rgba(211,163,118,0.1);
+      border: 1px solid rgba(211,163,118,0.2);
+      border-radius: 6px;
+      font-size: 0.78rem;
+      color: var(--accent2);
+    }
+
+    /* ===========================
+       EDUCATION + CERTS
+    =========================== */
+    .edu-certs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .edu-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+    }
+
+    .edu-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: rgba(158,103,82,0.15);
+      border: 1px solid rgba(158,103,82,0.3);
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent1);
+      margin-bottom: 1rem;
+    }
+
+    .edu-degree {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.3;
+      margin-bottom: 0.5rem;
+    }
+
+    .edu-institution {
+      font-size: 0.9rem;
+      color: var(--accent2);
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+
+    .edu-period {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .certs-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .cert-row {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color var(--transition);
+    }
+    .cert-row:hover { border-color: rgba(158,103,82,0.4); }
+
+    .cert-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      cursor: pointer;
+      background: var(--surface);
+      transition: background var(--transition);
+    }
+    .cert-header:hover { background: var(--surface-alt); }
+
+    .cert-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .cert-year {
+      font-size: 0.75rem;
+      color: var(--accent2);
+      font-weight: 500;
+      margin-left: auto;
+      margin-right: 1rem;
+    }
+
+    .cert-toggle {
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent1);
+      font-size: 1rem;
+      line-height: 1;
+      transition: transform var(--transition);
+      flex-shrink: 0;
+    }
+    .cert-row.expanded .cert-toggle { transform: rotate(45deg); }
+
+    .cert-body {
+      display: none;
+      padding: 0.75rem 1.25rem 1rem;
+      border-top: 1px solid var(--border);
+      background: rgba(45,67,84,0.5);
+    }
+    .cert-row.expanded .cert-body { display: block; }
+
+    .cert-meta {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .cert-link {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--accent1);
+    }
+    .cert-link:hover { color: var(--accent2); }
+
+    /* ===========================
+       CONTACT
+    =========================== */
+    .contact-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) * 1.5);
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* warm glow effect */
+    .contact-card::before {
+      content: '';
+      position: absolute;
+      bottom: -60px;
+      right: -60px;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(254,215,165,0.06) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .contact-intro {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      max-width: 540px;
+      margin-bottom: 2.5rem;
+      line-height: 1.8;
+    }
+
+    .contact-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .contact-option {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      padding: 1.1rem 1.25rem;
+      background: rgba(32,33,43,0.6);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      transition: border-color var(--transition), background var(--transition);
+    }
+    .contact-option:hover {
+      border-color: var(--accent1);
+      background: rgba(32,33,43,0.9);
+      color: var(--text-primary);
+    }
+
+    .contact-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(158,103,82,0.15);
+      border: 1px solid rgba(158,103,82,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .contact-icon svg {
+      width: 16px;
+      height: 16px;
+      fill: var(--accent1);
+    }
+
+    .contact-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+
+    .contact-value {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-top: 0.1rem;
+    }
+
+    /* ===========================
+       FOOTER
+    =========================== */
+    footer {
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .footer-copy {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+
+    /* ===========================
+       RESPONSIVE
+    =========================== */
+    @media (max-width: 900px) {
+      .bento-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .bento-cell-wide { grid-column: span 1; }
+      .bento-cell-3    { grid-column: span 3; }
+
+      .edu-certs-grid { grid-template-columns: 1fr; gap: 2rem; }
+
+      .hero-bio-row {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .hero-cta { flex-wrap: wrap; }
+    }
+
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+      .nav-toggle { display: flex; }
+
+      .hero-inner {
+        grid-template-columns: 1fr;
+        padding: 3rem 0 2rem;
+      }
+
+      .hero-stats {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+      }
+
+      .stat-item { text-align: left; }
+
+      .bento-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .bento-cell-3 { grid-column: span 2; }
+      .bento-cell-tall { grid-row: span 1; }
+
+      .contact-card { padding: 2rem 1.5rem; }
+
+      .footer-inner { flex-direction: column; gap: 0.5rem; text-align: center; }
+
+      section { padding: 4rem 0; }
+    }
+
+    @media (max-width: 460px) {
+      .bento-grid { grid-template-columns: 1fr; }
+      .bento-cell-wide,
+      .bento-cell-3 { grid-column: span 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===========================
+       NAVIGATION
+  =========================== -->
+  <nav class="nav">
+    <div class="container">
+      <div class="nav-inner">
+        <span class="nav-logo">Diego Santibanez</span>
+        <ul class="nav-links">
+          <li><a href="#experiencia">Experiencia</a></li>
+          <li><a href="#proyectos">Proyectos</a></li>
+          <li><a href="#habilidades">Habilidades</a></li>
+          <li><a href="#educacion">Educacion</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+        <button class="nav-toggle" id="navToggle" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="nav-mobile" id="navMobile">
+      <a href="#experiencia">Experiencia</a>
+      <a href="#proyectos">Proyectos</a>
+      <a href="#habilidades">Habilidades</a>
+      <a href="#educacion">Educacion</a>
+      <a href="#contacto">Contacto</a>
+    </div>
+  </nav>
+
+  <!-- ===========================
+       HERO
+  =========================== -->
+  <section class="hero" id="inicio">
+    <div class="container">
+      <div class="hero-inner reveal">
+        <div>
+          <h1 class="hero-name">Diego<br>Santibanez<br>Oyarce</h1>
+          <p class="hero-title">Cientifico de Datos</p>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-number" data-target="5">0</div>
+            <div class="stat-label">Anos de formacion</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" data-target="6">0</div>
+            <div class="stat-label">Congresos</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" data-target="4">0</div>
+            <div class="stat-label">Experiencias</div>
+          </div>
+        </div>
+        <div class="hero-bio-row">
+          <p class="hero-bio">
+            Egresado de Ingenieria Civil en Ciencia de datos en Agosto 2025, apasionado por la tecnologia y con un gran interes en el uso de la inteligencia artificial como herramienta para la resolucion de problemas del mundo real. Mi formacion academica me proporciono una solida comprension de algoritmos de aprendizaje automatico, analisis y visualizacion de datos. Me gusta proponerme desafios donde pueda poner en practica mis conocimientos y aprender cosas nuevas.
+          </p>
+          <div class="hero-cta">
+            <a href="#proyectos" class="btn btn-primary">Ver Proyectos</a>
+            <a href="#contacto" class="btn btn-outline">Contactar</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- ===========================
+       EXPERIENCE
+  =========================== -->
+  <section id="experiencia">
+    <div class="container">
+      <div class="section-label reveal">
+        <div class="section-ghost">01</div>
+        <span class="section-number">01 —</span>
+        <h2 class="section-title">Experiencia</h2>
+      </div>
+
+      <div class="experience-grid">
+
+        <div class="exp-card reveal">
+          <div class="exp-company">UTEM</div>
+          <div class="exp-role">Asistente de Investigacion</div>
+          <div class="exp-dates">Dic 2023 — Sep 2025</div>
+          <ul class="exp-desc">
+            <li>1ras Jornadas Ciencia de Datos y Salud Publica — U. Chile (ene 2024)</li>
+            <li>Carla2024 Flash Talk (sep 2024)</li>
+            <li>III Congreso Vive la Investigacion 2024 (oct 2024)</li>
+            <li>XIV Congreso Argentino Bioinformatica (nov 2024)</li>
+            <li>III Reunion Soc. Chilena de Bioinformatica — invitacion a publicar en Bioinformatics Advances Oxford (nov 2024)</li>
+            <li>Carla2025 — Mejor Poster (sep 2025)</li>
+          </ul>
+        </div>
+
+        <div class="exp-card reveal">
+          <div class="exp-company">UTEM</div>
+          <div class="exp-role">Tecnico Analisis de Datos Avanzado</div>
+          <div class="exp-dates">Feb 2025 — Sep 2025</div>
+          <ul class="exp-desc">
+            <li>Web scraping con Python (Selenium, BeautifulSoup)</li>
+            <li>Dashboards interactivos con Plotly y Streamlit</li>
+            <li>Gestion de bases de datos MariaDB y PostgreSQL</li>
+            <li>Procesamiento de lenguaje natural (NLP)</li>
+          </ul>
+        </div>
+
+        <div class="exp-card reveal">
+          <div class="exp-company">UTEM</div>
+          <div class="exp-role">Ayudante de Catedra — Visualizacion de Datos</div>
+          <div class="exp-dates">Mar 2025 — Jul 2025</div>
+          <ul class="exp-desc">
+            <li>Ensenanza de tecnicas de visualizacion de datos a estudiantes</li>
+            <li>Mentoria y apoyo academico continuo</li>
+          </ul>
+        </div>
+
+        <div class="exp-card reveal">
+          <div class="exp-company">Contraloria General de la Republica</div>
+          <div class="exp-role">Practicante Profesional</div>
+          <div class="exp-dates">Ago 2024 — Ene 2025</div>
+          <ul class="exp-desc">
+            <li>Analisis de datos con Impala y Oracle</li>
+            <li>Consultas SQL avanzadas</li>
+            <li>Automatizacion de procesos con Python</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- ===========================
+       PROJECTS
+  =========================== -->
+  <section id="proyectos" class="warm-bg">
+    <div class="container">
+      <div class="section-label reveal">
+        <div class="section-ghost">02</div>
+        <span class="section-number">02 —</span>
+        <h2 class="section-title">Proyectos</h2>
+      </div>
+
+      <div class="project-featured reveal">
+        <div class="project-label">Proyecto Destacado</div>
+        <h3 class="project-title">Dashboard de Avance de Proyecto</h3>
+        <p class="project-desc">
+          Dashboard interactivo para el seguimiento y visualizacion del avance de proyectos. Desarrollado con un stack moderno de ciencia de datos, integra visualizaciones geograficas, analisis temporal y consultas eficientes sobre grandes volumenes de datos.
+        </p>
+        <div class="tech-pills">
+          <span class="pill">Streamlit</span>
+          <span class="pill">Pandas</span>
+          <span class="pill">Plotly</span>
+          <span class="pill">DuckDB</span>
+          <span class="pill">Folium</span>
+          <span class="pill">Python</span>
+        </div>
+        <a href="https://dashboarddatalake-fiut-utem.streamlit.app/" target="_blank" rel="noopener" class="btn btn-primary">
+          Ver Dashboard
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- ===========================
+       SKILLS
+  =========================== -->
+  <section id="habilidades">
+    <div class="container">
+      <div class="section-label reveal">
+        <div class="section-ghost">03</div>
+        <span class="section-number">03 —</span>
+        <h2 class="section-title">Habilidades</h2>
+      </div>
+
+      <div class="bento-grid">
+
+        <div class="bento-cell bento-cell-wide reveal">
+          <div class="bento-category">Lenguajes</div>
+          <div class="bento-skill">Python</div>
+          <div class="bento-sub">Lenguaje principal de desarrollo</div>
+        </div>
+
+        <div class="bento-cell bento-cell-wide reveal">
+          <div class="bento-category">Bases de Datos</div>
+          <div class="bento-skill">SQL</div>
+          <div class="bento-sub">PostgreSQL · MariaDB · Impala · Oracle</div>
+        </div>
+
+        <div class="bento-cell bento-cell-wide reveal">
+          <div class="bento-category">Machine Learning</div>
+          <div class="bento-skill">TensorFlow</div>
+          <div class="bento-sub">Deep learning y redes neuronales</div>
+        </div>
+
+        <div class="bento-cell bento-cell-wide reveal">
+          <div class="bento-category">ML Framework</div>
+          <div class="bento-skill">scikit-learn</div>
+          <div class="bento-sub">Modelos supervisados y no supervisados</div>
+        </div>
+
+        <div class="bento-cell bento-cell-wide reveal">
+          <div class="bento-category">Analisis de Datos</div>
+          <div class="bento-skill">Pandas</div>
+          <div class="bento-sub">Manipulacion y transformacion de datos</div>
+        </div>
+
+        <div class="bento-cell bento-cell-wide reveal">
+          <div class="bento-category">Entorno</div>
+          <div class="bento-skill">Jupyter Notebooks</div>
+          <div class="bento-sub">Prototipado y analisis exploratorio</div>
+        </div>
+
+        <div class="bento-cell bento-cell-wide reveal">
+          <div class="bento-category">Visualizacion</div>
+          <div class="bento-skill">Plotly</div>
+          <div class="bento-sub">Graficos interactivos y dashboards</div>
+        </div>
+
+        <div class="bento-cell bento-cell-wide reveal">
+          <div class="bento-category">Apps de Datos</div>
+          <div class="bento-skill">Streamlit</div>
+          <div class="bento-sub">Aplicaciones web orientadas a datos</div>
+        </div>
+
+        <div class="bento-cell bento-cell-wide reveal">
+          <div class="bento-category">Extraccion</div>
+          <div class="bento-skill">Web Scraping</div>
+          <div class="bento-sub">Selenium · BeautifulSoup</div>
+        </div>
+
+        <div class="bento-cell bento-cell-wide reveal">
+          <div class="bento-category">NLP</div>
+          <div class="bento-skill">SpaCy</div>
+          <div class="bento-sub">Procesamiento de lenguaje natural</div>
+        </div>
+
+        <div class="bento-cell bento-cell-wide reveal">
+          <div class="bento-category">Visualizacion</div>
+          <div class="bento-skill">Viz de Datos</div>
+          <div class="bento-sub">Storytelling con datos</div>
+        </div>
+
+        <div class="bento-cell bento-cell-wide reveal">
+          <div class="bento-category">BI</div>
+          <div class="bento-skill">Power BI</div>
+          <div class="bento-sub">Reportes y analisis empresarial</div>
+        </div>
+
+        <div class="bento-cell bento-cell-3 reveal" style="grid-column: span 6;">
+          <div class="bento-category">Habilidades Blandas</div>
+          <div class="bento-soft">
+            <span>Resolucion de Problemas</span>
+            <span>Pensamiento Critico</span>
+            <span>Adaptabilidad</span>
+            <span>Mentoria</span>
+            <span>Curiosidad Intelectual</span>
+            <span>Responsabilidad</span>
+            <span>Mentalidad de Experimentacion</span>
+            <span>Mentalidad Analitica</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- ===========================
+       EDUCATION + CERTS
+  =========================== -->
+  <section id="educacion" class="warm-bg">
+    <div class="container">
+      <div class="section-label reveal">
+        <div class="section-ghost">04</div>
+        <span class="section-number">04 —</span>
+        <h2 class="section-title">Educacion y Certificados</h2>
+      </div>
+
+      <div class="edu-certs-grid">
+
+        <!-- Education -->
+        <div class="reveal">
+          <div class="edu-card">
+            <div class="edu-badge">Titulo Universitario</div>
+            <div class="edu-degree">Ingeniero Civil en Ciencia de Datos</div>
+            <div class="edu-institution">Universidad Tecnologica Metropolitana — UTEM</div>
+            <div class="edu-period">2020 — 2025</div>
+          </div>
+        </div>
+
+        <!-- Certificates -->
+        <div class="reveal">
+          <div class="certs-list">
+
+            <div class="cert-row" id="cert1">
+              <div class="cert-header" onclick="toggleCert('cert1')">
+                <span class="cert-name">Power BI</span>
+                <span class="cert-year">2025</span>
+                <span class="cert-toggle">+</span>
+              </div>
+              <div class="cert-body">
+                <div class="cert-meta">Santander X</div>
+                <a href="https://drive.google.com/file/d/1IOp4gjfLcW8XhqbiwwOd9dzlz8l60P5q/view?usp=drive_link" target="_blank" rel="noopener" class="cert-link">Ver Certificado</a>
+              </div>
+            </div>
+
+            <div class="cert-row" id="cert2">
+              <div class="cert-header" onclick="toggleCert('cert2')">
+                <span class="cert-name">Ingles B2 Upper Intermediate</span>
+                <span class="cert-year">2025</span>
+                <span class="cert-toggle">+</span>
+              </div>
+              <div class="cert-body">
+                <div class="cert-meta">Certificacion Internacional</div>
+                <a href="https://drive.google.com/file/d/1KT12-fKSs20wCu_AO6c6nEHYi5_v0mK1/view?usp=sharing" target="_blank" rel="noopener" class="cert-link">Ver Certificado</a>
+              </div>
+            </div>
+
+            <div class="cert-row" id="cert3">
+              <div class="cert-header" onclick="toggleCert('cert3')">
+                <span class="cert-name">AWS Data Center Technician</span>
+                <span class="cert-year">2024</span>
+                <span class="cert-toggle">+</span>
+              </div>
+              <div class="cert-body">
+                <div class="cert-meta">Amazon Web Services</div>
+                <a href="https://drive.google.com/file/d/1pYCaTdbJQAmruxvoknp92QbIys4Bt7Ws/view?usp=sharing" target="_blank" rel="noopener" class="cert-link">Ver Certificado</a>
+              </div>
+            </div>
+
+            <div class="cert-row" id="cert4">
+              <div class="cert-header" onclick="toggleCert('cert4')">
+                <span class="cert-name">Introduccion a la Ciencia de Datos</span>
+                <span class="cert-year">2025</span>
+                <span class="cert-toggle">+</span>
+              </div>
+              <div class="cert-body">
+                <div class="cert-meta">Santander Open Academy</div>
+                <a href="https://drive.google.com/file/d/1vmeQuzoZEwUTC0Pz7Xl_rlobqXcreX5w/view?usp=sharing" target="_blank" rel="noopener" class="cert-link">Ver Certificado</a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- ===========================
+       CONTACT
+  =========================== -->
+  <section id="contacto">
+    <div class="container">
+      <div class="section-label reveal">
+        <div class="section-ghost">05</div>
+        <span class="section-number">05 —</span>
+        <h2 class="section-title">Contacto</h2>
+      </div>
+
+      <div class="contact-card reveal">
+        <p class="contact-intro">
+          Abierto a nuevas oportunidades, colaboraciones y proyectos interesantes. Si tienes algo en mente o simplemente quieres conversar sobre datos e inteligencia artificial, no dudes en escribirme.
+        </p>
+
+        <div class="contact-options">
+
+          <a href="mailto:dsantibanezo@utem.cl" target="_blank" rel="noopener" class="contact-option">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="contact-label">Email</div>
+              <div class="contact-value">dsantibanezo@utem.cl</div>
+            </div>
+          </a>
+
+          <a href="https://www.linkedin.com/in/diego-santibanez-oyarce/" target="_blank" rel="noopener" class="contact-option">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19 3A2 2 0 0 1 21 5V19A2 2 0 0 1 19 21H5A2 2 0 0 1 3 19V5A2 2 0 0 1 5 3H19M18.5 18.5V13.2A3.26 3.26 0 0 0 15.24 9.94C14.39 9.94 13.4 10.46 12.92 11.24V10.13H10.13V18.5H12.92V13.57C12.92 12.8 13.54 12.17 14.31 12.17A1.4 1.4 0 0 1 15.71 13.57V18.5H18.5M6.88 8.56A1.68 1.68 0 0 0 8.56 6.88C8.56 5.95 7.81 5.19 6.88 5.19A1.69 1.69 0 0 0 5.19 6.88C5.19 7.81 5.95 8.56 6.88 8.56M8.27 18.5V10.13H5.5V18.5H8.27Z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="contact-label">LinkedIn</div>
+              <div class="contact-value">diego-santibanez-oyarce</div>
+            </div>
+          </a>
+
+          <a href="https://github.com/daso42" target="_blank" rel="noopener" class="contact-option">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="contact-label">GitHub</div>
+              <div class="contact-value">daso42</div>
+            </div>
+          </a>
+
+          <a href="tel:+56984341477" class="contact-option">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="contact-label">Telefono</div>
+              <div class="contact-value">+56 9 8434 1477</div>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===========================
+       FOOTER
+  =========================== -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <span class="footer-name">Diego Santibanez Oyarce</span>
+        <span class="footer-copy">2025 — Cientifico de Datos</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===========================
+       JAVASCRIPT
+  =========================== -->
+  <script>
+    // ---- Mobile nav toggle ----
+    const navToggle = document.getElementById('navToggle');
+    const navMobile = document.getElementById('navMobile');
+
+    navToggle.addEventListener('click', () => {
+      navToggle.classList.toggle('open');
+      navMobile.classList.toggle('open');
+    });
+
+    // Close mobile nav on link click
+    navMobile.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navToggle.classList.remove('open');
+        navMobile.classList.remove('open');
+      });
+    });
+
+    // ---- Active nav link on scroll ----
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    function updateActiveLink() {
+      let current = '';
+      sections.forEach(section => {
+        const top = section.offsetTop - 100;
+        if (window.scrollY >= top) {
+          current = section.getAttribute('id');
+        }
+      });
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveLink, { passive: true });
+
+    // ---- Intersection Observer reveal ----
+    const revealEls = document.querySelectorAll('.reveal');
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    revealEls.forEach(el => revealObserver.observe(el));
+
+    // ---- Animated stat counters ----
+    function animateCounter(el, target, duration) {
+      let start = 0;
+      const step = target / (duration / 16);
+      const timer = setInterval(() => {
+        start += step;
+        if (start >= target) {
+          el.textContent = target;
+          clearInterval(timer);
+        } else {
+          el.textContent = Math.floor(start);
+        }
+      }, 16);
+    }
+
+    const counters = document.querySelectorAll('.stat-number[data-target]');
+    let countersStarted = false;
+
+    const counterObserver = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && !countersStarted) {
+        countersStarted = true;
+        counters.forEach(counter => {
+          const target = parseInt(counter.getAttribute('data-target'), 10);
+          animateCounter(counter, target, 1200);
+        });
+      }
+    }, { threshold: 0.5 });
+
+    if (counters.length > 0) {
+      counterObserver.observe(counters[0].closest('.hero-inner') || document.querySelector('.hero'));
+    }
+
+    // ---- Certificate accordion ----
+    function toggleCert(id) {
+      const row = document.getElementById(id);
+      if (!row) return;
+      row.classList.toggle('expanded');
+    }
+
+    // ---- Stagger reveal delays for grids ----
+    document.querySelectorAll('.experience-grid .reveal, .bento-grid .reveal').forEach((el, i) => {
+      el.style.transitionDelay = (i * 60) + 'ms';
+    });
+  </script>
+
+</body>
+</html>

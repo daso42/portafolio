@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diego Santibanez Oyarce — Colección Permanente</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── RESET & BASE ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --wall:       #f7f7f5;
+      --ink:        #1a1a1a;
+      --tan:        #8b7355;
+      --frame:      #2c2c2c;
+      --cream:      #e8e0d0;
+      --red:        #c41e1e;
+      --mat:        #f0ebe2;
+      --light-tan:  #b8a898;
+      --shadow-1:   rgba(0,0,0,0.18);
+      --shadow-2:   rgba(0,0,0,0.10);
+      --shadow-3:   rgba(0,0,0,0.06);
+      --gold:       #a08850;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      background-color: var(--wall);
+      color: var(--ink);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ─── WALL TEXTURE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--cream); }
+    ::-webkit-scrollbar-thumb { background: var(--light-tan); border-radius: 3px; }
+
+    /* ─── MUSEUM TOP BAR ─── */
+    .museum-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: var(--ink);
+      border-bottom: 2px solid var(--tan);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 52px;
+    }
+
+    .museum-header__name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      color: var(--cream);
+      text-transform: uppercase;
+    }
+
+    .museum-header__name span {
+      color: var(--tan);
+    }
+
+    .museum-nav {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      list-style: none;
+    }
+
+    .museum-nav li a {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 18px;
+      height: 52px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--light-tan);
+      text-decoration: none;
+      border-right: 1px solid rgba(139,115,85,0.25);
+      transition: color 0.25s, background 0.25s;
+    }
+
+    .museum-nav li:first-child a { border-left: 1px solid rgba(139,115,85,0.25); }
+
+    .museum-nav li a:hover {
+      color: var(--cream);
+      background: rgba(139,115,85,0.12);
+    }
+
+    .museum-nav li a .nav-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      border: 1px solid var(--tan);
+      display: inline-block;
+      transition: background 0.25s;
+    }
+
+    .museum-nav li a:hover .nav-dot { background: var(--tan); }
+
+    .museum-header__logo {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      color: var(--tan);
+      text-transform: uppercase;
+      font-weight: 300;
+    }
+
+    /* ─── MAIN LAYOUT ─── */
+    main {
+      padding-top: 52px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ─── HERO / ENTRANCE HALL ─── */
+    .entrance-hall {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--ink);
+      position: relative;
+      overflow: hidden;
+      padding: 80px 40px;
+    }
+
+    /* spotlight cone */
+    .entrance-hall::before {
+      content: '';
+      position: absolute;
+      top: -10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 900px;
+      background: radial-gradient(ellipse 55% 60% at 50% 0%,
+        rgba(255,255,255,0.08) 0%,
+        rgba(255,255,255,0.03) 40%,
+        transparent 70%);
+      pointer-events: none;
+    }
+
+    .entrance-hall::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 120px;
+      background: linear-gradient(to bottom, transparent, rgba(26,26,26,0.6));
+      pointer-events: none;
+    }
+
+    .entrance-placard {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 780px;
+    }
+
+    .entrance-placard__institution {
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      color: var(--tan);
+      text-transform: uppercase;
+      margin-bottom: 32px;
+      font-weight: 600;
+    }
+
+    .entrance-placard__institution::before,
+    .entrance-placard__institution::after {
+      content: '——';
+      margin: 0 12px;
+      opacity: 0.5;
+    }
+
+    .entrance-placard__name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(48px, 7vw, 88px);
+      font-weight: 300;
+      color: #f0ece4;
+      line-height: 1.05;
+      letter-spacing: 0.04em;
+      margin-bottom: 16px;
+    }
+
+    .entrance-placard__title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(20px, 3vw, 28px);
+      font-style: italic;
+      font-weight: 300;
+      color: var(--tan);
+      letter-spacing: 0.08em;
+      margin-bottom: 40px;
+    }
+
+    .entrance-divider {
+      width: 100%;
+      max-width: 320px;
+      margin: 0 auto 40px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--tan), transparent);
+    }
+
+    .entrance-placard__bio {
+      font-size: 16px;
+      font-weight: 300;
+      color: rgba(240,235,226,0.72);
+      line-height: 1.85;
+      max-width: 640px;
+      margin: 0 auto 48px;
+    }
+
+    .entrance-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid rgba(139,115,85,0.5);
+      padding: 10px 28px;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--tan);
+      font-weight: 600;
+    }
+
+    .entrance-badge::before { content: '⬡'; font-size: 14px; }
+
+    .audio-guide-cue {
+      margin-top: 28px;
+      font-size: 11px;
+      color: rgba(139,115,85,0.55);
+      letter-spacing: 0.12em;
+    }
+
+    /* ─── SECTION ROOM ─── */
+    .gallery-room {
+      padding: 100px 60px 120px;
+      position: relative;
+    }
+
+    /* alternating very-subtle tint */
+    .gallery-room:nth-child(even) {
+      background: var(--wall);
+    }
+    .gallery-room:nth-child(odd) {
+      background: #f2f0ec;
+    }
+
+    /* room baseboard */
+    .gallery-room::after {
+      content: '';
+      display: block;
+      position: absolute;
+      bottom: 0; left: 60px; right: 60px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--cream), var(--tan), var(--cream), transparent);
+    }
+
+    .room-header {
+      display: flex;
+      align-items: baseline;
+      gap: 24px;
+      margin-bottom: 72px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--cream);
+      position: relative;
+    }
+
+    .room-header::before {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 0;
+      width: 80px; height: 2px;
+      background: var(--tan);
+    }
+
+    .room-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 60px;
+      font-weight: 300;
+      color: var(--cream);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      user-select: none;
+    }
+
+    .room-title-group { flex: 1; }
+
+    .room-label {
+      font-size: 9px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--tan);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .room-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 400;
+      color: var(--ink);
+      letter-spacing: 0.02em;
+      line-height: 1.1;
+    }
+
+    .room-subtitle {
+      font-size: 13px;
+      color: var(--tan);
+      letter-spacing: 0.1em;
+      margin-top: 4px;
+      font-style: italic;
+    }
+
+    /* ─── ARTWORK FRAME ─── */
+    .artwork-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 72px 56px;
+    }
+
+    .artwork-grid--single {
+      grid-template-columns: 1fr;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .artwork-grid--two {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .artwork-item {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .artwork-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* THE FRAME */
+    .frame {
+      position: relative;
+      background: var(--frame);
+      padding: 10px;
+      box-shadow:
+        /* inner shine */
+        inset 0 1px 0 rgba(255,255,255,0.06),
+        inset 0 -1px 0 rgba(0,0,0,0.2),
+        /* outer shadow — gallery wall */
+        2px 2px 0 #1a1a1a,
+        6px 6px 0 rgba(26,26,26,0.4),
+        10px 14px 20px rgba(0,0,0,0.28),
+        18px 24px 50px rgba(0,0,0,0.16),
+        /* subtle ambient glow */
+        0 0 60px rgba(0,0,0,0.08);
+      transition: box-shadow 0.4s ease, transform 0.4s ease;
+      cursor: default;
+    }
+
+    .frame:hover {
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        inset 0 -1px 0 rgba(0,0,0,0.2),
+        2px 2px 0 #1a1a1a,
+        6px 6px 0 rgba(26,26,26,0.4),
+        12px 18px 28px rgba(0,0,0,0.34),
+        22px 32px 60px rgba(0,0,0,0.20),
+        0 0 80px rgba(196,30,30,0.06),
+        0 0 140px rgba(160,136,80,0.08);
+      transform: translateY(-3px) translateX(-2px);
+    }
+
+    /* frame inner edge detail */
+    .frame::before {
+      content: '';
+      position: absolute;
+      inset: 4px;
+      border: 1px solid rgba(255,255,255,0.07);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .frame-mat {
+      background: var(--mat);
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* faint spotlight cone on mat */
+    .frame-mat::before {
+      content: '';
+      position: absolute;
+      top: -30%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120%;
+      height: 160%;
+      background: radial-gradient(ellipse 60% 50% at 50% 0%,
+        rgba(255,255,255,0.45) 0%,
+        rgba(255,255,255,0.15) 35%,
+        transparent 65%);
+      pointer-events: none;
+    }
+
+    .frame-content {
+      background: var(--wall);
+      padding: 32px 28px;
+      position: relative;
+      z-index: 1;
+      min-height: 120px;
+    }
+
+    /* ─── EXHIBIT LABEL ─── */
+    .exhibit-label {
+      margin-top: 20px;
+      padding: 16px 0 0;
+      border-top: 1px solid var(--cream);
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .audio-number {
+      flex-shrink: 0;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 1px solid var(--tan);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 13px;
+      color: var(--tan);
+      line-height: 1;
+      margin-top: 2px;
+    }
+
+    .exhibit-label__body { flex: 1; }
+
+    .exhibit-label__title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .exhibit-label__institution {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--tan);
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    .exhibit-label__date {
+      font-size: 11px;
+      color: var(--light-tan);
+      letter-spacing: 0.08em;
+    }
+
+    .exhibit-label__medium {
+      font-size: 11px;
+      font-style: italic;
+      color: var(--light-tan);
+      margin-top: 4px;
+    }
+
+    /* ─── FRAME CONTENT TYPOGRAPHY ─── */
+    .frame-content h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    .frame-content p {
+      font-size: 14px;
+      color: #3a3a3a;
+      line-height: 1.75;
+      margin-bottom: 10px;
+    }
+
+    .frame-content p:last-child { margin-bottom: 0; }
+
+    .frame-content .period-badge {
+      display: inline-block;
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--wall);
+      background: var(--frame);
+      padding: 3px 10px;
+      margin-bottom: 14px;
+      font-weight: 600;
+    }
+
+    .frame-content ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .frame-content ul li {
+      font-size: 13.5px;
+      color: #3a3a3a;
+      line-height: 1.7;
+      padding: 6px 0 6px 18px;
+      position: relative;
+      border-bottom: 1px solid rgba(232,224,208,0.5);
+    }
+
+    .frame-content ul li:last-child { border-bottom: none; }
+
+    .frame-content ul li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--tan);
+      font-weight: 300;
+    }
+
+    .frame-content .link-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .frame-content a {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--tan);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(139,115,85,0.35);
+      padding-bottom: 1px;
+      font-weight: 600;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .frame-content a:hover {
+      color: var(--red);
+      border-color: var(--red);
+    }
+
+    .presentation-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: var(--tan);
+      background: rgba(139,115,85,0.08);
+      border: 1px solid rgba(139,115,85,0.2);
+      padding: 3px 10px;
+      margin: 4px 4px 4px 0;
+    }
+
+    .award-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      background: rgba(160,136,80,0.08);
+      border: 1px solid rgba(160,136,80,0.3);
+      padding: 3px 10px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    /* ─── OBRA DESTACADA (featured project) ─── */
+    .obra-destacada {
+      position: relative;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .obra-label {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .obra-label__text {
+      display: inline-block;
+      font-size: 9px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--wall);
+      background: var(--red);
+      padding: 5px 20px;
+      font-weight: 600;
+    }
+
+    .obra-frame {
+      background: var(--frame);
+      padding: 14px;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.06),
+        inset 0 -1px 0 rgba(0,0,0,0.2),
+        0 0 0 1px rgba(160,136,80,0.4),
+        4px 4px 0 #1a1a1a,
+        8px 8px 0 rgba(26,26,26,0.4),
+        14px 20px 40px rgba(0,0,0,0.35),
+        28px 40px 80px rgba(0,0,0,0.18),
+        0 0 100px rgba(160,136,80,0.08);
+      transition: box-shadow 0.4s, transform 0.4s;
+    }
+
+    .obra-frame:hover {
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        inset 0 -1px 0 rgba(0,0,0,0.2),
+        0 0 0 1px rgba(160,136,80,0.55),
+        4px 4px 0 #1a1a1a,
+        8px 8px 0 rgba(26,26,26,0.4),
+        16px 24px 50px rgba(0,0,0,0.4),
+        32px 48px 90px rgba(0,0,0,0.20),
+        0 0 120px rgba(160,136,80,0.14);
+      transform: translateY(-4px) translateX(-2px);
+    }
+
+    /* gold inner edge */
+    .obra-frame::before {
+      content: '';
+      position: absolute;
+      inset: 4px;
+      border: 1px solid rgba(160,136,80,0.3);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .obra-mat {
+      background: var(--mat);
+      padding: 36px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .obra-mat::before {
+      content: '';
+      position: absolute;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 130%;
+      height: 170%;
+      background: radial-gradient(ellipse 65% 55% at 50% 0%,
+        rgba(255,255,255,0.55) 0%,
+        rgba(255,255,255,0.2) 35%,
+        transparent 65%);
+      pointer-events: none;
+    }
+
+    .obra-content {
+      background: var(--wall);
+      padding: 40px 36px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 32px;
+      align-items: start;
+      position: relative;
+      z-index: 1;
+    }
+
+    .obra-content h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 30px;
+      font-weight: 400;
+      color: var(--ink);
+      margin-bottom: 8px;
+      line-height: 1.1;
+    }
+
+    .obra-content .year-tag {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--tan);
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .obra-content p {
+      font-size: 15px;
+      color: #3a3a3a;
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+
+    .tech-catalog {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 24px;
+    }
+
+    .tech-pill {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--tan);
+      border: 1px solid rgba(139,115,85,0.35);
+      padding: 4px 12px;
+      font-weight: 600;
+    }
+
+    .obra-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--wall);
+      background: var(--frame);
+      padding: 11px 24px;
+      text-decoration: none;
+      font-weight: 600;
+      border: 1px solid transparent;
+      transition: background 0.25s, border-color 0.25s, color 0.25s;
+    }
+
+    .obra-cta:hover {
+      background: var(--red);
+      border-color: var(--red);
+      color: var(--wall) !important;
+    }
+
+    .obra-accession {
+      text-align: right;
+      min-width: 120px;
+    }
+
+    .obra-accession__number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 42px;
+      font-weight: 300;
+      color: var(--cream);
+      line-height: 1;
+      display: block;
+    }
+
+    .obra-accession__label {
+      font-size: 9px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--light-tan);
+      display: block;
+      margin-top: 4px;
+    }
+
+    /* ─── COLLECTION CATALOG (Skills) ─── */
+    .collection-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 28px;
+    }
+
+    .catalog-item {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .catalog-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .catalog-frame {
+      background: var(--frame);
+      padding: 6px;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.05),
+        2px 3px 6px rgba(0,0,0,0.22),
+        4px 6px 18px rgba(0,0,0,0.12);
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+
+    .catalog-frame:hover {
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.07),
+        3px 5px 10px rgba(0,0,0,0.28),
+        6px 10px 28px rgba(0,0,0,0.16),
+        0 0 30px rgba(139,115,85,0.08);
+      transform: translateY(-3px) translateX(-1px);
+    }
+
+    .catalog-mat {
+      background: var(--mat);
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .catalog-mat::before {
+      content: '';
+      position: absolute;
+      top: -40%; left: 50%;
+      transform: translateX(-50%);
+      width: 120%; height: 120%;
+      background: radial-gradient(ellipse 70% 60% at 50% 0%,
+        rgba(255,255,255,0.4) 0%,
+        transparent 60%);
+      pointer-events: none;
+    }
+
+    .catalog-inner {
+      background: var(--wall);
+      padding: 18px 14px 14px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .catalog-icon {
+      font-size: 22px;
+      display: block;
+      margin-bottom: 10px;
+      line-height: 1;
+    }
+
+    .catalog-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .catalog-type {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--tan);
+      font-weight: 600;
+    }
+
+    /* skills section separator */
+    .skill-category-label {
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--tan);
+      font-weight: 600;
+      padding: 12px 0 16px;
+      border-bottom: 1px solid var(--cream);
+      margin-bottom: 24px;
+      grid-column: 1 / -1;
+    }
+
+    /* ─── BIOGRAPHY PANEL (Education) ─── */
+    .biography-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 56px;
+      align-items: start;
+    }
+
+    /* ─── CERTIFICATE FRAMES ─── */
+    .cert-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 40px;
+    }
+
+    .cert-frame {
+      background: var(--frame);
+      padding: 7px;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.05),
+        2px 3px 8px rgba(0,0,0,0.22),
+        5px 8px 22px rgba(0,0,0,0.12);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.3s, transform 0.3s;
+    }
+
+    .cert-frame.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .cert-frame:hover {
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.07),
+        4px 6px 14px rgba(0,0,0,0.3),
+        8px 12px 34px rgba(0,0,0,0.16);
+      transform: translateY(-3px) translateX(-1px) !important;
+    }
+
+    .cert-mat {
+      background: var(--mat);
+      padding: 20px;
+    }
+
+    .cert-inner {
+      background: var(--wall);
+      padding: 24px 20px;
+      text-align: center;
+    }
+
+    .cert-year {
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--tan);
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .cert-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+
+    .cert-issuer {
+      font-size: 11px;
+      color: var(--light-tan);
+      margin-bottom: 14px;
+    }
+
+    .cert-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--tan) !important;
+      text-decoration: none !important;
+      border-bottom: 1px solid rgba(139,115,85,0.35) !important;
+      padding-bottom: 2px !important;
+      font-weight: 600;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .cert-link:hover {
+      color: var(--red) !important;
+      border-color: var(--red) !important;
+    }
+
+    /* ─── CONTACT / COLOPHON ─── */
+    .contact-section {
+      background: var(--ink);
+      padding: 100px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-section::before {
+      content: '';
+      position: absolute;
+      top: -10%; left: 50%;
+      transform: translateX(-50%);
+      width: 700px; height: 700px;
+      background: radial-gradient(ellipse 50% 45% at 50% 0%,
+        rgba(255,255,255,0.05) 0%,
+        transparent 65%);
+      pointer-events: none;
+    }
+
+    .contact-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .colophon-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .colophon-header__label {
+      font-size: 9px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--tan);
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .colophon-header__title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 42px;
+      font-weight: 300;
+      color: var(--cream);
+      letter-spacing: 0.04em;
+    }
+
+    .colophon-divider {
+      width: 120px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--tan), transparent);
+      margin: 20px auto 0;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 2px;
+      background: rgba(139,115,85,0.15);
+      border: 1px solid rgba(139,115,85,0.15);
+    }
+
+    .contact-card {
+      background: rgba(26,26,26,0.8);
+      padding: 32px 24px;
+      text-align: center;
+      transition: background 0.25s;
+    }
+
+    .contact-card:hover { background: rgba(44,44,44,0.9); }
+
+    .contact-card__icon {
+      font-size: 20px;
+      display: block;
+      margin-bottom: 12px;
+      color: var(--tan);
+    }
+
+    .contact-card__label {
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--tan);
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .contact-card__value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      color: var(--cream);
+      line-height: 1.4;
+    }
+
+    .contact-card a {
+      color: var(--cream) !important;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(232,224,208,0.2) !important;
+      padding-bottom: 1px !important;
+      font-size: inherit !important;
+      letter-spacing: normal !important;
+      font-weight: normal !important;
+      text-transform: none !important;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .contact-card a:hover {
+      color: var(--tan) !important;
+      border-color: var(--tan) !important;
+    }
+
+    .colophon-footer {
+      text-align: center;
+      margin-top: 64px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(139,115,85,0.2);
+    }
+
+    .colophon-footer__text {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      color: rgba(139,115,85,0.5);
+      text-transform: uppercase;
+    }
+
+    .colophon-footer__copy {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 13px;
+      color: rgba(240,235,226,0.3);
+      margin-top: 10px;
+      font-style: italic;
+    }
+
+    /* ─── DARK ROOM (spotlight section) ─── */
+    .dark-room {
+      background: #111;
+      padding: 100px 60px 120px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dark-room::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 800px; height: 100%;
+      background: radial-gradient(ellipse 60% 40% at 50% 0%,
+        rgba(255,255,255,0.06) 0%,
+        transparent 65%);
+      pointer-events: none;
+    }
+
+    .dark-room .room-number { color: rgba(139,115,85,0.2); }
+    .dark-room .room-label  { color: rgba(139,115,85,0.8); }
+    .dark-room .room-title  { color: var(--cream); }
+    .dark-room .room-subtitle { color: rgba(139,115,85,0.7); }
+    .dark-room .room-header { border-bottom-color: rgba(139,115,85,0.2); }
+    .dark-room .room-header::before { background: var(--red); }
+    .dark-room::after {
+      background: linear-gradient(to right, transparent, rgba(139,115,85,0.2), transparent);
+    }
+
+    /* ─── WALL HANGING WIRES ─── */
+    .wall-wire {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, transparent, rgba(139,115,85,0.3));
+      margin: 0 auto 0;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      .museum-nav { display: none; }
+      .museum-header { padding: 0 20px; }
+
+      .gallery-room,
+      .dark-room,
+      .contact-section { padding-left: 24px; padding-right: 24px; }
+
+      .gallery-room::after { left: 24px; right: 24px; }
+
+      .artwork-grid--two { grid-template-columns: 1fr; }
+      .biography-grid { grid-template-columns: 1fr; }
+
+      .obra-content {
+        grid-template-columns: 1fr;
+      }
+
+      .obra-accession { text-align: left; min-width: 0; }
+
+      .frame-mat { padding: 16px; }
+      .frame-content { padding: 20px 16px; }
+    }
+
+    @media (max-width: 600px) {
+      .collection-grid { grid-template-columns: repeat(2, 1fr); }
+      .cert-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .artwork-grid { grid-template-columns: 1fr; }
+      .entrance-placard__name { font-size: 36px; }
+    }
+
+    /* ─── FADE-IN ANIMATION ─── */
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .entrance-placard__institution,
+    .entrance-placard__name,
+    .entrance-placard__title,
+    .entrance-divider,
+    .entrance-placard__bio,
+    .entrance-badge,
+    .audio-guide-cue {
+      animation: fadeSlideIn 1s ease both;
+    }
+    .entrance-placard__institution { animation-delay: 0.1s; }
+    .entrance-placard__name        { animation-delay: 0.3s; }
+    .entrance-placard__title       { animation-delay: 0.5s; }
+    .entrance-divider              { animation-delay: 0.6s; }
+    .entrance-placard__bio         { animation-delay: 0.7s; }
+    .entrance-badge                { animation-delay: 0.9s; }
+    .audio-guide-cue               { animation-delay: 1.1s; }
+
+    /* presentation event rows */
+    .presentation-row {
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(232,224,208,0.4);
+    }
+    .presentation-row:last-child { border-bottom: none; }
+
+    .presentation-row__title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 5px;
+      line-height: 1.3;
+    }
+
+    .presentation-row__meta {
+      font-size: 11px;
+      color: var(--light-tan);
+      margin-bottom: 6px;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+      text-align: center;
+      animation: scrollPulse 2s ease infinite;
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.5; transform: translateX(-50%) translateY(0); }
+      50%       { opacity: 1; transform: translateX(-50%) translateY(6px); }
+    }
+
+    .scroll-hint span {
+      display: block;
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--tan);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .scroll-hint__arrow {
+      font-size: 18px;
+      color: var(--tan);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════
+       MUSEUM TOP BAR
+  ═════════════════════════════════════════════ -->
+  <header class="museum-header">
+    <div class="museum-header__name">
+      <span>Colección</span> · Diego Santibanez Oyarce
+    </div>
+    <nav>
+      <ul class="museum-nav">
+        <li><a href="#experiencia"><span class="nav-dot"></span>Galería I</a></li>
+        <li><a href="#proyecto"><span class="nav-dot"></span>Galería II</a></li>
+        <li><a href="#habilidades"><span class="nav-dot"></span>Galería III</a></li>
+        <li><a href="#educacion"><span class="nav-dot"></span>Galería IV</a></li>
+        <li><a href="#contacto"><span class="nav-dot"></span>Información</a></li>
+      </ul>
+    </nav>
+    <div class="museum-header__logo">Colección Permanente · 2025</div>
+  </header>
+
+  <main>
+
+    <!-- ══════════════════════════════════════════
+         ENTRANCE HALL
+    ═════════════════════════════════════════════ -->
+    <section class="entrance-hall" id="inicio">
+      <div class="entrance-placard">
+        <div class="entrance-placard__institution">Colección Permanente &nbsp;·&nbsp; Ciencias de Datos &nbsp;·&nbsp; 2020–2025</div>
+        <h1 class="entrance-placard__name">Diego Santibanez<br>Oyarce</h1>
+        <div class="entrance-placard__title">Científico de Datos</div>
+        <div class="entrance-divider"></div>
+        <p class="entrance-placard__bio">
+          Egresado de Ingeniería Civil en Ciencia de Datos en agosto 2025, apasionado por la tecnología
+          y con un gran interés en el uso de la inteligencia artificial como herramienta para la resolución
+          de problemas del mundo real. Su formación académica le proporcionó una sólida comprensión de
+          algoritmos de aprendizaje automático, análisis y visualización de datos. Le gusta proponerse
+          desafíos donde pueda poner en práctica sus conocimientos y donde pueda aprender cosas nuevas.
+        </p>
+        <div class="entrance-badge">Exposición Retrospectiva &nbsp;·&nbsp; Temporada 2025</div>
+        <div class="audio-guide-cue">① Comience su recorrido desplazándose hacia abajo</div>
+      </div>
+      <div class="scroll-hint">
+        <span>Galería I</span>
+        <div class="scroll-hint__arrow">↓</div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         GALLERY I — EXPERIENCIA
+    ═════════════════════════════════════════════ -->
+    <section class="gallery-room" id="experiencia">
+      <div class="room-header">
+        <div class="room-number">I</div>
+        <div class="room-title-group">
+          <div class="room-label">Sala de Exposición Permanente</div>
+          <h2 class="room-title">Trayectoria Profesional</h2>
+          <div class="room-subtitle">Obras de la colección personal, 2023–2025</div>
+        </div>
+      </div>
+
+      <div class="artwork-grid">
+
+        <!-- Artwork 1: Asistente de Investigación -->
+        <div class="artwork-item">
+          <div class="wall-wire"></div>
+          <div class="frame">
+            <div class="frame-mat">
+              <div class="frame-content">
+                <span class="period-badge">Dic 2023 — Sep 2025</span>
+                <h3>Investigación en Ciencias de Datos y Salud</h3>
+                <p>Participación activa en proyectos de investigación interdisciplinaria, representando a la institución en congresos nacionales e internacionales con presentaciones de alto impacto.</p>
+                <div style="margin-top:14px;">
+                  <div class="presentation-row">
+                    <div class="presentation-row__title">1ras Jornadas Ciencia de Datos y Salud Pública</div>
+                    <div class="presentation-row__meta">Póster · Enero 2024</div>
+                    <div class="link-row">
+                      <a href="https://drive.google.com/file/d/124VDD5x6pBidyC1Wx4ZLehAQixdjZ9dS/view?usp=sharing" target="_blank">Certificado</a>
+                      <a href="https://drive.google.com/file/d/1gRjnIt9xa5CYPhbgGFTKR1o5WV3RB8H6/view?usp=drive_link" target="_blank">Póster</a>
+                    </div>
+                  </div>
+                  <div class="presentation-row">
+                    <div class="presentation-row__title">CARLA 2024 — Flash Talk + Póster</div>
+                    <div class="presentation-row__meta">Congreso Internacional · Septiembre 2024</div>
+                    <div class="link-row">
+                      <a href="https://drive.google.com/file/d/1jHc_2fZiakh2G9t8EkiB7Z3l0iuWBJ7n/view?usp=sharing" target="_blank">Certificado</a>
+                      <a href="https://drive.google.com/file/d/1jfS4S75dwoBnUMZ3xeQOFfBzX6HP5gpc/view?usp=drive_link" target="_blank">Póster</a>
+                    </div>
+                  </div>
+                  <div class="presentation-row">
+                    <div class="presentation-row__title">III Congreso Vive la Investigación</div>
+                    <div class="presentation-row__meta">Póster · Octubre 2024</div>
+                    <div class="link-row">
+                      <a href="https://drive.google.com/file/d/1unqW5oOxe5wl84-vmq4Y8AhXmD1sJJL_/view?usp=sharing" target="_blank">Certificado</a>
+                      <a href="https://drive.google.com/file/d/1OEKXi8gl7Z9bGySQ8esoomkDJLPiBLCE/view?usp=drive_link" target="_blank">Póster</a>
+                    </div>
+                  </div>
+                  <div class="presentation-row">
+                    <div class="presentation-row__title">XIV Congreso Argentino de Bioinformática</div>
+                    <div class="presentation-row__meta">Póster · Noviembre 2024</div>
+                    <div class="link-row">
+                      <a href="https://drive.google.com/file/d/1br_Vv35RmHxvyPScFlhDCJxucFz0ckii/view?usp=sharing" target="_blank">Certificado</a>
+                      <a href="https://drive.google.com/file/d/1wLUe3ssEY_XcOgoTbVJj0B5C7plK-G9n/view?usp=drive_link" target="_blank">Póster</a>
+                    </div>
+                  </div>
+                  <div class="presentation-row">
+                    <div class="presentation-row__title">III Reunión Soc. Chilena de Bioinformática — Flash Talk</div>
+                    <div class="presentation-row__meta">Noviembre 2024 · Invitación a publicar en Bioinformatics Advances (Oxford)</div>
+                    <div class="link-row">
+                      <a href="https://drive.google.com/file/d/1-dZ_CdZlYkd58OlGr3v92n8pLshnurje/view?usp=sharing" target="_blank">Certificado</a>
+                    </div>
+                  </div>
+                  <div class="presentation-row">
+                    <div class="presentation-row__title">CARLA 2025 — Póster</div>
+                    <div class="presentation-row__meta">Septiembre 2025</div>
+                    <div style="margin-bottom:6px;"><span class="award-tag">★ Premio al Mejor Póster</span></div>
+                    <div class="link-row">
+                      <a href="https://drive.google.com/file/d/10tcRQonSWMgKQ8FciWOsCobzQAlWCPr9/view?usp=sharing" target="_blank">Certificado</a>
+                      <a href="https://drive.google.com/file/d/1M_MhsoB8BCUO5LITTVvQw0Hi9l7RU4Vj/view?usp=sharing" target="_blank">Premio</a>
+                      <a href="https://drive.google.com/file/d/14Fc9u_zCtxiKG7RKW3W85Rv6X4OJy5HP/view?usp=drive_link" target="_blank">Póster</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="exhibit-label">
+            <div class="audio-number">①</div>
+            <div class="exhibit-label__body">
+              <div class="exhibit-label__title">Asistente de Investigación</div>
+              <div class="exhibit-label__institution">Universidad Tecnológica Metropolitana · UTEM</div>
+              <div class="exhibit-label__date">Diciembre 2023 — Septiembre 2025</div>
+              <div class="exhibit-label__medium">Investigación. Bioinformática, Machine Learning, 2023–2025</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Artwork 2: Técnico Análisis de Datos -->
+        <div class="artwork-item">
+          <div class="wall-wire"></div>
+          <div class="frame">
+            <div class="frame-mat">
+              <div class="frame-content">
+                <span class="period-badge">Feb — Sep 2025</span>
+                <h3>Análisis de Datos Avanzado</h3>
+                <p>Desarrollo de soluciones analíticas de alto rendimiento, combinando extracción automatizada de datos, visualización interactiva y gestión de bases de datos relacionales.</p>
+                <ul>
+                  <li>Web scraping automatizado con Python para recolección masiva de datos</li>
+                  <li>Construcción de dashboards interactivos con Plotly y Streamlit</li>
+                  <li>Administración de bases de datos MariaDB y PostgreSQL</li>
+                  <li>Procesamiento de lenguaje natural (NLP) aplicado a datos textuales</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="exhibit-label">
+            <div class="audio-number">②</div>
+            <div class="exhibit-label__body">
+              <div class="exhibit-label__title">Técnico en Análisis de Datos Avanzado</div>
+              <div class="exhibit-label__institution">Universidad Tecnológica Metropolitana · UTEM</div>
+              <div class="exhibit-label__date">Febrero — Septiembre 2025</div>
+              <div class="exhibit-label__medium">Técnica mixta. Python, SQL, NLP, Visualización, 2025</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Artwork 3: Ayudante Cátedra -->
+        <div class="artwork-item">
+          <div class="wall-wire"></div>
+          <div class="frame">
+            <div class="frame-mat">
+              <div class="frame-content">
+                <span class="period-badge">Mar — Jul 2025</span>
+                <h3>Mentoría en Visualización de Datos</h3>
+                <p>Apoyo académico directo a estudiantes en el desarrollo de competencias para la representación visual efectiva de información, fomentando la comprensión crítica de los datos.</p>
+                <ul>
+                  <li>Mentoría personalizada a estudiantes de la cátedra</li>
+                  <li>Resolución de dudas y guía en proyectos de visualización</li>
+                  <li>Evaluación de trabajos prácticos</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="exhibit-label">
+            <div class="audio-number">③</div>
+            <div class="exhibit-label__body">
+              <div class="exhibit-label__title">Ayudante de Cátedra — Visualización de Datos</div>
+              <div class="exhibit-label__institution">Universidad Tecnológica Metropolitana · UTEM</div>
+              <div class="exhibit-label__date">Marzo — Julio 2025</div>
+              <div class="exhibit-label__medium">Pedagogía aplicada. Docencia, Mentoría, 2025</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Artwork 4: Practicante -->
+        <div class="artwork-item">
+          <div class="wall-wire"></div>
+          <div class="frame">
+            <div class="frame-mat">
+              <div class="frame-content">
+                <span class="period-badge">Ago 2024 — Ene 2025</span>
+                <h3>Práctica Profesional en Gobierno Digital</h3>
+                <p>Inserción en el entorno de gestión pública digital, trabajando con infraestructuras de datos críticas y herramientas de análisis a escala institucional.</p>
+                <ul>
+                  <li>Consultas y procesamiento de datos con Impala y Oracle</li>
+                  <li>Automatización de procesos con Python y SQL</li>
+                  <li>Análisis de datos en contexto de auditoría gubernamental</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="exhibit-label">
+            <div class="audio-number">④</div>
+            <div class="exhibit-label__body">
+              <div class="exhibit-label__title">Practicante Profesional</div>
+              <div class="exhibit-label__institution">Contraloría General de la República</div>
+              <div class="exhibit-label__date">Agosto 2024 — Enero 2025</div>
+              <div class="exhibit-label__medium">Práctica institucional. SQL, Python, Impala, Oracle, 2024–2025</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         GALLERY II — OBRA DESTACADA (Project)
+    ═════════════════════════════════════════════ -->
+    <section class="dark-room" id="proyecto">
+      <div class="room-header">
+        <div class="room-number">II</div>
+        <div class="room-title-group">
+          <div class="room-label">Sala de Obra Destacada</div>
+          <h2 class="room-title">Proyecto Principal</h2>
+          <div class="room-subtitle">Obra de mayor relevancia de la colección</div>
+        </div>
+      </div>
+
+      <div class="obra-destacada artwork-item">
+        <div class="obra-label">
+          <span class="obra-label__text">OBRA DESTACADA · Pieza Central de la Colección</span>
+        </div>
+        <div style="position:relative;">
+          <div class="obra-frame">
+            <div class="obra-mat">
+              <div class="obra-content">
+                <div>
+                  <div class="year-tag">2025 · Dashboard Interactivo</div>
+                  <h3>Dashboard de Avance de Proyecto</h3>
+                  <p>
+                    Plataforma de visualización interactiva desarrollada para el seguimiento y análisis
+                    del avance de proyectos en tiempo real. Integra múltiples fuentes de datos con
+                    capacidades geoespaciales y analíticas avanzadas, permitiendo la toma de decisiones
+                    basada en datos de manera eficiente e intuitiva.
+                  </p>
+                  <div class="tech-catalog">
+                    <span class="tech-pill">Python</span>
+                    <span class="tech-pill">Streamlit</span>
+                    <span class="tech-pill">Pandas</span>
+                    <span class="tech-pill">Plotly</span>
+                    <span class="tech-pill">DuckDB</span>
+                    <span class="tech-pill">Folium</span>
+                  </div>
+                  <a href="https://dashboarddatalake-fiut-utem.streamlit.app/" target="_blank" class="obra-cta">
+                    ↗ &nbsp; Ver Obra en Línea
+                  </a>
+                </div>
+                <div class="obra-accession">
+                  <span class="obra-accession__number">2025</span>
+                  <span class="obra-accession__label">Año de creación</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="exhibit-label" style="max-width:900px; margin:20px auto 0; padding-top:20px; border-top: 1px solid rgba(139,115,85,0.25);">
+          <div class="audio-number" style="border-color:var(--tan); color:var(--tan);">⑤</div>
+          <div class="exhibit-label__body">
+            <div class="exhibit-label__title" style="color:var(--cream);">Dashboard de Avance de Proyecto</div>
+            <div class="exhibit-label__institution">Proyecto Personal · UTEM</div>
+            <div class="exhibit-label__date" style="color:rgba(184,168,152,0.7);">2025</div>
+            <div class="exhibit-label__medium" style="color:rgba(184,168,152,0.6);">Desarrollo de software. Python, Streamlit, Visualización geoespacial, 2025</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         GALLERY III — HABILIDADES
+    ═════════════════════════════════════════════ -->
+    <section class="gallery-room" id="habilidades">
+      <div class="room-header">
+        <div class="room-number">III</div>
+        <div class="room-title-group">
+          <div class="room-label">Catálogo de la Colección</div>
+          <h2 class="room-title">Habilidades &amp; Competencias</h2>
+          <div class="room-subtitle">Inventario completo de herramientas y técnicas, 2020–2025</div>
+        </div>
+      </div>
+
+      <div class="collection-grid">
+        <div class="skill-category-label">Habilidades Técnicas — Hard Skills</div>
+
+        <!-- Hard Skills -->
+        <div class="catalog-item">
+          <div class="catalog-frame">
+            <div class="catalog-mat">
+              <div class="catalog-inner">
+                <span class="catalog-icon">🐍</span>
+                <div class="catalog-name">Python</div>
+                <div class="catalog-type">Lenguaje · Principal</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="catalog-item">
+          <div class="catalog-frame">
+            <div class="catalog-mat">
+              <div class="catalog-inner">
+                <span class="catalog-icon">🗄️</span>
+                <div class="catalog-name">SQL</div>
+                <div class="catalog-type">Lenguaje · Datos</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="catalog-item">
+          <div class="catalog-frame">
+            <div class="catalog-mat">
+              <div class="catalog-inner">
+                <span class="catalog-icon">🧠</span>
+                <div class="catalog-name">TensorFlow</div>
+                <div class="catalog-type">Framework · ML</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="catalog-item">
+          <div class="catalog-frame">
+            <div class="catalog-mat">
+              <div class="catalog-inner">
+                <span class="catalog-icon">⚙️</span>
+                <div class="catalog-name">scikit-learn</div>
+                <div class="catalog-type">Librería · ML</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="catalog-item">
+          <div class="catalog-frame">
+            <div class="catalog-mat">
+              <div class="catalog-inner">
+                <span class="catalog-icon">🐼</span>
+                <div class="catalog-name">Pandas</div>
+                <div class="catalog-type">Librería · Análisis</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="catalog-item">
+          <div class="catalog-frame">
+            <div class="catalog-mat">
+              <div class="catalog-inner">
+                <span class="catalog-icon">📓</span>
+                <div class="catalog-name">Jupyter Notebooks</div>
+                <div class="catalog-type">Entorno · Exploración</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="catalog-item">
+          <div class="catalog-frame">
+            <div class="catalog-mat">
+              <div class="catalog-inner">
+                <span class="catalog-icon">📊</span>
+                <div class="catalog-name">Visualización de Datos</div>
+                <div class="catalog-type">Competencia · Análisis</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="catalog-item">
+          <div class="catalog-frame">
+            <div class="catalog-mat">
+              <div class="catalog-inner">
+                <span class="catalog-icon">📈</span>
+                <div class="catalog-name">Plotly</div>
+                <div class="catalog-type">Librería · Visualización</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="catalog-item">
+          <div class="catalog-frame">
+            <div class="catalog-mat">
+              <div class="catalog-inner">
+                <span class="catalog-icon">🌊</span>
+                <div class="catalog-name">Streamlit</div>
+                <div class="catalog-type">Framework · Apps</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="catalog-item">
+          <div class="catalog-frame">
+            <div class="catalog-mat">
+              <div class="catalog-inner">
+                <span class="catalog-icon">🕸️</span>
+                <div class="catalog-name">Web Scraping</div>
+                <div class="catalog-type">Técnica · Extracción</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="catalog-item">
+          <div class="catalog-frame">
+            <div class="catalog-mat">
+              <div class="catalog-inner">
+                <span class="catalog-icon">🐘</span>
+                <div class="catalog-name">PostgreSQL</div>
+                <div class="catalog-type">Base de Datos · Relacional</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="catalog-item">
+          <div class="catalog-frame">
+            <div class="catalog-mat">
+              <div class="catalog-inner">
+                <span class="catalog-icon">🔵</span>
+                <div class="catalog-name">MariaDB</div>
+                <div class="catalog-type">Base de Datos · Relacional</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="catalog-item">
+          <div class="catalog-frame">
+            <div class="catalog-mat">
+              <div class="catalog-inner">
+                <span class="catalog-icon">💬</span>
+                <div class="catalog-name">SpaCy</div>
+                <div class="catalog-type">Librería · NLP</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Soft Skills divider -->
+        <div class="skill-category-label" style="margin-top:20px;">Habilidades Interpersonales — Soft Skills</div>
+
+        <div class="catalog-item">
+          <div class="catalog-frame">
+            <div class="catalog-mat">
+              <div class="catalog-inner">
+                <span class="catalog-icon">🔍</span>
+                <div class="catalog-name">Resolución de Problemas</div>
+                <div class="catalog-type">Competencia</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="catalog-item">
+          <div class="catalog-frame">
+            <div class="catalog-mat">
+              <div class="catalog-inner">
+                <span class="catalog-icon">🧩</span>
+                <div class="catalog-name">Pensamiento Crítico</div>
+                <div class="catalog-type">Competencia</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="catalog-item">
+          <div class="catalog-frame">
+            <div class="catalog-mat">
+              <div class="catalog-inner">
+                <span class="catalog-icon">🌱</span>
+                <div class="catalog-name">Adaptabilidad</div>
+                <div class="catalog-type">Competencia</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="catalog-item">
+          <div class="catalog-frame">
+            <div class="catalog-mat">
+              <div class="catalog-inner">
+                <span class="catalog-icon">🎓</span>
+                <div class="catalog-name">Mentoría</div>
+                <div class="catalog-type">Competencia</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="catalog-item">
+          <div class="catalog-frame">
+            <div class="catalog-mat">
+              <div class="catalog-inner">
+                <span class="catalog-icon">💡</span>
+                <div class="catalog-name">Curiosidad Intelectual</div>
+                <div class="catalog-type">Competencia</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="catalog-item">
+          <div class="catalog-frame">
+            <div class="catalog-mat">
+              <div class="catalog-inner">
+                <span class="catalog-icon">✅</span>
+                <div class="catalog-name">Responsabilidad</div>
+                <div class="catalog-type">Competencia</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="catalog-item">
+          <div class="catalog-frame">
+            <div class="catalog-mat">
+              <div class="catalog-inner">
+                <span class="catalog-icon">🔬</span>
+                <div class="catalog-name">Mentalidad Experimental</div>
+                <div class="catalog-type">Competencia</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="catalog-item">
+          <div class="catalog-frame">
+            <div class="catalog-mat">
+              <div class="catalog-inner">
+                <span class="catalog-icon">📐</span>
+                <div class="catalog-name">Mentalidad Analítica</div>
+                <div class="catalog-type">Competencia</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         GALLERY IV — EDUCACIÓN & CERTIFICADOS
+    ═════════════════════════════════════════════ -->
+    <section class="gallery-room" id="educacion" style="background:#f4f1eb;">
+      <div class="room-header">
+        <div class="room-number">IV</div>
+        <div class="room-title-group">
+          <div class="room-label">Formación del Artista · Sala Biográfica</div>
+          <h2 class="room-title">Educación &amp; Certificados</h2>
+          <div class="room-subtitle">Historia académica y reconocimientos institucionales</div>
+        </div>
+      </div>
+
+      <!-- Biography panel -->
+      <div class="biography-grid" style="margin-bottom:72px;">
+
+        <div class="artwork-item">
+          <div class="wall-wire"></div>
+          <div class="frame">
+            <div class="frame-mat">
+              <div class="frame-content">
+                <span class="period-badge">2020 — 2025</span>
+                <h3>Ingeniería Civil en Ciencia de Datos</h3>
+                <p>
+                  Título de Ingeniero Civil con especialización en Ciencia de Datos, egresado en agosto de 2025.
+                  Durante cinco años de formación rigurosa, desarrolló experticia en algoritmos de aprendizaje
+                  automático, análisis estadístico, visualización de datos y gestión de sistemas de información.
+                </p>
+                <p>
+                  La carrera integra matemáticas aplicadas, programación avanzada, inteligencia artificial
+                  y aplicaciones industriales, preparando profesionales capaces de enfrentar los desafíos
+                  del mundo real a través del análisis inteligente de datos.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="exhibit-label">
+            <div class="audio-number">⑥</div>
+            <div class="exhibit-label__body">
+              <div class="exhibit-label__title">Ingeniero Civil en Ciencia de Datos</div>
+              <div class="exhibit-label__institution">Universidad Tecnológica Metropolitana · UTEM</div>
+              <div class="exhibit-label__date">2020 — 2025 · Egresado Agosto 2025</div>
+              <div class="exhibit-label__medium">Formación académica. Ingeniería, Ciencia de Datos, 2020–2025</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Credentials panel -->
+        <div class="artwork-item">
+          <div class="wall-wire"></div>
+          <div class="frame">
+            <div class="frame-mat">
+              <div class="frame-content">
+                <h3 style="margin-bottom:18px;">Distinciones &amp; Reconocimientos</h3>
+                <ul>
+                  <li>Premio al Mejor Póster — CARLA 2025 (Congreso Latinoamericano de Aprendizaje Automático)</li>
+                  <li>Invitación a publicar en Bioinformatics Advances — Oxford University Press (2024)</li>
+                  <li>Representación institucional en 6 congresos nacionales e internacionales</li>
+                  <li>Colaboración activa en proyectos de investigación interdisciplinaria con impacto en salud pública</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="exhibit-label">
+            <div class="audio-number">⑦</div>
+            <div class="exhibit-label__body">
+              <div class="exhibit-label__title">Reconocimientos Académicos y Profesionales</div>
+              <div class="exhibit-label__institution">Varios organismos · 2024–2025</div>
+              <div class="exhibit-label__date">2024 — 2025</div>
+              <div class="exhibit-label__medium">Colección de distinciones. Investigación, Excelencia académica</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Certificates -->
+      <div style="margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid var(--cream);">
+        <div class="room-label" style="font-size:9px; letter-spacing:0.35em;">Sala de Credenciales — Certificados &amp; Cursos</div>
+      </div>
+
+      <div class="cert-grid">
+
+        <div class="cert-frame">
+          <div class="cert-mat">
+            <div class="cert-inner">
+              <div class="cert-year">2025</div>
+              <div class="cert-title">Power BI</div>
+              <div class="cert-issuer">Santander X</div>
+              <a href="https://drive.google.com/file/d/1IOp4gjfLcW8XhqbiwwOd9dzlz8l60P5q/view?usp=drive_link" target="_blank" class="cert-link">↗ Ver Certificado</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="cert-frame">
+          <div class="cert-mat">
+            <div class="cert-inner">
+              <div class="cert-year">2025</div>
+              <div class="cert-title">Inglés B2</div>
+              <div class="cert-issuer">Certificación de Nivel</div>
+              <a href="https://drive.google.com/file/d/1KT12-fKSs20wCu_AO6c6nEHYi5_v0mK1/view?usp=sharing" target="_blank" class="cert-link">↗ Ver Certificado</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="cert-frame">
+          <div class="cert-mat">
+            <div class="cert-inner">
+              <div class="cert-year">2024</div>
+              <div class="cert-title">AWS Data Center Technician</div>
+              <div class="cert-issuer">Amazon Web Services</div>
+              <a href="https://drive.google.com/file/d/1pYCaTdbJQAmruxvoknp92QbIys4Bt7Ws/view?usp=sharing" target="_blank" class="cert-link">↗ Ver Certificado</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="cert-frame">
+          <div class="cert-mat">
+            <div class="cert-inner">
+              <div class="cert-year">2025</div>
+              <div class="cert-title">Introducción a Ciencia de Datos</div>
+              <div class="cert-issuer">Santander Open Academy</div>
+              <a href="https://drive.google.com/file/d/1vmeQuzoZEwUTC0Pz7Xl_rlobqXcreX5w/view?usp=sharing" target="_blank" class="cert-link">↗ Ver Certificado</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         CONTACT / COLOPHON
+    ═════════════════════════════════════════════ -->
+    <section class="contact-section" id="contacto">
+      <div class="contact-inner">
+        <div class="colophon-header">
+          <div class="colophon-header__label">Información del Visitante · Área de Atención</div>
+          <h2 class="colophon-header__title">Contacto</h2>
+          <div class="colophon-divider"></div>
+        </div>
+
+        <div class="contact-grid">
+          <div class="contact-card">
+            <span class="contact-card__icon">✉</span>
+            <span class="contact-card__label">Correo Electrónico</span>
+            <div class="contact-card__value">
+              <a href="mailto:dsantibanezo@utem.cl" target="_blank">dsantibanezo@utem.cl</a>
+            </div>
+          </div>
+          <div class="contact-card">
+            <span class="contact-card__icon">💼</span>
+            <span class="contact-card__label">LinkedIn</span>
+            <div class="contact-card__value">
+              <a href="https://www.linkedin.com/in/diego-santibanez-oyarce/" target="_blank">diego-santibanez-oyarce</a>
+            </div>
+          </div>
+          <div class="contact-card">
+            <span class="contact-card__icon">⌥</span>
+            <span class="contact-card__label">GitHub</span>
+            <div class="contact-card__value">
+              <a href="https://github.com/daso42" target="_blank">github.com/daso42</a>
+            </div>
+          </div>
+          <div class="contact-card">
+            <span class="contact-card__icon">☏</span>
+            <span class="contact-card__label">Teléfono</span>
+            <div class="contact-card__value">
+              <a href="tel:+56984341477">+56 9 8434 1477</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="colophon-footer">
+          <div class="colophon-footer__text">Colección Permanente · Universidad Tecnológica Metropolitana · Santiago de Chile</div>
+          <div class="colophon-footer__copy">Diego Santibanez Oyarce — Científico de Datos — Egresado 2025</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══════════════════════════════════════════
+       INTERSECTION OBSERVER — FADE IN
+  ═════════════════════════════════════════════ -->
+  <script>
+    // Fade-in for artwork items
+    const artworkObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          // stagger within a parent
+          const siblings = entry.target.parentElement.querySelectorAll('.artwork-item');
+          let delay = 0;
+          siblings.forEach((sib, idx) => {
+            if (sib === entry.target) delay = idx * 120;
+          });
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, delay);
+          artworkObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+    document.querySelectorAll('.artwork-item').forEach(el => artworkObserver.observe(el));
+
+    // Fade-in for catalog items
+    const catalogObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const siblings = Array.from(entry.target.parentElement.querySelectorAll('.catalog-item'));
+          const idx = siblings.indexOf(entry.target);
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, idx * 60);
+          catalogObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.catalog-item').forEach(el => catalogObserver.observe(el));
+
+    // Fade-in for cert frames
+    const certObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const siblings = Array.from(entry.target.parentElement.querySelectorAll('.cert-frame'));
+          const idx = siblings.indexOf(entry.target);
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, idx * 100);
+          certObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.cert-frame').forEach(el => certObserver.observe(el));
+
+    // Active nav link highlighting
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.museum-nav li a');
+
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => {
+            link.style.color = '';
+            link.querySelector('.nav-dot').style.background = '';
+          });
+          const activeLink = document.querySelector(`.museum-nav a[href="#${entry.target.id}"]`);
+          if (activeLink) {
+            activeLink.style.color = '#e8e0d0';
+            activeLink.querySelector('.nav-dot').style.background = '#8b7355';
+          }
+        }
+      });
+    }, { threshold: 0.4 });
+
+    sections.forEach(s => sectionObserver.observe(s));
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diego Santibanez Oyarce - Scrapbook Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --kraft: #f4ede4;
+  --dark: #2c2c2c;
+  --coral: #e85d4a;
+  --blue: #4a90d9;
+  --yellow: #f5c842;
+  --green: #7cb342;
+  --shadow: 2px 3px 8px rgba(0,0,0,0.15);
+  --shadow-hover: 4px 6px 16px rgba(0,0,0,0.22);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: var(--kraft);
+  color: var(--dark);
+  line-height: 1.6;
+  overflow-x: hidden;
+  background-image:
+    url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(0deg, transparent, transparent 30px, rgba(139,119,101,0.04) 30px, rgba(139,119,101,0.04) 31px);
+}
+
+/* ===== NAVIGATION - STICKY NOTES ===== */
+.nav-bar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 14px 10px 8px;
+  background: linear-gradient(180deg, var(--kraft) 60%, transparent);
+  backdrop-filter: blur(2px);
+}
+
+.nav-note {
+  display: inline-block;
+  padding: 8px 16px;
+  font-family: 'Caveat', cursive;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--dark);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  position: relative;
+}
+.nav-note::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #e0e0e0, #888);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+.nav-note:nth-child(1) { background: #fff9c4; transform: rotate(-3deg); }
+.nav-note:nth-child(2) { background: #c8e6c9; transform: rotate(2deg); }
+.nav-note:nth-child(3) { background: #bbdefb; transform: rotate(-1.5deg); }
+.nav-note:nth-child(4) { background: #ffe0b2; transform: rotate(2.5deg); }
+.nav-note:nth-child(5) { background: #f8bbd0; transform: rotate(-2deg); }
+.nav-note:nth-child(6) { background: #d1c4e9; transform: rotate(1.5deg); }
+.nav-note:hover {
+  transform: rotate(0deg) translateY(-3px) scale(1.07);
+  box-shadow: var(--shadow-hover);
+  z-index: 2;
+}
+
+/* ===== GENERAL LAYOUT ===== */
+.scrapbook {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 24px 60px;
+}
+
+section {
+  margin-bottom: 60px;
+  scroll-margin-top: 70px;
+}
+
+.section-title {
+  font-family: 'Caveat', cursive;
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 30px;
+  display: inline-block;
+  position: relative;
+  text-decoration: underline wavy var(--coral);
+  text-underline-offset: 6px;
+  text-decoration-thickness: 2px;
+}
+
+/* ===== CARD BASE ===== */
+.card {
+  background: #fffef9;
+  padding: 28px 30px;
+  border-radius: 3px;
+  box-shadow: var(--shadow);
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 26px;
+}
+.card:hover {
+  transform: rotate(0deg) translateY(-4px) !important;
+  box-shadow: var(--shadow-hover);
+}
+
+/* ===== TAPE STRIPS ===== */
+.tape-tl::before {
+  content: '';
+  position: absolute;
+  top: -8px; left: 14px;
+  width: 60px; height: 22px;
+  background: rgba(232,93,74,0.45);
+  transform: rotate(-18deg);
+  border-radius: 1px;
+  z-index: 2;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
+}
+.tape-tr::after {
+  content: '';
+  position: absolute;
+  top: -6px; right: 18px;
+  width: 55px; height: 20px;
+  background: rgba(74,144,217,0.4);
+  transform: rotate(12deg);
+  border-radius: 1px;
+  z-index: 2;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
+}
+.tape-bl::before {
+  content: '';
+  position: absolute;
+  bottom: -6px; left: 20px;
+  width: 50px; height: 18px;
+  background: rgba(124,179,66,0.45);
+  transform: rotate(15deg);
+  border-radius: 1px;
+  z-index: 2;
+}
+.tape-yellow::before {
+  content: '';
+  position: absolute;
+  top: -7px; left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 70px; height: 22px;
+  background: rgba(245,200,66,0.55);
+  border-radius: 1px;
+  z-index: 2;
+}
+
+/* ===== PUSH PIN ===== */
+.pin {
+  position: relative;
+}
+.pin::before {
+  content: '';
+  position: absolute;
+  top: -10px; left: 50%;
+  transform: translateX(-50%);
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 35%, #ff6f6f, #c62828);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.35), inset 0 -1px 2px rgba(0,0,0,0.2);
+  z-index: 5;
+}
+.pin-blue::before {
+  background: radial-gradient(circle at 38% 35%, #64b5f6, #1565c0);
+}
+.pin-green::before {
+  background: radial-gradient(circle at 38% 35%, #aed581, #558b2f);
+}
+.pin-yellow::before {
+  background: radial-gradient(circle at 38% 35%, #fff176, #f9a825);
+}
+
+/* ===== PAPER CLIP ===== */
+.paperclip {
+  position: relative;
+}
+.paperclip::after {
+  content: '';
+  position: absolute;
+  top: -12px; right: 30px;
+  width: 20px; height: 50px;
+  border: 3px solid #aaa;
+  border-radius: 10px 10px 0 0;
+  border-bottom: none;
+  z-index: 5;
+}
+
+/* ===== HERO / INICIO ===== */
+.hero-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.hero-card {
+  background: #fffef9;
+  padding: 36px 34px;
+  border-radius: 3px;
+  box-shadow: var(--shadow);
+  transform: rotate(-1.5deg);
+  flex: 1 1 400px;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hero-card:hover {
+  transform: rotate(0deg) translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+.hero-card h1 {
+  font-family: 'Caveat', cursive;
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 4px;
+  color: var(--dark);
+}
+.hero-card .subtitle {
+  font-family: 'Caveat', cursive;
+  font-size: 1.6rem;
+  color: var(--coral);
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+.hero-card p {
+  font-size: 0.97rem;
+  line-height: 1.7;
+  color: #444;
+}
+
+.hero-doodle {
+  flex: 0 0 220px;
+  background: var(--yellow);
+  padding: 22px 20px;
+  transform: rotate(3deg);
+  box-shadow: var(--shadow);
+  font-family: 'Caveat', cursive;
+  font-size: 1.25rem;
+  color: var(--dark);
+  line-height: 1.5;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hero-doodle:hover {
+  transform: rotate(0deg) translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+.hero-doodle .arrow {
+  font-size: 2rem;
+  display: block;
+  text-align: center;
+  margin-top: 6px;
+}
+
+/* ===== EXPERIENCE ===== */
+.exp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+/* Lined paper */
+.paper-lined {
+  background:
+    repeating-linear-gradient(
+      transparent, transparent 27px, #c8d8e4 27px, #c8d8e4 28px
+    ),
+    linear-gradient(90deg, transparent 59px, #e8b4b8 59px, #e8b4b8 61px, transparent 61px);
+  background-color: #fffef9;
+  padding: 30px 30px 30px 72px;
+  transform: rotate(-1.5deg);
+}
+
+/* Graph paper */
+.paper-graph {
+  background:
+    repeating-linear-gradient(0deg, transparent, transparent 19px, #c8dce8 19px, #c8dce8 20px),
+    repeating-linear-gradient(90deg, transparent, transparent 19px, #c8dce8 19px, #c8dce8 20px);
+  background-color: #fffefb;
+  padding: 28px 28px;
+  transform: rotate(1.8deg);
+}
+
+/* Yellow sticky note */
+.paper-sticky {
+  background: linear-gradient(180deg, #fff9c4 0%, #fff59d 100%);
+  padding: 26px 24px;
+  transform: rotate(2.5deg);
+  border: none;
+  box-shadow: 3px 4px 10px rgba(0,0,0,0.18);
+}
+
+/* White card */
+.paper-white {
+  background: #fff;
+  padding: 28px 28px;
+  transform: rotate(-2deg);
+  border-left: 5px solid var(--coral);
+}
+
+.exp-title {
+  font-family: 'Caveat', cursive;
+  font-size: 1.45rem;
+  font-weight: 700;
+  margin-bottom: 2px;
+  color: var(--dark);
+}
+.exp-company {
+  font-family: 'Caveat', cursive;
+  font-size: 1.15rem;
+  color: var(--blue);
+  margin-bottom: 2px;
+}
+.exp-date {
+  font-family: 'Courier New', monospace;
+  font-size: 0.82rem;
+  color: #888;
+  margin-bottom: 12px;
+}
+.exp-list {
+  list-style: none;
+  padding: 0;
+}
+.exp-list li {
+  position: relative;
+  padding-left: 18px;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+.exp-list li::before {
+  content: '\2022';
+  position: absolute;
+  left: 0;
+  color: var(--coral);
+  font-weight: bold;
+}
+.exp-list a {
+  color: var(--blue);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--blue);
+  transition: color 0.2s;
+}
+.exp-list a:hover {
+  color: var(--coral);
+  border-bottom-color: var(--coral);
+}
+
+.exp-sub-list {
+  list-style: none;
+  padding-left: 12px;
+  margin-top: 4px;
+}
+.exp-sub-list li {
+  padding-left: 16px;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+}
+.exp-sub-list li::before {
+  content: '↳';
+  color: var(--green);
+}
+
+/* ===== PROJECTS - POLAROID ===== */
+.polaroid-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+}
+.polaroid {
+  background: #fff;
+  padding: 16px 16px 50px;
+  width: 380px;
+  box-shadow: var(--shadow);
+  transform: rotate(-2deg);
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.polaroid:hover {
+  transform: rotate(0deg) translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+.polaroid-inner {
+  background: linear-gradient(135deg, #e8f5e9, #e3f2fd);
+  padding: 24px;
+  min-height: 180px;
+  border: 1px solid #e0e0e0;
+}
+.polaroid-inner h3 {
+  font-family: 'Caveat', cursive;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: var(--dark);
+}
+.polaroid-inner p {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #444;
+  margin-bottom: 10px;
+}
+.polaroid-caption {
+  position: absolute;
+  bottom: 10px;
+  left: 16px;
+  right: 16px;
+  font-family: 'Caveat', cursive;
+  font-size: 1.2rem;
+  color: var(--dark);
+  text-align: center;
+}
+.tech-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 8px;
+}
+.tech-tag {
+  background: rgba(74,144,217,0.13);
+  color: var(--blue);
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-family: 'Courier New', monospace;
+}
+.polaroid-link {
+  display: inline-block;
+  margin-top: 10px;
+  color: var(--coral);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  border-bottom: 2px solid var(--coral);
+  transition: color 0.2s;
+}
+.polaroid-link:hover { color: var(--blue); border-bottom-color: var(--blue); }
+
+/* ===== SKILLS - STICKERS ===== */
+.skills-area {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 12px;
+  margin-bottom: 30px;
+}
+.sticker {
+  display: inline-block;
+  padding: 8px 18px;
+  border-radius: 30px;
+  font-family: 'Caveat', cursive;
+  font-size: 1.15rem;
+  font-weight: 600;
+  box-shadow: 1px 2px 5px rgba(0,0,0,0.12);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: default;
+}
+.sticker:hover {
+  transform: rotate(0deg) scale(1.1) !important;
+  box-shadow: var(--shadow-hover);
+}
+.sticker:nth-child(1)  { background: #ffcdd2; color: #b71c1c; transform: rotate(-3deg); }
+.sticker:nth-child(2)  { background: #bbdefb; color: #0d47a1; transform: rotate(2deg); }
+.sticker:nth-child(3)  { background: #c8e6c9; color: #1b5e20; transform: rotate(-1deg); }
+.sticker:nth-child(4)  { background: #fff9c4; color: #f57f17; transform: rotate(3deg); }
+.sticker:nth-child(5)  { background: #d1c4e9; color: #4a148c; transform: rotate(-2.5deg); }
+.sticker:nth-child(6)  { background: #ffe0b2; color: #e65100; transform: rotate(1.5deg); }
+.sticker:nth-child(7)  { background: #b2dfdb; color: #004d40; transform: rotate(-1.5deg); }
+.sticker:nth-child(8)  { background: #f8bbd0; color: #880e4f; transform: rotate(2.5deg); }
+.sticker:nth-child(9)  { background: #e1bee7; color: #6a1b9a; transform: rotate(-2deg); }
+.sticker:nth-child(10) { background: #c5cae9; color: #1a237e; transform: rotate(1deg); }
+.sticker:nth-child(11) { background: #dcedc8; color: #33691e; transform: rotate(-3deg); }
+.sticker:nth-child(12) { background: #ffccbc; color: #bf360c; transform: rotate(2deg); }
+.sticker:nth-child(13) { background: #b3e5fc; color: #01579b; transform: rotate(-1.5deg); }
+
+.skills-label {
+  font-family: 'Caveat', cursive;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+  color: var(--dark);
+  position: relative;
+  display: inline-block;
+}
+.skills-label::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0;
+  width: 100%; height: 3px;
+  background: var(--blue);
+  border-radius: 2px;
+}
+
+/* soft skills different look */
+.sticker-soft {
+  border: 2px dashed;
+  background: transparent !important;
+}
+.sticker-soft:nth-child(1)  { border-color: #e85d4a; color: #e85d4a; transform: rotate(2deg); }
+.sticker-soft:nth-child(2)  { border-color: #4a90d9; color: #4a90d9; transform: rotate(-1.5deg); }
+.sticker-soft:nth-child(3)  { border-color: #7cb342; color: #7cb342; transform: rotate(3deg); }
+.sticker-soft:nth-child(4)  { border-color: #f5c842; color: #9e7700; transform: rotate(-2deg); }
+.sticker-soft:nth-child(5)  { border-color: #9c27b0; color: #9c27b0; transform: rotate(1.5deg); }
+.sticker-soft:nth-child(6)  { border-color: #00897b; color: #00897b; transform: rotate(-3deg); }
+.sticker-soft:nth-child(7)  { border-color: #ef6c00; color: #ef6c00; transform: rotate(2.5deg); }
+.sticker-soft:nth-child(8)  { border-color: #c62828; color: #c62828; transform: rotate(-1deg); }
+
+/* ===== EDUCATION - DIPLOMA ===== */
+.diploma {
+  background: #fffef5;
+  border: 3px double var(--dark);
+  padding: 40px 36px;
+  text-align: center;
+  transform: rotate(-1deg);
+  position: relative;
+  box-shadow: var(--shadow);
+  max-width: 620px;
+  margin: 0 auto;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.diploma:hover {
+  transform: rotate(0deg) translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+.diploma::before,
+.diploma::after {
+  content: '';
+  position: absolute;
+  width: 50px; height: 50px;
+  border: 2px solid var(--dark);
+  border-radius: 50%;
+  opacity: 0.12;
+}
+.diploma::before { top: 12px; left: 12px; }
+.diploma::after { bottom: 12px; right: 12px; }
+.diploma h3 {
+  font-family: 'Caveat', cursive;
+  font-size: 2rem;
+  margin-bottom: 4px;
+}
+.diploma .diploma-school {
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  color: var(--blue);
+  margin-bottom: 4px;
+}
+.diploma .diploma-year {
+  font-family: 'Courier New', monospace;
+  font-size: 0.88rem;
+  color: #888;
+  margin-bottom: 14px;
+}
+.diploma p {
+  font-size: 0.93rem;
+  line-height: 1.65;
+  color: #555;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* ===== CERTIFICATES - STAMP ===== */
+.cert-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 22px;
+  margin-top: 30px;
+}
+.stamp-card {
+  background: #fff;
+  padding: 22px 18px;
+  border-radius: 3px;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.stamp-card:nth-child(1) { transform: rotate(1.5deg); }
+.stamp-card:nth-child(2) { transform: rotate(-2deg); }
+.stamp-card:nth-child(3) { transform: rotate(2.5deg); }
+.stamp-card:nth-child(4) { transform: rotate(-1deg); }
+.stamp-card:hover {
+  transform: rotate(0deg) translateY(-4px) !important;
+  box-shadow: var(--shadow-hover);
+}
+.stamp-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 52px;
+  height: 52px;
+  border: 3px solid var(--coral);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Caveat', cursive;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--coral);
+  transform: rotate(12deg);
+  opacity: 0.7;
+  line-height: 1.1;
+  text-align: center;
+}
+.stamp-card h4 {
+  font-family: 'Caveat', cursive;
+  font-size: 1.3rem;
+  margin-bottom: 4px;
+  padding-right: 55px;
+}
+.stamp-card .stamp-issuer {
+  font-family: 'Courier New', monospace;
+  font-size: 0.82rem;
+  color: #888;
+  margin-bottom: 10px;
+}
+.stamp-card a {
+  color: var(--blue);
+  font-size: 0.85rem;
+  text-decoration: none;
+  border-bottom: 1px dashed var(--blue);
+}
+.stamp-card a:hover { color: var(--coral); border-bottom-color: var(--coral); }
+
+/* ===== CONTACT - TORN PAPER ===== */
+.torn-paper {
+  background: #fff;
+  padding: 36px 34px;
+  max-width: 520px;
+  margin: 0 auto;
+  position: relative;
+  box-shadow: var(--shadow);
+  transform: rotate(1.5deg);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.torn-paper:hover {
+  transform: rotate(0deg) translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+.torn-paper::before {
+  content: '';
+  position: absolute;
+  top: -14px; left: 0; right: 0;
+  height: 16px;
+  background: var(--kraft);
+  mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,12 Q10,4 20,10 Q30,16 40,8 Q50,2 60,10 Q70,15 80,7 Q90,0 100,9 Q110,16 120,6 Q130,0 140,10 Q150,14 160,5 Q170,0 180,8 Q190,16 200,7 Q210,0 220,10 Q230,15 240,6 Q250,0 260,9 Q270,16 280,5 Q290,0 300,8 Q310,14 320,6 Q330,0 340,10 Q350,15 360,7 Q370,0 380,9 Q390,16 400,8 L400,0 L0,0 Z' fill='white'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,12 Q10,4 20,10 Q30,16 40,8 Q50,2 60,10 Q70,15 80,7 Q90,0 100,9 Q110,16 120,6 Q130,0 140,10 Q150,14 160,5 Q170,0 180,8 Q190,16 200,7 Q210,0 220,10 Q230,15 240,6 Q250,0 260,9 Q270,16 280,5 Q290,0 300,8 Q310,14 320,6 Q330,0 340,10 Q350,15 360,7 Q370,0 380,9 Q390,16 400,8 L400,0 L0,0 Z' fill='white'/%3E%3C/svg%3E");
+  mask-size: 400px 16px;
+  -webkit-mask-size: 400px 16px;
+}
+.torn-paper::after {
+  content: '';
+  position: absolute;
+  bottom: -14px; left: 0; right: 0;
+  height: 16px;
+  background: var(--kraft);
+  mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,4 Q10,12 20,6 Q30,0 40,8 Q50,14 60,6 Q70,1 80,9 Q90,16 100,7 Q110,0 120,10 Q130,16 140,6 Q150,2 160,11 Q170,16 180,8 Q190,0 200,9 Q210,16 220,6 Q230,1 240,10 Q250,16 260,7 Q270,0 280,11 Q290,16 300,8 Q310,2 320,10 Q330,16 340,6 Q350,1 360,9 Q370,16 380,7 Q390,0 400,8 L400,16 L0,16 Z' fill='white'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,4 Q10,12 20,6 Q30,0 40,8 Q50,14 60,6 Q70,1 80,9 Q90,16 100,7 Q110,0 120,10 Q130,16 140,6 Q150,2 160,11 Q170,16 180,8 Q190,0 200,9 Q210,16 220,6 Q230,1 240,10 Q250,16 260,7 Q270,0 280,11 Q290,16 300,8 Q310,2 320,10 Q330,16 340,6 Q350,1 360,9 Q370,16 380,7 Q390,0 400,8 L400,16 L0,16 Z' fill='white'/%3E%3C/svg%3E");
+  mask-size: 400px 16px;
+  -webkit-mask-size: 400px 16px;
+}
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  font-family: 'Caveat', cursive;
+  font-size: 1.25rem;
+}
+.contact-item svg {
+  flex-shrink: 0;
+  width: 22px; height: 22px;
+  fill: var(--coral);
+}
+.contact-item a {
+  color: var(--blue);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--blue);
+  transition: color 0.2s;
+}
+.contact-item a:hover {
+  color: var(--coral);
+  border-bottom-color: var(--coral);
+}
+
+/* ===== TORN DIVIDER ===== */
+.torn-divider {
+  width: 100%;
+  height: 20px;
+  margin: 20px 0;
+  background: var(--kraft);
+  mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 600 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,10 Q15,2 30,10 Q45,18 60,8 Q75,0 90,10 Q105,18 120,6 Q135,0 150,10 Q165,18 180,6 Q195,0 210,10 Q225,18 240,8 Q255,0 270,10 Q285,18 300,6 Q315,0 330,10 Q345,18 360,8 Q375,0 390,10 Q405,18 420,6 Q435,0 450,10 Q465,18 480,8 Q495,0 510,10 Q525,18 540,6 Q555,0 570,10 Q585,18 600,8 L600,20 L0,20 Z' fill='rgba(0,0,0,0.06)'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 600 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,10 Q15,2 30,10 Q45,18 60,8 Q75,0 90,10 Q105,18 120,6 Q135,0 150,10 Q165,18 180,6 Q195,0 210,10 Q225,18 240,8 Q255,0 270,10 Q285,18 300,6 Q315,0 330,10 Q345,18 360,8 Q375,0 390,10 Q405,18 420,6 Q435,0 450,10 Q465,18 480,8 Q495,0 510,10 Q525,18 540,6 Q555,0 570,10 Q585,18 600,8 L600,20 L0,20 Z' fill='rgba(0,0,0,0.06)'/%3E%3C/svg%3E");
+}
+
+/* ===== FOOTER ===== */
+.scrapbook-footer {
+  text-align: center;
+  padding: 30px 20px 10px;
+  font-family: 'Caveat', cursive;
+  font-size: 1.2rem;
+  color: #999;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .exp-grid { grid-template-columns: 1fr; }
+  .hero-wrapper { flex-direction: column; }
+  .hero-doodle { flex: auto; }
+  .card, .hero-card, .polaroid, .diploma, .torn-paper, .stamp-card,
+  .paper-lined, .paper-graph, .paper-sticky, .paper-white {
+    transform: rotate(0deg) !important;
+  }
+  .card:hover, .hero-card:hover, .polaroid:hover, .diploma:hover,
+  .torn-paper:hover, .stamp-card:hover {
+    transform: translateY(-3px) !important;
+  }
+  .sticker { transform: rotate(0deg) !important; }
+  .section-title { font-size: 2rem; }
+  .hero-card h1 { font-size: 2.3rem; }
+  .nav-bar { gap: 4px; padding: 10px 6px 6px; }
+  .nav-note { font-size: 1rem; padding: 6px 12px; }
+  .scrapbook { padding: 14px 14px 40px; }
+  .polaroid { width: 100%; }
+  .cert-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .nav-note { font-size: 0.9rem; padding: 5px 10px; }
+  .hero-card { padding: 24px 20px; }
+  .hero-card h1 { font-size: 1.9rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav class="nav-bar">
+  <a href="#inicio" class="nav-note">Inicio</a>
+  <a href="#experiencia" class="nav-note">Experiencia</a>
+  <a href="#proyectos" class="nav-note">Proyectos</a>
+  <a href="#habilidades" class="nav-note">Habilidades</a>
+  <a href="#educacion" class="nav-note">Educacion</a>
+  <a href="#contacto" class="nav-note">Contacto</a>
+</nav>
+
+<div class="scrapbook">
+
+  <!-- ===== INICIO ===== -->
+  <section id="inicio">
+    <div class="hero-wrapper">
+      <div class="hero-card tape-tl tape-tr">
+        <h1>Diego Santibanez Oyarce</h1>
+        <div class="subtitle">Cientifico de Datos</div>
+        <p>Egresado de Ingenieria Civil en Ciencia de datos en Agosto 2025, apasionado por la tecnologia y con un gran interes en el uso de la inteligencia artificial como herramienta para la resolucion de problemas del mundo real. Mi formacion academica me proporciono una solida comprension de algoritmos de aprendizaje automatico, analisis y visualizacion de datos. Me gusta proponerme desafios donde pueda poner en practica mis conocimientos y donde ademas pueda aprender cosas nuevas.</p>
+      </div>
+      <div class="hero-doodle pin">
+        &#9997; Bienvenido a mi scrapbook profesional!
+        <br><br>
+        Aqui encontraras mi experiencia, proyectos y mas...
+        <span class="arrow">&#8595;</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="torn-divider"></div>
+
+  <!-- ===== EXPERIENCIA ===== -->
+  <section id="experiencia">
+    <h2 class="section-title">Experiencia</h2>
+
+    <div class="exp-grid">
+
+      <!-- 1. Asistente de investigacion - LINED PAPER -->
+      <div class="card paper-lined tape-tl" style="grid-column: 1 / -1;">
+        <div class="exp-title">Asistente de Investigacion</div>
+        <div class="exp-company">Universidad Tecnologica Metropolitana (UTEM)</div>
+        <div class="exp-date">Dic 2023 - Sep 2025</div>
+        <ul class="exp-list">
+          <li>Presentacion poster en "1ras Jornadas de Ciencia de Datos y Salud Publica" de la Universidad de Chile en Enero de 2024
+            <ul class="exp-sub-list">
+              <li><a href="https://drive.google.com/file/d/124VDD5x6pBidyC1Wx4ZLehAQixdjZ9dS/view?usp=sharing" target="_blank">Certificado de participacion</a></li>
+              <li><a href="https://drive.google.com/file/d/1gRjnIt9xa5CYPhbgGFTKR1o5WV3RB8H6/view?usp=drive_link" target="_blank">Link poster</a></li>
+            </ul>
+          </li>
+          <li>Flash Talk (5 min) y presentacion de poster en Carla2024 en Septiembre 2024
+            <ul class="exp-sub-list">
+              <li><a href="https://drive.google.com/file/d/1jHc_2fZiakh2G9t8EkiB7Z3l0iuWBJ7n/view?usp=sharing" target="_blank">Certificado de participacion</a></li>
+              <li><a href="https://drive.google.com/file/d/1jfS4S75dwoBnUMZ3xeQOFfBzX6HP5gpc/view?usp=drive_link" target="_blank">Link poster</a></li>
+            </ul>
+          </li>
+          <li>Presentacion poster en "III Congreso Vive la Investigacion 2024" en Octubre 2024
+            <ul class="exp-sub-list">
+              <li><a href="https://drive.google.com/file/d/1unqW5oOxe5wl84-vmq4Y8AhXmD1sJJL_/view?usp=sharing" target="_blank">Certificado de participacion</a></li>
+              <li><a href="https://drive.google.com/file/d/1OEKXi8gl7Z9bGySQ8esoomkDJLPiBLCE/view?usp=drive_link" target="_blank">Link poster</a></li>
+            </ul>
+          </li>
+          <li>Presentacion de poster en "XIV Congreso Argentino de Bioinformatica y Biologia Computacional" en Noviembre de 2024
+            <ul class="exp-sub-list">
+              <li><a href="https://drive.google.com/file/d/1br_Vv35RmHxvyPScFlhDCJxucFz0ckii/view?usp=sharing" target="_blank">Certificado de participacion</a></li>
+              <li><a href="https://drive.google.com/file/d/1wLUe3ssEY_XcOgoTbVJj0B5C7plK-G9n/view?usp=drive_link" target="_blank">Link poster</a></li>
+            </ul>
+          </li>
+          <li>Flash Talk (15 min) en "III Reunion Anual de la Sociedad Chilena de Bioinformatica" en Noviembre de 2024. Invitacion a publicar un manuscrito en revista "Bioinformatics Advances (Oxford University Press)".
+            <ul class="exp-sub-list">
+              <li><a href="https://drive.google.com/file/d/1-dZ_CdZlYkd58OlGr3v92n8pLshnurje/view?usp=sharing" target="_blank">Certificado de participacion</a></li>
+            </ul>
+          </li>
+          <li>Presentacion de poster en Carla2025 en Septiembre 2025. Obtencion premio al mejor poster.
+            <ul class="exp-sub-list">
+              <li><a href="https://drive.google.com/file/d/10tcRQonSWMgKQ8FciWOsCobzQAlWCPr9/view?usp=sharing" target="_blank">Certificado de participacion</a></li>
+              <li><a href="https://drive.google.com/file/d/1M_MhsoB8BCUO5LITTVvQw0Hi9l7RU4Vj/view?usp=sharing" target="_blank">Premio al mejor poster</a></li>
+              <li><a href="https://drive.google.com/file/d/14Fc9u_zCtxiKG7RKW3W85Rv6X4OJy5HP/view?usp=drive_link" target="_blank">Link poster</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 2. Tecnico - GRAPH PAPER -->
+      <div class="card paper-graph paperclip">
+        <div class="exp-title">Tecnico para Analisis de Datos Avanzado</div>
+        <div class="exp-company">UTEM</div>
+        <div class="exp-date">Feb 2025 - Sep 2025</div>
+        <ul class="exp-list">
+          <li>Implementacion de web scrapping con Python (Selenium y BeautifulSoup) para la extraccion automatizada de datos</li>
+          <li>Creacion de dashboard interactivos utilizando Plotly y Streamlit para visualizar avances del proyecto</li>
+          <li>Diseno y gestion de bases de datos en MariaDB y PostgreSQL para el almacenamiento de datos estructurados</li>
+          <li>Aplicacion de procesamiento de lenguaje natural para analisis y filtrado de datos</li>
+        </ul>
+      </div>
+
+      <!-- 3. Ayudante - YELLOW STICKY NOTE -->
+      <div class="card paper-sticky">
+        <div class="exp-title">Ayudante de Catedra - Visualizacion de Datos</div>
+        <div class="exp-company">UTEM</div>
+        <div class="exp-date">Mar 2025 - Jul 2025</div>
+        <ul class="exp-list">
+          <li>Ensenanza y mentoria a estudiantes en tecnicas de visualizacion de datos</li>
+        </ul>
+      </div>
+
+      <!-- 4. Practicante - WHITE CARD -->
+      <div class="card paper-white tape-tr">
+        <div class="exp-title">Practicante Profesional</div>
+        <div class="exp-company">Contraloria General de la Republica</div>
+        <div class="exp-date">Ago 2024 - Ene 2025</div>
+        <ul class="exp-list">
+          <li>Analisis de datos utilizando Impala y Oracle</li>
+          <li>Desarrollo de consultas SQL y automatizacion de procesos mediante codigos de Python</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="torn-divider"></div>
+
+  <!-- ===== PROYECTOS ===== -->
+  <section id="proyectos">
+    <h2 class="section-title">Proyectos</h2>
+
+    <div class="polaroid-grid">
+      <div class="polaroid pin-blue">
+        <div class="polaroid-inner">
+          <h3>Dashboard de Avance de Proyecto</h3>
+          <p>Dashboard interactivo desarrollado con Streamlit para visualizar el avance y estado de los datos utilizados en el proyecto.</p>
+          <div class="tech-tags">
+            <span class="tech-tag">Python</span>
+            <span class="tech-tag">Streamlit</span>
+            <span class="tech-tag">Pandas</span>
+            <span class="tech-tag">Plotly</span>
+            <span class="tech-tag">DuckDB</span>
+            <span class="tech-tag">Folium</span>
+          </div>
+          <a href="https://dashboarddatalake-fiut-utem.streamlit.app/" target="_blank" class="polaroid-link">Ver proyecto &rarr;</a>
+        </div>
+        <div class="polaroid-caption">Dashboard de Avance &bull; 2025</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="torn-divider"></div>
+
+  <!-- ===== HABILIDADES ===== -->
+  <section id="habilidades">
+    <h2 class="section-title">Habilidades</h2>
+
+    <div class="skills-label">Hard Skills</div>
+    <div class="skills-area">
+      <span class="sticker">Python</span>
+      <span class="sticker">SQL</span>
+      <span class="sticker">TensorFlow</span>
+      <span class="sticker">scikit-learn</span>
+      <span class="sticker">Pandas</span>
+      <span class="sticker">Jupyter Notebooks</span>
+      <span class="sticker">Visualizacion de datos</span>
+      <span class="sticker">Plotly</span>
+      <span class="sticker">Streamlit</span>
+      <span class="sticker">Web Scraping</span>
+      <span class="sticker">PostgreSQL</span>
+      <span class="sticker">MariaDB</span>
+      <span class="sticker">SpaCy</span>
+    </div>
+
+    <div class="skills-label" style="margin-top: 10px;">Soft Skills</div>
+    <div class="skills-area">
+      <span class="sticker sticker-soft">Resolucion de Problemas</span>
+      <span class="sticker sticker-soft">Pensamiento Critico</span>
+      <span class="sticker sticker-soft">Adaptabilidad</span>
+      <span class="sticker sticker-soft">Mentoria</span>
+      <span class="sticker sticker-soft">Curiosidad Intelectual</span>
+      <span class="sticker sticker-soft">Responsabilidad</span>
+      <span class="sticker sticker-soft">Mentalidad de Experimentacion</span>
+      <span class="sticker sticker-soft">Mentalidad Analitica</span>
+    </div>
+  </section>
+
+  <div class="torn-divider"></div>
+
+  <!-- ===== EDUCACION & CERTIFICADOS ===== -->
+  <section id="educacion">
+    <h2 class="section-title">Educacion & Certificados</h2>
+
+    <div class="diploma">
+      <h3>Ingeniero Civil en Ciencia de Datos</h3>
+      <div class="diploma-school">Universidad Tecnologica Metropolitana (UTEM)</div>
+      <div class="diploma-year">2020 - 2025</div>
+      <p>Formacion integral en algoritmos de aprendizaje automatico, analisis y visualizacion de datos, con enfoque en aplicaciones de inteligencia artificial para problemas del mundo real.</p>
+    </div>
+
+    <div class="cert-grid">
+      <div class="stamp-card">
+        <div class="stamp-badge">2025</div>
+        <h4>Power BI</h4>
+        <div class="stamp-issuer">Santander X</div>
+        <a href="https://drive.google.com/file/d/1IOp4gjfLcW8XhqbiwwOd9dzlz8l60P5q/view?usp=drive_link" target="_blank">Ver certificado</a>
+      </div>
+      <div class="stamp-card">
+        <div class="stamp-badge">2025</div>
+        <h4>Ingles B2 Upper Intermediate</h4>
+        <div class="stamp-issuer">Certificacion Internacional</div>
+        <a href="https://drive.google.com/file/d/1KT12-fKSs20wCu_AO6c6nEHYi5_v0mK1/view?usp=sharing" target="_blank">Ver certificado</a>
+      </div>
+      <div class="stamp-card">
+        <div class="stamp-badge">2024</div>
+        <h4>AWS Data Center Technician</h4>
+        <div class="stamp-issuer">Amazon Web Services</div>
+        <a href="https://drive.google.com/file/d/1pYCaTdbJQAmruxvoknp92QbIys4Bt7Ws/view?usp=sharing" target="_blank">Ver certificado</a>
+      </div>
+      <div class="stamp-card">
+        <div class="stamp-badge">2025</div>
+        <h4>Introduccion a la Ciencia de Datos</h4>
+        <div class="stamp-issuer">Santander Open Academy</div>
+        <a href="https://drive.google.com/file/d/1vmeQuzoZEwUTC0Pz7Xl_rlobqXcreX5w/view?usp=sharing" target="_blank">Ver certificado</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="torn-divider"></div>
+
+  <!-- ===== CONTACTO ===== -->
+  <section id="contacto">
+    <h2 class="section-title">Contacto</h2>
+
+    <div class="torn-paper tape-yellow">
+      <div class="contact-item">
+        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        <a href="mailto:dsantibanezo@utem.cl" target="_blank">dsantibanezo@utem.cl</a>
+      </div>
+      <div class="contact-item">
+        <svg viewBox="0 0 24 24"><path d="M19 3a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14m-.5 15.5v-5.3a3.26 3.26 0 00-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 011.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 001.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 00-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+        <a href="https://www.linkedin.com/in/diego-santibanez-oyarce/" target="_blank">LinkedIn</a>
+      </div>
+      <div class="contact-item">
+        <svg viewBox="0 0 24 24"><path d="M12 2A10 10 0 002 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z"/></svg>
+        <a href="https://github.com/daso42" target="_blank">GitHub</a>
+      </div>
+      <div class="contact-item">
+        <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.15 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+        <span>+56 9 8434 1477</span>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="scrapbook-footer">
+  Hecho con cuidado y dedicacion &hearts; Diego Santibanez Oyarce
+</footer>
+
+</body>
+</html>

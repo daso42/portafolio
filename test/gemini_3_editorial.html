@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diego Santibáñez Oyarce — Editorial Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #EAE6DB; /* Off-white paper */
+      --text: #1A1A1A;
+      --text-mute: #555555;
+      --border: #222222;
+      --border-light: rgba(34, 34, 34, 0.2);
+      
+      --serif: 'Crimson Pro', serif;
+      --sans: 'Inter', sans-serif;
+      --mono: 'IBM Plex Mono', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--serif);
+      line-height: 1.6;
+      font-size: 1.1rem;
+      padding: 2rem 5vw;
+      border-top: 12px solid var(--text);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Header / Masthead */
+    .masthead {
+      text-align: center;
+      padding: 3rem 0;
+      border-bottom: 4px solid var(--border);
+      margin-bottom: 0.5rem;
+    }
+
+    .masthead h1 {
+      font-size: clamp(3rem, 10vw, 7rem);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .masthead-sub {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--sans);
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .edition-date { font-family: var(--mono); }
+
+    /* Layout */
+    .paper-grid {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 3rem;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 3rem;
+    }
+
+    @media (max-width: 900px) {
+      .paper-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Typography Utilities */
+    .section-head {
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--text);
+    }
+
+    .drop-cap::first-letter {
+      float: left;
+      font-size: 5.5rem;
+      line-height: 0.8;
+      padding-right: 0.5rem;
+      padding-top: 0.2rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .lead {
+      column-count: 2;
+      column-gap: 2rem;
+      text-align: justify;
+      hyphens: auto;
+    }
+
+    @media (max-width: 600px) {
+      .lead { column-count: 1; }
+    }
+
+    /* Experience Details */
+    .article {
+      margin-bottom: 2.5rem;
+    }
+
+    .article-header {
+      margin-bottom: 1rem;
+    }
+
+    .article-title {
+      font-size: 1.8rem;
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 0.25rem;
+    }
+
+    .article-meta {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--text-mute);
+      text-transform: uppercase;
+    }
+
+    .article-body {
+      color: var(--text-mute);
+    }
+
+    /* Sidebar Content */
+    .sidebar {
+      border-left: 1px solid var(--border-light);
+      padding-left: 3rem;
+    }
+
+    @media (max-width: 900px) {
+      .sidebar { border-left: none; padding-left: 0; border-top: 2px solid var(--border); padding-top: 3rem; }
+    }
+
+    .widget {
+      margin-bottom: 3rem;
+    }
+
+    .skill-list {
+      list-style: none;
+      font-family: var(--sans);
+      font-size: 0.9rem;
+    }
+
+    .skill-list li {
+      padding: 0.5rem 0;
+      border-bottom: 1px dashed var(--border-light);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .skill-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* Projects / Footer Section */
+    .projects {
+      padding: 3rem 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    @media (max-width: 800px) {
+      .projects { grid-template-columns: 1fr; }
+    }
+
+    .project-card {
+      border: 1px solid var(--border);
+      padding: 2rem;
+      background: var(--bg);
+      position: relative;
+    }
+
+    .project-card::after {
+      content: '';
+      position: absolute;
+      top: 4px; left: 4px; right: -4px; bottom: -4px;
+      border: 1px solid var(--border);
+      z-index: -1;
+    }
+
+    .project-name { font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; }
+    .project-tags {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      margin-top: 1.5rem;
+      color: var(--text-mute);
+    }
+
+    /* Contact Frame */
+    .contact-frame {
+      margin-top: 4rem;
+      border: 4px double var(--border);
+      padding: 3rem;
+      text-align: center;
+    }
+
+    .contact-frame h2 {
+      font-family: var(--sans);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .contact-link {
+      font-size: 2.5rem;
+      font-weight: 600;
+      font-style: italic;
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 2px solid var(--text);
+    }
+
+    .contact-link:hover {
+      color: var(--text-mute);
+      border-color: var(--text-mute);
+    }
+
+    /* Animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: revealUp 0.8s forwards;
+    }
+    .delay-1 { animation-delay: 0.2s; }
+    .delay-2 { animation-delay: 0.4s; }
+
+    @keyframes revealUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Masthead -->
+    <header class="masthead reveal">
+      <h1>Diego S. Oyarce</h1>
+      <div class="masthead-sub">
+        <span>Edición Especial</span>
+        <span class="edition-date">CIENCIA DE DATOS Y AI</span>
+        <span>Santiago, Chile</span>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="paper-grid">
+      
+      <!-- Center Column -->
+      <section class="reveal delay-1">
+        <h2 class="section-head">Perfil Principal</h2>
+        <div class="lead" style="margin-bottom: 3rem;">
+          <p class="drop-cap">Egresado de Ingeniería Civil en Ciencia de Datos, apasionado por la tecnología y con un gran interés en el uso de la inteligencia artificial como herramienta para la resolución de problemas del mundo real. Mi formación académica me proporcionó una sólida comprensión de algoritmos de aprendizaje automático, análisis y visualización de datos, complementada con habilidades de investigación y desarrollo iterativo en entornos dinámicos.</p>
+        </div>
+
+        <h2 class="section-head">Crónica Profesional</h2>
+        
+        <article class="article">
+          <header class="article-header">
+            <h3 class="article-title">Asistente de Investigación en UTEM</h3>
+            <div class="article-meta">DIC 2023 — SEP 2025 // Sector: Académico</div>
+          </header>
+          <div class="article-body">
+            <p>Destacada participación mediante diversas presentaciones en congresos tanto nacionales como internacionales. Entre los hitos se incluyen las Primeras Jornadas de Ciencia de Datos y Salud Pública (U. Chile, ene 2024), Flash Talk en Carla2024 (sep 2024), y la obtención del reconocimiento a "Mejor Póster" en Carla2025. Adicionalmente, se realizó un Flash Talk de 15 minutos en la III Reunión de la Sociedad Chilena de Bioinformática.</p>
+          </div>
+        </article>
+
+        <article class="article">
+          <header class="article-header">
+            <h3 class="article-title">Técnico Análisis de Datos Avanzado</h3>
+            <div class="article-meta">FEB 2025 — SEP 2025 // UTEM</div>
+          </header>
+          <div class="article-body">
+            <p>Ejecución meticulosa de web scraping con Python utilizando Selenium y BeautifulSoup. Desarrollo y despliegue de dashboards interactivos mediante Plotly y Streamlit. Administración integral de bases de datos MariaDB y PostgreSQL, junto con exploración técnica en el procesamiento del lenguaje natural (NLP).</p>
+          </div>
+        </article>
+
+        <article class="article">
+          <header class="article-header">
+            <h3 class="article-title">Practicante Profesional</h3>
+            <div class="article-meta">AGO 2024 — ENE 2025 // Contraloría General de la República</div>
+          </header>
+          <div class="article-body">
+            <p>Análisis riguroso de datos alojados en plataformas como Impala y Oracle, logrando la elaboración de consultas SQL de alta complejidad y la automatización sistemática de procesos organizativos mediante rutinas programadas en Python.</p>
+          </div>
+        </article>
+
+      </section>
+
+      <!-- Sidebar Column -->
+      <aside class="sidebar reveal delay-2">
+        
+        <div class="widget">
+          <h2 class="section-head">Índice Analítico</h2>
+          <ul class="skill-list">
+            <li><span>Python (Data Science)</span> <span>Avanzado</span></li>
+            <li><span>SQL & Databases</span> <span>Avanzado</span></li>
+            <li><span>TensorFlow / Scikit</span> <span>Intermedio</span></li>
+            <li><span>Pandas & Plotly</span> <span>Experto</span></li>
+            <li><span>Streamlit Dashboards</span> <span>Avanzado</span></li>
+            <li><span>Web Scraping</span> <span>Intermedio</span></li>
+          </ul>
+        </div>
+
+        <div class="widget">
+          <h2 class="section-head">Acreditaciones</h2>
+          <div style="margin-bottom: 1rem;">
+            <div style="font-weight: 600; font-size: 1.2rem;">Ingeniero Civil en Ciencia de Datos</div>
+            <div style="font-family: var(--mono); font-size: 0.8rem; color: var(--text-mute);">UTEM (2020-2025)</div>
+          </div>
+          <ul class="skill-list">
+            <li>Power BI (Santander X, 2025)</li>
+            <li>Inglés B2 Upper Intermediate (2025)</li>
+            <li>AWS Data Center Technician (2024)</li>
+          </ul>
+        </div>
+        
+        <div class="widget" style="background: var(--text); color: var(--bg); padding: 1.5rem; text-align: center;">
+          <h3 style="font-family: var(--sans); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: #AAA; margin-bottom: 0.5rem;">Cifra del Mes</h3>
+          <div style="font-size: 4rem; font-style: italic; line-height: 1;">7</div>
+          <p style="font-size: 0.9rem; margin-top: 0.5rem; color: #CCC;">Presentaciones en Congresos Científicos y de Datos nacionales e internacionales.</p>
+        </div>
+
+      </aside>
+
+    </main>
+
+    <!-- Projects Grid underneath -->
+    <h2 class="section-head reveal delay-2" style="margin-top: 3rem;">Obras y Desarrollos</h2>
+    <section class="projects reveal delay-2">
+      
+      <div class="project-card">
+        <h3 class="project-name">Dashboard de Avance de Proyecto</h3>
+        <p class="article-body">Dashboard interactivo para el seguimiento y análisis de avance de proyectos. Incorpora visualizaciones geográficas, tablas dinámicas y filtros en tiempo real. Desarrollado con enfoque en usabilidad y rendimiento sobre grandes volúmenes de datos.</p>
+        <div class="project-tags">Streamlit — Plotly — DuckDB — Folium</div>
+      </div>
+
+    </section>
+
+    <!-- Ad / Contact -->
+    <div class="contact-frame reveal delay-2">
+      <h2>Para Consultas y Contrataciones</h2>
+      <p style="margin-bottom: 1.5rem;">Correspondencia formal, oportunidades laborales y colaboraciones académicas.</p>
+      <a href="mailto:dsantibanezo@utem.cl" class="contact-link">dsantibanezo@utem.cl</a>
+      <div style="margin-top: 2rem; font-family: var(--mono); font-size: 0.8rem; text-transform: uppercase;">
+        <a href="https://linkedin.com/in/diego-santibanez-oyarce" target="_blank" style="color: var(--text); text-decoration: none;">[ Enlace Linkedin ]</a>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

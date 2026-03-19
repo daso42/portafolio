@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diego Santibáñez Oyarce — Signal Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0e17;
+      --surface: rgba(16, 24, 40, 0.8);
+      --border: rgba(0, 255, 136, 0.15);
+      --text: #e8ede9;
+      --dim: #5a7062;
+      --green: #00ff88;
+      --green-dim: rgba(0, 255, 136, 0.3);
+      --cyan: #00d4ff;
+      --orange: #ff6b35;
+      --font: 'Inter', sans-serif;
+      --mono: 'Space Mono', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg); color: var(--text); font-family: var(--font);
+      line-height: 1.6; min-height: 100vh; overflow-x: hidden;
+    }
+
+    /* Scanlines */
+    body::after {
+      content: ''; position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    }
+
+    /* Waveform canvas background */
+    .wave-bg {
+      position: fixed; bottom: 0; left: 0; right: 0; height: 200px; z-index: -1; opacity: 0.15;
+    }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 0 2rem; }
+
+    /* Status bar */
+    .status-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.75rem 2rem; border-bottom: 1px solid var(--border);
+      font-family: var(--mono); font-size: 0.65rem; color: var(--dim);
+      text-transform: uppercase; letter-spacing: 0.1em;
+      max-width: 900px; margin: 0 auto;
+    }
+    .status-live { display: flex; align-items: center; gap: 0.5rem; }
+    .status-dot {
+      width: 6px; height: 6px; border-radius: 50%; background: var(--green);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    /* Hero */
+    .hero {
+      padding: 6rem 0 4rem; position: relative;
+    }
+    .signal-label {
+      font-family: var(--mono); font-size: 0.65rem; color: var(--green);
+      text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 1rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .signal-label::before {
+      content: ''; width: 20px; height: 1px; background: var(--green);
+    }
+    .hero h1 {
+      font-family: var(--mono); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700;
+      line-height: 1.15; margin-bottom: 0.5rem; letter-spacing: -0.02em;
+    }
+    .hero h1 span { color: var(--green); }
+    .hero-role {
+      font-family: var(--mono); font-size: 0.8rem; color: var(--cyan);
+      margin-bottom: 1.5rem; letter-spacing: 0.05em;
+    }
+    .hero-bio { max-width: 550px; font-size: 0.95rem; color: var(--dim); line-height: 1.8; margin-bottom: 2rem; font-weight: 300; }
+
+    /* Frequency display */
+    .freq-display {
+      display: flex; gap: 2rem; padding: 1rem 0; margin-bottom: 2rem;
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    }
+    .freq-item { display: flex; flex-direction: column; }
+    .freq-value {
+      font-family: var(--mono); font-size: 1.8rem; font-weight: 700; color: var(--green); line-height: 1;
+    }
+    .freq-label { font-family: var(--mono); font-size: 0.55rem; color: var(--dim); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.25rem; }
+
+    .hero-actions { display: flex; gap: 1rem; }
+    .btn-signal {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.6rem 1.25rem; font-family: var(--mono); font-size: 0.75rem;
+      text-transform: uppercase; letter-spacing: 0.05em; text-decoration: none;
+      border: 1px solid var(--green); color: var(--green); background: transparent;
+      transition: all 0.3s; cursor: pointer;
+    }
+    .btn-signal:hover { background: var(--green); color: var(--bg); }
+    .btn-signal.filled { background: var(--green); color: var(--bg); }
+    .btn-signal.filled:hover { opacity: 0.8; }
+
+    /* Sections */
+    section { padding: 3rem 0; border-bottom: 1px solid var(--border); }
+    .section-header {
+      font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase;
+      letter-spacing: 0.2em; color: var(--green); margin-bottom: 2rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .section-header::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* Signal panels */
+    .panel {
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 1.5rem; position: relative; overflow: hidden;
+    }
+    .panel::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--green), transparent);
+      opacity: 0.5;
+    }
+    .panel + .panel { margin-top: 1rem; }
+
+    /* Experience */
+    .exp-grid { display: grid; grid-template-columns: 120px 1fr; gap: 1rem; }
+    @media (max-width: 640px) { .exp-grid { grid-template-columns: 1fr; gap: 0.25rem; } }
+    .exp-date { font-family: var(--mono); font-size: 0.65rem; color: var(--dim); padding-top: 0.15rem; }
+    .exp-role { font-size: 1rem; font-weight: 600; margin-bottom: 0.15rem; }
+    .exp-org { font-family: var(--mono); font-size: 0.7rem; color: var(--cyan); margin-bottom: 0.5rem; text-transform: uppercase; }
+    .exp-desc { font-size: 0.85rem; color: var(--dim); line-height: 1.7; }
+    .exp-list { list-style: none; margin-top: 0.5rem; }
+    .exp-list li { font-size: 0.78rem; color: var(--dim); padding: 0.15rem 0 0.15rem 1rem; position: relative; }
+    .exp-list li::before { content: '▸'; position: absolute; left: 0; color: var(--green); }
+
+    /* Projects */
+    .proj-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .proj-desc { font-size: 0.85rem; color: var(--dim); line-height: 1.7; margin-bottom: 1rem; }
+    .tech-row { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .tech-chip {
+      font-family: var(--mono); font-size: 0.6rem; padding: 0.2rem 0.5rem;
+      border: 1px solid var(--border); color: var(--green); text-transform: uppercase;
+      letter-spacing: 0.05em; transition: all 0.2s;
+    }
+    .tech-chip:hover { background: var(--green); color: var(--bg); }
+
+    /* Skills */
+    .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 640px) { .skills-grid { grid-template-columns: 1fr; } }
+    .skill-col-title { font-family: var(--mono); font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--cyan); margin-bottom: 0.75rem; }
+    .skill-item {
+      font-size: 0.85rem; padding: 0.4rem 0; border-bottom: 1px solid rgba(0,255,136,0.06);
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .skill-item::before { content: '◈'; color: var(--green); font-size: 0.5rem; }
+    .skill-item:last-child { border-bottom: none; }
+
+    /* Education */
+    .edu-deg { font-size: 1.1rem; font-weight: 600; }
+    .edu-meta { font-family: var(--mono); font-size: 0.75rem; color: var(--dim); margin-top: 0.2rem; }
+    .cert-row { display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0; border-bottom: 1px solid rgba(0,255,136,0.06); font-size: 0.85rem; flex-wrap: wrap; gap: 0.5rem; }
+    .cert-date { font-family: var(--mono); font-size: 0.65rem; color: var(--dim); }
+
+    /* Contact */
+    .contact-center { text-align: center; padding: 2rem; }
+    .contact-center h2 { font-family: var(--mono); font-size: 1.1rem; font-weight: 400; margin-bottom: 1rem; color: var(--dim); }
+    .contact-center h2 span { color: var(--green); font-weight: 700; }
+    .contact-email {
+      font-family: var(--mono); font-size: 1rem; color: var(--green);
+      text-decoration: none; border-bottom: 1px solid var(--green-dim);
+      padding-bottom: 2px; transition: all 0.3s;
+    }
+    .contact-email:hover { color: var(--cyan); border-color: var(--cyan); }
+
+    footer {
+      padding: 2rem 0; text-align: center;
+      font-family: var(--mono); font-size: 0.6rem; color: var(--dim);
+      text-transform: uppercase; letter-spacing: 0.1em;
+    }
+
+    .fade-in { opacity: 0; transform: translateY(15px); transition: all 0.6s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+<canvas class="wave-bg" id="waveCanvas"></canvas>
+<div class="container">
+  <div class="status-bar">
+    <div class="status-live"><div class="status-dot"></div> SEÑAL ACTIVA</div>
+    <div>FRQ: 2025.DS</div>
+    <div>LAT: -33.44 | LON: -70.66</div>
+  </div>
+
+  <section class="hero fade-in" style="border-bottom: 1px solid var(--border);">
+    <div class="signal-label">Transmisión Entrante</div>
+    <h1>Diego <span>Santibáñez</span><br>Oyarce</h1>
+    <div class="hero-role">&gt; Científico_de_Datos</div>
+    <p class="hero-bio">Egresado de Ingeniería Civil en Ciencia de Datos, apasionado por resolver problemas del mundo real con inteligencia artificial y análisis de datos.</p>
+    <div class="freq-display">
+      <div class="freq-item"><span class="freq-value">1+</span><span class="freq-label">Años Exp.</span></div>
+      <div class="freq-item"><span class="freq-value">7</span><span class="freq-label">Congresos</span></div>
+      <div class="freq-item"><span class="freq-value">4</span><span class="freq-label">Certs</span></div>
+    </div>
+    <div class="hero-actions">
+      <a href="mailto:dsantibanezo@utem.cl" class="btn-signal filled">▶ Contacto</a>
+      <a href="https://linkedin.com/in/diego-santibanez-oyarce" target="_blank" class="btn-signal">◇ LinkedIn</a>
+    </div>
+  </section>
+
+  <section id="experiencia" class="fade-in">
+    <div class="section-header">01 // Experiencia</div>
+    <div class="panel">
+      <div class="exp-grid">
+        <div class="exp-date">DIC 2023 –<br>SEP 2025</div>
+        <div>
+          <div class="exp-role">Asistente de Investigación</div>
+          <div class="exp-org">UTEM</div>
+          <div class="exp-desc">Congresos nacionales e internacionales:</div>
+          <ul class="exp-list">
+            <li>1ras Jornadas CdD y Salud Pública — U. Chile</li>
+            <li>Carla2024 Flash Talk</li>
+            <li>III Congreso Vive la Investigación</li>
+            <li>XIV Congreso Argentino Bioinformática</li>
+            <li>III Reunión SCHB — Flash Talk</li>
+            <li>Carla2025 — Mejor póster</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="exp-grid">
+        <div class="exp-date">FEB 2025 –<br>SEP 2025</div>
+        <div><div class="exp-role">Técnico Análisis de Datos Avanzado</div><div class="exp-org">UTEM</div><div class="exp-desc">Web scraping, dashboards Plotly/Streamlit, MariaDB/PostgreSQL, NLP.</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="exp-grid">
+        <div class="exp-date">MAR 2025 –<br>JUL 2025</div>
+        <div><div class="exp-role">Ayudante de Cátedra</div><div class="exp-org">UTEM</div><div class="exp-desc">Mentoría en visualización de datos.</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="exp-grid">
+        <div class="exp-date">AGO 2024 –<br>ENE 2025</div>
+        <div><div class="exp-role">Practicante Profesional</div><div class="exp-org">Contraloría General de la República</div><div class="exp-desc">Impala, Oracle, SQL avanzado, automatización Python.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="proyectos" class="fade-in">
+    <div class="section-header">02 // Proyectos</div>
+    <div class="panel">
+      <div class="proj-title">Dashboard de Avance de Proyecto</div>
+      <div class="proj-desc">Dashboard interactivo con visualizaciones geográficas, tablas dinámicas y filtros en tiempo real.</div>
+      <div class="tech-row">
+        <span class="tech-chip">Streamlit</span><span class="tech-chip">Pandas</span><span class="tech-chip">Plotly</span><span class="tech-chip">DuckDB</span><span class="tech-chip">Folium</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills" class="fade-in">
+    <div class="section-header">03 // Habilidades</div>
+    <div class="skills-grid">
+      <div class="panel">
+        <div class="skill-col-title">Técnicas</div>
+        <div class="skill-item">Python</div><div class="skill-item">SQL</div>
+        <div class="skill-item">TensorFlow / scikit-learn</div><div class="skill-item">Pandas / Jupyter</div>
+        <div class="skill-item">Plotly / Streamlit</div><div class="skill-item">Web Scraping</div>
+        <div class="skill-item">PostgreSQL / MariaDB</div><div class="skill-item">SpaCy (NLP)</div>
+      </div>
+      <div class="panel">
+        <div class="skill-col-title">Blandas</div>
+        <div class="skill-item">Resolución de Problemas</div><div class="skill-item">Pensamiento Crítico</div>
+        <div class="skill-item">Adaptabilidad</div><div class="skill-item">Mentoría</div>
+        <div class="skill-item">Curiosidad Intelectual</div><div class="skill-item">Responsabilidad</div>
+        <div class="skill-item">Mentalidad Analítica</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="educacion" class="fade-in">
+    <div class="section-header">04 // Educación</div>
+    <div class="panel">
+      <div class="edu-deg">Ingeniero Civil en Ciencia de Datos</div>
+      <div class="edu-meta">UTEM | 2020 — 2025</div>
+      <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border);">
+        <div class="skill-col-title">Certificaciones</div>
+        <div class="cert-row"><span>Power BI</span><span class="cert-date">Santander X | 2025</span></div>
+        <div class="cert-row"><span>Inglés B2</span><span class="cert-date">2025</span></div>
+        <div class="cert-row"><span>AWS Data Center Tech</span><span class="cert-date">AWS | 2024</span></div>
+        <div class="cert-row"><span>Intro. Ciencia de Datos</span><span class="cert-date">Santander | 2025</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contacto" class="fade-in" style="border-bottom:none;">
+    <div class="section-header">05 // Contacto</div>
+    <div class="panel contact-center">
+      <h2>&gt; Transmitir <span>mensaje</span></h2>
+      <a href="mailto:dsantibanezo@utem.cl" class="contact-email">dsantibanezo@utem.cl</a>
+      <div style="margin-top:1.5rem;">
+        <a href="https://linkedin.com/in/diego-santibanez-oyarce" target="_blank" class="btn-signal">◇ LinkedIn</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>/// FIN DE TRANSMISIÓN /// © 2025 DS.OY /// SIGNAL DESIGN ///</footer>
+</div>
+
+<script>
+  // Waveform animation
+  const canvas = document.getElementById('waveCanvas');
+  const ctx = canvas.getContext('2d');
+  let t = 0;
+  function resize() { canvas.width = window.innerWidth; canvas.height = 200; }
+  resize();
+  window.addEventListener('resize', resize);
+  function drawWave() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = 'rgba(0, 255, 136, 0.4)';
+    ctx.lineWidth = 1;
+    for (let w = 0; w < 3; w++) {
+      ctx.beginPath();
+      const amp = 30 - w * 8;
+      const freq = 0.005 + w * 0.002;
+      const yBase = 100 + w * 20;
+      for (let x = 0; x < canvas.width; x++) {
+        const y = yBase + Math.sin(x * freq + t + w) * amp + Math.sin(x * freq * 2.5 + t * 1.5) * (amp * 0.3);
+        if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+    t += 0.02;
+    requestAnimationFrame(drawWave);
+  }
+  drawWave();
+
+  // Fade in
+  const obs = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }), {threshold:0.1});
+  document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diego Santibanez Oyarce | Terminal Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet" />
+  <style>
+    /* ──────────────────────────────────────────────
+       RESET & BASE
+    ────────────────────────────────────────────── */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg:        #0a0a0a;
+      --surface:   #141414;
+      --green:     #00ff41;
+      --green-dim: #00cc33;
+      --green-glow:#00ff4180;
+      --cyan:      #00ffcc;
+      --cyan-glow: #00ffcc80;
+      --gray:      #555;
+      --gray-light:#888;
+      --white:     #e0ffe0;
+      --red:       #ff4444;
+      --yellow:    #ffcc00;
+      --font:      'JetBrains Mono', 'Courier New', monospace;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--green);
+      font-family: var(--font);
+      font-size: 14px;
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* CRT scanlines overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.15) 2px,
+        rgba(0, 0, 0, 0.15) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* CRT vignette */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(
+        ellipse at center,
+        transparent 60%,
+        rgba(0, 0, 0, 0.6) 100%
+      );
+      pointer-events: none;
+      z-index: 9998;
+    }
+
+    /* ──────────────────────────────────────────────
+       SCROLLBAR
+    ────────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--green-dim); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--green); }
+
+    /* ──────────────────────────────────────────────
+       ANIMATIONS
+    ────────────────────────────────────────────── */
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+
+    @keyframes scanline-sweep {
+      0%   { transform: translateY(-100%); }
+      100% { transform: translateY(100vh); }
+    }
+
+    @keyframes boot-fade {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes flicker {
+      0%   { opacity: 1; }
+      92%  { opacity: 1; }
+      93%  { opacity: 0.8; }
+      94%  { opacity: 1; }
+      98%  { opacity: 1; }
+      99%  { opacity: 0.9; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to   { width: 100%; }
+    }
+
+    /* ──────────────────────────────────────────────
+       TOPBAR / NAVBAR
+    ────────────────────────────────────────────── */
+    #topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: var(--surface);
+      border-bottom: 1px solid var(--green-dim);
+      box-shadow: 0 0 20px var(--green-glow), 0 2px 0 var(--green-dim);
+      animation: flicker 8s infinite;
+    }
+
+    .topbar-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .topbar-title {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 0 0.3rem;
+      font-size: 11px;
+      color: var(--gray-light);
+      border-bottom: 1px solid #1e1e1e;
+    }
+
+    .topbar-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .dot-red    { background: #ff5f56; }
+    .dot-yellow { background: #ffbd2e; }
+    .dot-green  { background: #27c93f; }
+
+    .topbar-title span {
+      margin-left: auto;
+      margin-right: auto;
+      color: var(--gray-light);
+    }
+
+    .topbar-prompt {
+      font-size: 12px;
+      padding: 0.3rem 0;
+      color: var(--gray-light);
+    }
+
+    .topbar-prompt .prompt-user { color: var(--green); font-weight: 700; }
+    .topbar-prompt .prompt-at   { color: var(--gray); }
+    .topbar-prompt .prompt-host { color: var(--cyan); }
+    .topbar-prompt .prompt-path { color: var(--green-dim); }
+    .topbar-prompt .prompt-sym  { color: var(--white); }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.2rem 0.1rem;
+      padding: 0.4rem 0 0.5rem;
+    }
+
+    nav a {
+      color: var(--cyan);
+      text-decoration: none;
+      font-size: 12px;
+      padding: 0.15rem 0.5rem;
+      border: 1px solid transparent;
+      border-radius: 2px;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    nav a::before {
+      content: './';
+      color: var(--gray);
+      font-size: 11px;
+    }
+
+    nav a:hover {
+      color: var(--green);
+      border-color: var(--green-dim);
+      background: rgba(0, 255, 65, 0.05);
+      text-shadow: 0 0 8px var(--green-glow);
+    }
+
+    /* ──────────────────────────────────────────────
+       MAIN WRAPPER
+    ────────────────────────────────────────────── */
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 8rem 1.5rem 4rem;
+    }
+
+    /* ──────────────────────────────────────────────
+       SECTION BLOCK
+    ────────────────────────────────────────────── */
+    .section {
+      margin-bottom: 3.5rem;
+      animation: boot-fade 0.4s ease both;
+    }
+
+    .cmd-line {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 1.2rem;
+      padding: 0.5rem 0.8rem;
+      background: var(--surface);
+      border-left: 3px solid var(--green);
+      border-radius: 0 4px 4px 0;
+      box-shadow: inset 0 0 12px rgba(0, 255, 65, 0.04);
+    }
+
+    .cmd-prompt {
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 700;
+      text-shadow: 0 0 8px var(--green-glow);
+      white-space: nowrap;
+    }
+
+    .cmd-prompt .user  { color: var(--green); }
+    .cmd-prompt .at    { color: var(--gray); }
+    .cmd-prompt .host  { color: var(--cyan); text-shadow: 0 0 8px var(--cyan-glow); }
+    .cmd-prompt .path  { color: var(--green-dim); }
+    .cmd-prompt .sym   { color: var(--white); }
+
+    .cmd-text {
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .cmd-text .cmd-name { color: var(--yellow); font-weight: 700; }
+    .cmd-text .cmd-arg  { color: var(--cyan); }
+    .cmd-text .cmd-flag { color: var(--green-dim); }
+
+    /* ──────────────────────────────────────────────
+       SECTION CONTENT WRAPPER
+    ────────────────────────────────────────────── */
+    .output {
+      padding: 0 0.5rem 0 1rem;
+      border-left: 1px solid #1e1e1e;
+    }
+
+    /* ──────────────────────────────────────────────
+       HERO / INICIO
+    ────────────────────────────────────────────── */
+    .hero-banner {
+      background: var(--surface);
+      border: 1px solid var(--green-dim);
+      border-radius: 4px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 0 20px rgba(0,255,65,0.08), inset 0 0 20px rgba(0,0,0,0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-banner::before {
+      content: '';
+      position: absolute;
+      top: -1px; left: -1px; right: -1px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--green), transparent);
+      animation: scanline-sweep 4s linear infinite;
+      opacity: 0.6;
+    }
+
+    .ascii-name {
+      color: var(--green);
+      font-size: clamp(7px, 1.8vw, 13px);
+      line-height: 1.2;
+      text-shadow: 0 0 10px var(--green-glow);
+      white-space: pre;
+      overflow-x: auto;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+
+    .hero-title {
+      color: var(--cyan);
+      font-size: 18px;
+      font-weight: 700;
+      text-shadow: 0 0 12px var(--cyan-glow);
+      margin-bottom: 0.4rem;
+    }
+
+    .hero-subtitle {
+      color: var(--green-dim);
+      font-size: 13px;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-subtitle::before { content: '# '; color: var(--gray); }
+
+    .hero-bio {
+      color: var(--white);
+      font-size: 13px;
+      line-height: 1.8;
+      border-left: 2px solid var(--green-dim);
+      padding-left: 1rem;
+    }
+
+    .hero-bio::before {
+      content: '"""';
+      display: block;
+      color: var(--gray);
+      margin-bottom: 0.3rem;
+    }
+
+    .hero-bio::after {
+      content: '"""';
+      display: block;
+      color: var(--gray);
+      margin-top: 0.3rem;
+    }
+
+    /* Cursor blink */
+    .cursor {
+      display: inline-block;
+      width: 9px;
+      height: 1.1em;
+      background: var(--green);
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+      box-shadow: 0 0 6px var(--green-glow);
+      margin-left: 2px;
+    }
+
+    /* ──────────────────────────────────────────────
+       STATUS LINE
+    ────────────────────────────────────────────── */
+    .status-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1.2rem;
+      font-size: 12px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.2rem 0.6rem;
+      border: 1px solid var(--green-dim);
+      border-radius: 2px;
+      color: var(--green-dim);
+      background: rgba(0,255,65,0.04);
+    }
+
+    .status-badge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 4px var(--green-glow);
+      animation: blink 2s step-end infinite;
+    }
+
+    /* ──────────────────────────────────────────────
+       EXPERIENCE CARDS
+    ────────────────────────────────────────────── */
+    .exp-entry {
+      background: var(--surface);
+      border: 1px solid #1e1e1e;
+      border-radius: 4px;
+      padding: 1.2rem;
+      margin-bottom: 1.2rem;
+      position: relative;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .exp-entry:hover {
+      border-color: var(--green-dim);
+      box-shadow: 0 0 12px rgba(0,255,65,0.08);
+    }
+
+    .exp-entry::before {
+      content: attr(data-index);
+      position: absolute;
+      top: 0.7rem;
+      right: 0.8rem;
+      font-size: 11px;
+      color: var(--gray);
+    }
+
+    .exp-header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem 1rem;
+      margin-bottom: 0.6rem;
+      align-items: baseline;
+    }
+
+    .exp-role {
+      color: var(--cyan);
+      font-weight: 700;
+      font-size: 14px;
+      text-shadow: 0 0 8px var(--cyan-glow);
+    }
+
+    .exp-company {
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .exp-period {
+      color: var(--gray-light);
+      font-size: 11px;
+      margin-left: auto;
+    }
+
+    .exp-period::before { content: '[ '; color: var(--gray); }
+    .exp-period::after  { content: ' ]'; color: var(--gray); }
+
+    .exp-items {
+      list-style: none;
+      margin-top: 0.6rem;
+    }
+
+    .exp-items li {
+      color: var(--white);
+      font-size: 12px;
+      padding: 0.2rem 0 0.2rem 1.4rem;
+      position: relative;
+      line-height: 1.6;
+    }
+
+    .exp-items li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--green-dim);
+      font-size: 11px;
+    }
+
+    .exp-sub {
+      list-style: none;
+      margin-top: 0.3rem;
+      margin-left: 1rem;
+    }
+
+    .exp-sub li {
+      color: var(--gray-light);
+      font-size: 11px;
+      padding: 0.1rem 0 0.1rem 1.2rem;
+      position: relative;
+    }
+
+    .exp-sub li::before {
+      content: '├─';
+      position: absolute;
+      left: 0;
+      color: var(--gray);
+      font-size: 10px;
+    }
+
+    .exp-sub li:last-child::before {
+      content: '└─';
+    }
+
+    /* ──────────────────────────────────────────────
+       LINKS
+    ────────────────────────────────────────────── */
+    a {
+      color: var(--cyan);
+      text-decoration: none;
+      border-bottom: 1px dashed var(--cyan);
+      transition: all 0.15s ease;
+    }
+
+    a:hover {
+      color: var(--green);
+      border-bottom-color: var(--green);
+      text-shadow: 0 0 8px var(--green-glow);
+    }
+
+    /* ──────────────────────────────────────────────
+       PROJECTS
+    ────────────────────────────────────────────── */
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--green-dim);
+      border-radius: 4px;
+      padding: 1.2rem;
+      box-shadow: 0 0 15px rgba(0,255,65,0.06);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-card::before {
+      content: 'PROJECT';
+      position: absolute;
+      top: 0.6rem;
+      right: 0.8rem;
+      font-size: 9px;
+      color: var(--gray);
+      letter-spacing: 2px;
+    }
+
+    .project-name {
+      color: var(--cyan);
+      font-weight: 700;
+      font-size: 15px;
+      text-shadow: 0 0 10px var(--cyan-glow);
+      margin-bottom: 0.3rem;
+    }
+
+    .project-year {
+      color: var(--gray);
+      font-size: 11px;
+    }
+
+    .project-desc {
+      color: var(--white);
+      font-size: 12px;
+      margin: 0.6rem 0;
+      line-height: 1.7;
+    }
+
+    .project-tech {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin: 0.8rem 0;
+    }
+
+    .tech-tag {
+      font-size: 11px;
+      padding: 0.15rem 0.5rem;
+      border: 1px solid var(--green-dim);
+      border-radius: 2px;
+      color: var(--green-dim);
+      background: rgba(0,255,65,0.04);
+    }
+
+    .tech-tag::before { content: '#'; color: var(--gray); margin-right: 2px; }
+
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 12px;
+      color: var(--cyan);
+      border: 1px solid var(--cyan);
+      border-radius: 2px;
+      padding: 0.3rem 0.7rem;
+      transition: all 0.15s ease;
+    }
+
+    .project-link:hover {
+      background: rgba(0,255,204,0.08);
+      box-shadow: 0 0 10px var(--cyan-glow);
+      text-shadow: 0 0 8px var(--cyan-glow);
+      border-color: var(--cyan);
+    }
+
+    .project-link::before {
+      content: '$ open ';
+      color: var(--gray);
+      font-size: 11px;
+    }
+
+    /* ──────────────────────────────────────────────
+       SKILLS — ASCII TABLE
+    ────────────────────────────────────────────── */
+    .skills-table-wrap {
+      overflow-x: auto;
+      margin-bottom: 1.2rem;
+    }
+
+    .skills-label {
+      color: var(--green-dim);
+      font-size: 11px;
+      margin-bottom: 0.4rem;
+      letter-spacing: 1px;
+    }
+
+    .skills-label::before { content: '# '; color: var(--gray); }
+
+    table.ascii-table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 400px;
+      font-size: 12px;
+      color: var(--white);
+    }
+
+    table.ascii-table th,
+    table.ascii-table td {
+      border: 1px solid #2a2a2a;
+      padding: 0.35rem 0.8rem;
+      text-align: left;
+    }
+
+    table.ascii-table thead th {
+      background: rgba(0,255,65,0.06);
+      color: var(--green);
+      font-weight: 700;
+      text-shadow: 0 0 6px var(--green-glow);
+      letter-spacing: 0.5px;
+      font-size: 11px;
+    }
+
+    table.ascii-table tbody tr:nth-child(even) {
+      background: rgba(255,255,255,0.015);
+    }
+
+    table.ascii-table tbody tr:hover {
+      background: rgba(0,255,65,0.04);
+    }
+
+    table.ascii-table td:first-child {
+      color: var(--cyan);
+      font-weight: 600;
+    }
+
+    .skill-level {
+      display: inline-block;
+      font-family: var(--font);
+      color: var(--green);
+      letter-spacing: 1px;
+    }
+
+    .skill-level .filled { color: var(--green); text-shadow: 0 0 4px var(--green-glow); }
+    .skill-level .empty  { color: #2a2a2a; }
+
+    /* Soft skills pills */
+    .soft-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.6rem;
+    }
+
+    .soft-pill {
+      font-size: 12px;
+      padding: 0.25rem 0.7rem;
+      border: 1px solid #2a3a2a;
+      border-radius: 2px;
+      color: var(--green-dim);
+      background: rgba(0,255,65,0.03);
+    }
+
+    .soft-pill::before { content: '+ '; color: var(--gray); }
+
+    /* ──────────────────────────────────────────────
+       EDUCATION
+    ────────────────────────────────────────────── */
+    .edu-block {
+      background: var(--surface);
+      border: 1px solid #1e1e1e;
+      border-radius: 4px;
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    .edu-block:hover { border-color: var(--green-dim); }
+
+    .edu-degree {
+      color: var(--cyan);
+      font-weight: 700;
+      font-size: 14px;
+      text-shadow: 0 0 8px var(--cyan-glow);
+    }
+
+    .edu-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1.5rem;
+      margin-top: 0.3rem;
+      font-size: 12px;
+    }
+
+    .edu-school { color: var(--green); font-weight: 600; }
+    .edu-year   { color: var(--gray-light); }
+    .edu-year::before { content: '[ '; color: var(--gray); }
+    .edu-year::after  { content: ' ]'; color: var(--gray); }
+
+    .edu-desc {
+      margin-top: 0.6rem;
+      font-size: 12px;
+      color: var(--gray-light);
+      line-height: 1.6;
+      padding-left: 0.8rem;
+      border-left: 1px solid #2a2a2a;
+    }
+
+    /* ──────────────────────────────────────────────
+       CERTIFICATES
+    ────────────────────────────────────────────── */
+    .cert-list {
+      list-style: none;
+    }
+
+    .cert-list li {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.3rem 0.8rem;
+      padding: 0.5rem 0.7rem;
+      border-bottom: 1px dashed #1e1e1e;
+      font-size: 12px;
+      transition: background 0.15s;
+    }
+
+    .cert-list li:hover { background: rgba(0,255,65,0.02); }
+
+    .cert-list li::before {
+      content: '[cert]';
+      color: var(--gray);
+      font-size: 10px;
+      flex-shrink: 0;
+    }
+
+    .cert-name   { color: var(--white); font-weight: 600; }
+    .cert-issuer { color: var(--green-dim); }
+    .cert-year   { color: var(--gray-light); margin-left: auto; }
+    .cert-year::before { content: 'v'; color: var(--gray); }
+
+    /* ──────────────────────────────────────────────
+       CONTACT — JSON BLOCK
+    ────────────────────────────────────────────── */
+    .json-block {
+      background: var(--surface);
+      border: 1px solid var(--green-dim);
+      border-radius: 4px;
+      padding: 1.5rem;
+      font-size: 13px;
+      box-shadow: 0 0 20px rgba(0,255,65,0.06);
+      position: relative;
+    }
+
+    .json-block::before {
+      content: 'JSON';
+      position: absolute;
+      top: 0.6rem;
+      right: 0.8rem;
+      font-size: 9px;
+      color: var(--gray);
+      letter-spacing: 2px;
+    }
+
+    .json-brace   { color: var(--gray-light); }
+    .json-key     { color: var(--cyan); }
+    .json-string  { color: var(--green); }
+    .json-link    { color: var(--green); }
+    .json-comma   { color: var(--gray-light); }
+    .json-indent  { padding-left: 1.5rem; display: block; }
+
+    /* ──────────────────────────────────────────────
+       DIVIDER
+    ────────────────────────────────────────────── */
+    .term-divider {
+      border: none;
+      border-top: 1px dashed #1e1e1e;
+      margin: 2.5rem 0;
+    }
+
+    /* ──────────────────────────────────────────────
+       FOOTER
+    ────────────────────────────────────────────── */
+    footer {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1.5rem 1.5rem 3rem;
+      border-top: 1px dashed #1e1e1e;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      font-size: 11px;
+      color: var(--gray);
+    }
+
+    .footer-prompt::before { content: '$ '; color: var(--green-dim); }
+
+    .footer-exit {
+      color: var(--gray);
+      font-size: 11px;
+    }
+
+    /* ──────────────────────────────────────────────
+       RESPONSIVE
+    ────────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      body { font-size: 13px; }
+      main { padding: 7.5rem 1rem 3rem; }
+
+      nav a { font-size: 11px; padding: 0.15rem 0.4rem; }
+
+      .ascii-name { font-size: 6px; }
+
+      .exp-period { margin-left: 0; }
+
+      table.ascii-table { min-width: 300px; font-size: 11px; }
+
+      .hero-title { font-size: 15px; }
+
+      .cmd-text { font-size: 12px; }
+    }
+
+    @media (max-width: 400px) {
+      .ascii-name { font-size: 5px; }
+      nav { gap: 0.15rem; }
+      nav a { font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ────────────────────────────────────────────
+       TOPBAR / TERMINAL NAVBAR
+  ──────────────────────────────────────────────── -->
+  <div id="topbar">
+    <div class="topbar-inner">
+      <!-- Window chrome -->
+      <div class="topbar-title">
+        <span class="topbar-dot dot-red"></span>
+        <span class="topbar-dot dot-yellow"></span>
+        <span class="topbar-dot dot-green"></span>
+        <span>diego@portfolio — bash — 80×24</span>
+      </div>
+
+      <!-- Prompt line -->
+      <div class="topbar-prompt">
+        <span class="prompt-user">diego</span><span class="prompt-at">@</span><span class="prompt-host">portfolio</span><span class="prompt-path">:~</span><span class="prompt-sym">$</span>
+        <span style="color:var(--yellow); margin-left:0.4rem;">cd</span>
+        <span style="color:var(--white); margin-left:0.3rem;">seccion</span>
+      </div>
+
+      <!-- Nav -->
+      <nav aria-label="Navegacion principal">
+        <a href="#inicio">inicio</a>
+        <a href="#experiencia">experiencia</a>
+        <a href="#proyectos">proyectos</a>
+        <a href="#habilidades">habilidades</a>
+        <a href="#educacion">educacion</a>
+        <a href="#contacto">contacto</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- ────────────────────────────────────────────
+       MAIN
+  ──────────────────────────────────────────────── -->
+  <main>
+
+    <!-- ── INICIO ────────────────────────────── -->
+    <section class="section" id="inicio">
+      <div class="cmd-line">
+        <span class="cmd-prompt">
+          <span class="user">diego</span><span class="at">@</span><span class="host">portfolio</span><span class="path">:~</span><span class="sym">$</span>
+        </span>
+        <span class="cmd-text">
+          <span class="cmd-name">cat</span> <span class="cmd-arg">whoami.txt</span>
+        </span>
+      </div>
+      <div class="output">
+        <div class="hero-banner">
+          <div class="ascii-name">
+ ____  _                  ____              _   _ _
+|  _ \(_) ___  __ _  ___ / ___|  __ _ _ __ | |_(_) |__   __ _ _ __   ___ ____
+| | | | |/ _ \/ _` |/ _ \\___ \ / _` | '_ \| __| | '_ \ / _` | '_ \ / _ \_  /
+| |_| | |  __/ (_| | (_) |___) | (_| | | | | |_| | |_) | (_| | | | |  __// /
+|____/|_|\___|\__, |\___/|____/ \__,_|_| |_|\__|_|_.__/ \__,_|_| |_|\___/___|
+              |___/
+          </div>
+          <div class="hero-title">Diego Santibanez Oyarce</div>
+          <div class="hero-subtitle">Cientifico de datos</div>
+          <div class="hero-bio">
+            Egresado de Ingenieria Civil en Ciencia de datos en Agosto 2025, apasionado por la tecnologia y con un gran interes en el uso de la inteligencia artificial como herramienta para la resolucion de problemas del mundo real. Mi formacion academica me proporciono una solida comprension de algoritmos de aprendizaje automatico, analisis y visualizacion de datos. Me gusta proponerme desafios donde pueda poner en practica mis conocimientos y donde ademas pueda aprender cosas nuevas.
+          </div>
+          <div class="status-line">
+            <span class="status-badge"><span class="dot"></span>Disponible para oportunidades</span>
+            <span class="status-badge">Santiago, Chile</span>
+            <span class="status-badge">2025</span>
+          </div>
+        </div>
+        <!-- inline cursor at end -->
+        <span style="font-size:12px; color:var(--gray-light);">output: 1 file &nbsp; [OK]</span><span class="cursor"></span>
+      </div>
+    </section>
+
+    <hr class="term-divider" />
+
+    <!-- ── EXPERIENCIA ────────────────────────── -->
+    <section class="section" id="experiencia">
+      <div class="cmd-line">
+        <span class="cmd-prompt">
+          <span class="user">diego</span><span class="at">@</span><span class="host">portfolio</span><span class="path">:~</span><span class="sym">$</span>
+        </span>
+        <span class="cmd-text">
+          <span class="cmd-name">cat</span> <span class="cmd-arg">experiencia.md</span> <span class="cmd-flag">--verbose</span>
+        </span>
+      </div>
+      <div class="output">
+
+        <!-- Exp 1 -->
+        <div class="exp-entry" data-index="[1/4]">
+          <div class="exp-header">
+            <span class="exp-role">Asistente de investigacion</span>
+            <span class="exp-company">UTEM</span>
+            <span class="exp-period">Dic 2023 — Sep 2025</span>
+          </div>
+          <ul class="exp-items">
+            <li>
+              Presentacion poster en "1ras Jornadas de Ciencia de Datos y Salud Publica" — Universidad de Chile, Enero 2024
+              <ul class="exp-sub">
+                <li><a href="https://drive.google.com/file/d/124VDD5x6pBidyC1Wx4ZLehAQixdjZ9dS/view?usp=sharing" target="_blank">Certificado de participacion</a></li>
+                <li><a href="https://drive.google.com/file/d/1gRjnIt9xa5CYPhbgGFTKR1o5WV3RB8H6/view?usp=drive_link" target="_blank">Link poster</a></li>
+              </ul>
+            </li>
+            <li>
+              Flash Talk (5 min) y presentacion de poster en Carla2024 — Septiembre 2024
+              <ul class="exp-sub">
+                <li><a href="https://drive.google.com/file/d/1jHc_2fZiakh2G9t8EkiB7Z3l0iuWBJ7n/view?usp=sharing" target="_blank">Certificado de participacion</a></li>
+                <li><a href="https://drive.google.com/file/d/1jfS4S75dwoBnUMZ3xeQOFfBzX6HP5gpc/view?usp=drive_link" target="_blank">Link poster</a></li>
+              </ul>
+            </li>
+            <li>
+              Presentacion poster en "III Congreso Vive la Investigacion 2024" — Octubre 2024
+              <ul class="exp-sub">
+                <li><a href="https://drive.google.com/file/d/1unqW5oOxe5wl84-vmq4Y8AhXmD1sJJL_/view?usp=sharing" target="_blank">Certificado de participacion</a></li>
+                <li><a href="https://drive.google.com/file/d/1OEKXi8gl7Z9bGySQ8esoomkDJLPiBLCE/view?usp=drive_link" target="_blank">Link poster</a></li>
+              </ul>
+            </li>
+            <li>
+              Presentacion poster en "XIV Congreso Argentino de Bioinformatica y Biologia Computacional" — Noviembre 2024
+              <ul class="exp-sub">
+                <li><a href="https://drive.google.com/file/d/1br_Vv35RmHxvyPScFlhDCJxucFz0ckii/view?usp=sharing" target="_blank">Certificado de participacion</a></li>
+                <li><a href="https://drive.google.com/file/d/1wLUe3ssEY_XcOgoTbVJj0B5C7plK-G9n/view?usp=drive_link" target="_blank">Link poster</a></li>
+              </ul>
+            </li>
+            <li>
+              Flash Talk (15 min) en "III Reunion Anual de la Sociedad Chilena de Bioinformatica" — Noviembre 2024. Invitacion a publicar manuscrito en <em style="color:var(--cyan);">Bioinformatics Advances (Oxford University Press)</em>
+              <ul class="exp-sub">
+                <li><a href="https://drive.google.com/file/d/1-dZ_CdZlYkd58OlGr3v92n8pLshnurje/view?usp=sharing" target="_blank">Certificado de participacion</a></li>
+              </ul>
+            </li>
+            <li>
+              Presentacion poster en Carla2025 — Septiembre 2025 <span style="color:var(--yellow); font-weight:700;">[PREMIO AL MEJOR POSTER]</span>
+              <ul class="exp-sub">
+                <li><a href="https://drive.google.com/file/d/10tcRQonSWMgKQ8FciWOsCobzQAlWCPr9/view?usp=sharing" target="_blank">Certificado de participacion</a></li>
+                <li><a href="https://drive.google.com/file/d/1M_MhsoB8BCUO5LITTVvQw0Hi9l7RU4Vj/view?usp=sharing" target="_blank">Premio al mejor poster</a></li>
+                <li><a href="https://drive.google.com/file/d/14Fc9u_zCtxiKG7RKW3W85Rv6X4OJy5HP/view?usp=drive_link" target="_blank">Link poster</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Exp 2 -->
+        <div class="exp-entry" data-index="[2/4]">
+          <div class="exp-header">
+            <span class="exp-role">Tecnico para analisis de datos avanzado</span>
+            <span class="exp-company">UTEM</span>
+            <span class="exp-period">Feb 2025 — Sep 2025</span>
+          </div>
+          <ul class="exp-items">
+            <li>Implementacion de web scraping con Python (Selenium y BeautifulSoup) para extraccion automatizada de datos</li>
+            <li>Creacion de dashboards interactivos con Plotly y Streamlit para visualizar avances del proyecto</li>
+            <li>Diseno y gestion de bases de datos en MariaDB y PostgreSQL para almacenamiento de datos estructurados</li>
+            <li>Aplicacion de procesamiento de lenguaje natural para analisis y filtrado de datos</li>
+          </ul>
+        </div>
+
+        <!-- Exp 3 -->
+        <div class="exp-entry" data-index="[3/4]">
+          <div class="exp-header">
+            <span class="exp-role">Ayudante de Catedra — Visualizacion de Datos</span>
+            <span class="exp-company">UTEM</span>
+            <span class="exp-period">Mar 2025 — Jul 2025</span>
+          </div>
+          <ul class="exp-items">
+            <li>Ensenanza y mentoria a estudiantes en tecnicas de visualizacion de datos</li>
+          </ul>
+        </div>
+
+        <!-- Exp 4 -->
+        <div class="exp-entry" data-index="[4/4]">
+          <div class="exp-header">
+            <span class="exp-role">Practicante Profesional</span>
+            <span class="exp-company">Contraloria General de la Republica</span>
+            <span class="exp-period">Ago 2024 — Ene 2025</span>
+          </div>
+          <ul class="exp-items">
+            <li>Analisis de datos utilizando Impala y Oracle</li>
+            <li>Desarrollo de consultas SQL y automatizacion de procesos mediante codigos de Python</li>
+          </ul>
+        </div>
+
+      </div><!-- /output -->
+    </section>
+
+    <hr class="term-divider" />
+
+    <!-- ── PROYECTOS ───────────────────────────── -->
+    <section class="section" id="proyectos">
+      <div class="cmd-line">
+        <span class="cmd-prompt">
+          <span class="user">diego</span><span class="at">@</span><span class="host">portfolio</span><span class="path">:~</span><span class="sym">$</span>
+        </span>
+        <span class="cmd-text">
+          <span class="cmd-name">ls</span> <span class="cmd-flag">-la</span> <span class="cmd-arg">./proyectos/</span>
+        </span>
+      </div>
+      <div class="output">
+
+        <div class="project-card">
+          <div class="project-name">Dashboard de avance de proyecto</div>
+          <div class="project-year">2025</div>
+          <div class="project-desc">
+            Dashboard interactivo desarrollado con Streamlit para visualizar el avance y estado de los datos utilizados en el proyecto. Permite monitoreo en tiempo real con graficos dinamicos y filtros interactivos.
+          </div>
+          <div class="project-tech">
+            <span class="tech-tag">Python</span>
+            <span class="tech-tag">Streamlit</span>
+            <span class="tech-tag">Pandas</span>
+            <span class="tech-tag">Plotly</span>
+            <span class="tech-tag">DuckDB</span>
+            <span class="tech-tag">Folium</span>
+          </div>
+          <a class="project-link" href="https://dashboarddatalake-fiut-utem.streamlit.app/" target="_blank">dashboarddatalake-fiut-utem.streamlit.app</a>
+        </div>
+
+      </div>
+    </section>
+
+    <hr class="term-divider" />
+
+    <!-- ── HABILIDADES ────────────────────────── -->
+    <section class="section" id="habilidades">
+      <div class="cmd-line">
+        <span class="cmd-prompt">
+          <span class="user">diego</span><span class="at">@</span><span class="host">portfolio</span><span class="path">:~</span><span class="sym">$</span>
+        </span>
+        <span class="cmd-text">
+          <span class="cmd-name">pip</span> <span class="cmd-arg">list</span> <span class="cmd-flag">--format=columns</span>
+        </span>
+      </div>
+      <div class="output">
+
+        <div class="skills-label">Hard Skills</div>
+        <div class="skills-table-wrap">
+          <table class="ascii-table">
+            <thead>
+              <tr>
+                <th>Package</th>
+                <th>Version / Level</th>
+                <th>Category</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Python</td>
+                <td><span class="skill-level"><span class="filled">█████</span></span></td>
+                <td>Lenguaje</td>
+              </tr>
+              <tr>
+                <td>SQL</td>
+                <td><span class="skill-level"><span class="filled">████</span><span class="empty">█</span></span></td>
+                <td>Bases de datos</td>
+              </tr>
+              <tr>
+                <td>TensorFlow</td>
+                <td><span class="skill-level"><span class="filled">███</span><span class="empty">██</span></span></td>
+                <td>Deep Learning</td>
+              </tr>
+              <tr>
+                <td>scikit-learn</td>
+                <td><span class="skill-level"><span class="filled">████</span><span class="empty">█</span></span></td>
+                <td>Machine Learning</td>
+              </tr>
+              <tr>
+                <td>Pandas</td>
+                <td><span class="skill-level"><span class="filled">█████</span></span></td>
+                <td>Analisis de datos</td>
+              </tr>
+              <tr>
+                <td>Jupyter Notebooks</td>
+                <td><span class="skill-level"><span class="filled">█████</span></span></td>
+                <td>Entorno de desarrollo</td>
+              </tr>
+              <tr>
+                <td>Plotly</td>
+                <td><span class="skill-level"><span class="filled">████</span><span class="empty">█</span></span></td>
+                <td>Visualizacion</td>
+              </tr>
+              <tr>
+                <td>Streamlit</td>
+                <td><span class="skill-level"><span class="filled">████</span><span class="empty">█</span></span></td>
+                <td>Visualizacion / Apps</td>
+              </tr>
+              <tr>
+                <td>Web Scraping</td>
+                <td><span class="skill-level"><span class="filled">████</span><span class="empty">█</span></span></td>
+                <td>Extraccion de datos</td>
+              </tr>
+              <tr>
+                <td>PostgreSQL</td>
+                <td><span class="skill-level"><span class="filled">███</span><span class="empty">██</span></span></td>
+                <td>Bases de datos</td>
+              </tr>
+              <tr>
+                <td>MariaDB</td>
+                <td><span class="skill-level"><span class="filled">███</span><span class="empty">██</span></span></td>
+                <td>Bases de datos</td>
+              </tr>
+              <tr>
+                <td>SpaCy</td>
+                <td><span class="skill-level"><span class="filled">███</span><span class="empty">██</span></span></td>
+                <td>NLP</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="skills-label" style="margin-top:1.4rem;">Soft Skills</div>
+        <div class="soft-grid">
+          <span class="soft-pill">Resolucion de Problemas</span>
+          <span class="soft-pill">Pensamiento Critico</span>
+          <span class="soft-pill">Adaptabilidad</span>
+          <span class="soft-pill">Mentoria</span>
+          <span class="soft-pill">Curiosidad intelectual</span>
+          <span class="soft-pill">Responsabilidad</span>
+          <span class="soft-pill">Mentalidad de experimentacion</span>
+          <span class="soft-pill">Mentalidad analitica</span>
+        </div>
+
+      </div>
+    </section>
+
+    <hr class="term-divider" />
+
+    <!-- ── EDUCACION & CERTIFICADOS ────────────── -->
+    <section class="section" id="educacion">
+      <div class="cmd-line">
+        <span class="cmd-prompt">
+          <span class="user">diego</span><span class="at">@</span><span class="host">portfolio</span><span class="path">:~</span><span class="sym">$</span>
+        </span>
+        <span class="cmd-text">
+          <span class="cmd-name">cat</span> <span class="cmd-arg">educacion.json</span> <span class="cmd-flag">|</span> <span class="cmd-name">jq</span> <span class="cmd-arg">'.[]'</span>
+        </span>
+      </div>
+      <div class="output">
+
+        <div class="edu-block">
+          <div class="edu-degree">Ingeniero Civil en Ciencia de Datos</div>
+          <div class="edu-meta">
+            <span class="edu-school">Universidad Tecnologica Metropolitana (UTEM)</span>
+            <span class="edu-year">2020 — 2025</span>
+          </div>
+          <div class="edu-desc">
+            Formacion integral en algoritmos de aprendizaje automatico, analisis y visualizacion de datos, con enfoque en aplicaciones de inteligencia artificial para problemas del mundo real.
+          </div>
+        </div>
+
+        <!-- Certificates -->
+        <div class="cmd-line" style="margin-top:1.5rem; margin-bottom:0.8rem;">
+          <span class="cmd-prompt">
+            <span class="user">diego</span><span class="at">@</span><span class="host">portfolio</span><span class="path">:~</span><span class="sym">$</span>
+          </span>
+          <span class="cmd-text">
+            <span class="cmd-name">ls</span> <span class="cmd-arg">./certificados/</span> <span class="cmd-flag">-1</span>
+          </span>
+        </div>
+
+        <ul class="cert-list">
+          <li>
+            <span class="cert-name">Power BI</span>
+            <span class="cert-issuer">Santander X</span>
+            <span class="cert-year">2025</span>
+            <a href="https://drive.google.com/file/d/1IOp4gjfLcW8XhqbiwwOd9dzlz8l60P5q/view?usp=drive_link" target="_blank" style="font-size:11px; margin-left:auto;">[ver certificado]</a>
+          </li>
+          <li>
+            <span class="cert-name">Ingles B2 Upper Intermediate</span>
+            <span class="cert-issuer">Certificacion Internacional</span>
+            <span class="cert-year">2025</span>
+            <a href="https://drive.google.com/file/d/1KT12-fKSs20wCu_AO6c6nEHYi5_v0mK1/view?usp=sharing" target="_blank" style="font-size:11px; margin-left:auto;">[ver certificado]</a>
+          </li>
+          <li>
+            <span class="cert-name">AWS Data Center Technician</span>
+            <span class="cert-issuer">Amazon Web Services</span>
+            <span class="cert-year">2024</span>
+            <a href="https://drive.google.com/file/d/1pYCaTdbJQAmruxvoknp92QbIys4Bt7Ws/view?usp=sharing" target="_blank" style="font-size:11px; margin-left:auto;">[ver certificado]</a>
+          </li>
+          <li>
+            <span class="cert-name">Introduccion a la Ciencia de Datos</span>
+            <span class="cert-issuer">Santander Open Academy</span>
+            <span class="cert-year">2025</span>
+            <a href="https://drive.google.com/file/d/1vmeQuzoZEwUTC0Pz7Xl_rlobqXcreX5w/view?usp=sharing" target="_blank" style="font-size:11px; margin-left:auto;">[ver certificado]</a>
+          </li>
+        </ul>
+
+      </div>
+    </section>
+
+    <hr class="term-divider" />
+
+    <!-- ── CONTACTO ───────────────────────────── -->
+    <section class="section" id="contacto">
+      <div class="cmd-line">
+        <span class="cmd-prompt">
+          <span class="user">diego</span><span class="at">@</span><span class="host">portfolio</span><span class="path">:~</span><span class="sym">$</span>
+        </span>
+        <span class="cmd-text">
+          <span class="cmd-name">curl</span> <span class="cmd-flag">-s</span> <span class="cmd-arg">https://api.diego.dev/contacto</span> <span class="cmd-flag">|</span> <span class="cmd-name">jq</span>
+        </span>
+      </div>
+      <div class="output">
+        <div class="json-block">
+          <span class="json-brace">{</span>
+            <span class="json-indent">
+              <span class="json-key">"nombre"</span><span class="json-brace">:</span>
+              <span class="json-string"> "Diego Santibanez Oyarce"</span><span class="json-comma">,</span>
+            </span>
+            <span class="json-indent">
+              <span class="json-key">"email"</span><span class="json-brace">:</span>
+              <span class="json-string"> "<a href="mailto:dsantibanezo@utem.cl" target="_blank" class="json-link">dsantibanezo@utem.cl</a>"</span><span class="json-comma">,</span>
+            </span>
+            <span class="json-indent">
+              <span class="json-key">"linkedin"</span><span class="json-brace">:</span>
+              <span class="json-string"> "<a href="https://www.linkedin.com/in/diego-santibanez-oyarce/" target="_blank" class="json-link">linkedin.com/in/diego-santibanez-oyarce</a>"</span><span class="json-comma">,</span>
+            </span>
+            <span class="json-indent">
+              <span class="json-key">"github"</span><span class="json-brace">:</span>
+              <span class="json-string"> "<a href="https://github.com/daso42" target="_blank" class="json-link">github.com/daso42</a>"</span><span class="json-comma">,</span>
+            </span>
+            <span class="json-indent">
+              <span class="json-key">"telefono"</span><span class="json-brace">:</span>
+              <span class="json-string"> "<a href="tel:+56984341477" target="_blank" class="json-link">+56 9 8434 1477</a>"</span><span class="json-comma">,</span>
+            </span>
+            <span class="json-indent">
+              <span class="json-key">"disponibilidad"</span><span class="json-brace">:</span>
+              <span class="json-string"> "open_to_work"</span><span class="json-comma">,</span>
+            </span>
+            <span class="json-indent">
+              <span class="json-key">"ubicacion"</span><span class="json-brace">:</span>
+              <span class="json-string"> "Santiago, Chile"</span>
+            </span>
+          <span class="json-brace">}</span>
+          <br/>
+          <span style="color:var(--gray-light); font-size:11px; margin-top:0.6rem; display:block;">HTTP/200 OK &nbsp;·&nbsp; Content-Type: application/json</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ────────────────────────────────────────────
+       FOOTER
+  ──────────────────────────────────────────────── -->
+  <footer>
+    <span class="footer-prompt">exit 0</span>
+    <span class="footer-exit">© 2025 Diego Santibanez Oyarce &nbsp;·&nbsp; All rights reserved</span>
+    <span style="color: var(--gray);">[ session closed ]</span>
+  </footer>
+
+</body>
+</html>

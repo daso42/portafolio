@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diego Santibanez Oyarce — Cientifico de Datos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+::selection{background:#c4956a;color:#faf6f0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Jost',sans-serif;
+  background:#faf6f0;
+  color:#2d3b2d;
+  line-height:1.7;
+  font-weight:400;
+  font-size:16px;
+}
+
+/* ── NAV ── */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(250,246,240,.92);
+  backdrop-filter:blur(8px);
+  border-bottom:1.5px solid #5a7c5a;
+}
+nav .nav-inner{
+  max-width:860px;margin:0 auto;
+  display:flex;align-items:center;justify-content:center;gap:2rem;
+  padding:.85rem 1.5rem;flex-wrap:wrap;
+}
+nav a{
+  font-family:'Jost',sans-serif;
+  font-size:.82rem;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:#2d3b2d;text-decoration:none;
+  position:relative;padding-bottom:3px;
+  transition:color .3s;
+}
+nav a::after{
+  content:'';position:absolute;bottom:0;left:0;width:0;height:1.5px;
+  background:#5a7c5a;transition:width .35s ease;
+}
+nav a:hover{color:#5a7c5a}
+nav a:hover::after{width:100%}
+
+/* ── MAIN COLUMN ── */
+.container{
+  max-width:800px;margin:0 auto;
+  padding:0 1.5rem 4rem;
+}
+
+/* ── SECTIONS ── */
+section{padding:3rem 0 1rem;opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+section.visible{opacity:1;transform:translateY(0)}
+
+/* ── HEADINGS ── */
+h1{
+  font-family:'Lora',serif;font-weight:700;
+  font-size:2.6rem;color:#2d3b2d;line-height:1.2;
+}
+h2.section-title{
+  font-family:'Lora',serif;font-weight:600;
+  font-size:1.35rem;color:#5a7c5a;
+  letter-spacing:.22em;text-transform:uppercase;
+  margin-bottom:2rem;text-align:center;
+}
+h3{font-family:'Lora',serif;font-weight:600;font-size:1.15rem;color:#2d3b2d}
+
+/* ── HERO ── */
+.hero{text-align:center;padding-top:4rem}
+.hero .subtitle{
+  font-family:'Jost',sans-serif;font-weight:400;
+  font-size:1.05rem;letter-spacing:.25em;text-transform:uppercase;
+  color:#5a7c5a;margin:.6rem 0 1.8rem;
+}
+.hero .bio{
+  max-width:640px;margin:0 auto;
+  font-size:1rem;color:#4a5a4a;line-height:1.85;
+}
+
+/* ── BOTANICAL DIVIDER ── */
+.divider{
+  display:flex;align-items:center;justify-content:center;
+  padding:1.5rem 0;
+}
+.divider svg{opacity:.55;transition:opacity .4s}
+.divider:hover svg{opacity:.85}
+
+/* ── EXPERIENCE CARDS ── */
+.exp-card{
+  background:#faf6f0;
+  border-left:3px solid #5a7c5a;
+  padding:1.5rem 1.8rem;
+  margin-bottom:1.5rem;
+  box-shadow:0 1px 6px rgba(45,59,45,.07);
+  border-radius:0 4px 4px 0;
+  transition:box-shadow .3s,transform .3s;
+}
+.exp-card:hover{box-shadow:0 3px 14px rgba(45,59,45,.12);transform:translateY(-2px)}
+.exp-card .role{font-family:'Lora',serif;font-weight:600;font-size:1.05rem;color:#2d3b2d}
+.exp-card .org{color:#5a7c5a;font-size:.92rem;margin-top:.15rem}
+.exp-card .period{font-size:.82rem;color:#8b6914;font-weight:500;letter-spacing:.06em;margin-top:.1rem}
+.exp-card ul{margin-top:.8rem;list-style:none;padding:0}
+.exp-card li{
+  position:relative;padding-left:1.4rem;margin-bottom:.45rem;
+  font-size:.92rem;color:#4a5a4a;line-height:1.6;
+}
+.exp-card li::before{
+  content:'';position:absolute;left:0;top:.55em;
+  width:8px;height:8px;
+  background:#5a7c5a;
+  clip-path:polygon(50% 0%,80% 30%,100% 70%,80% 100%,50% 85%,20% 100%,0% 70%,20% 30%);
+}
+.exp-card a{color:#8b6914;text-decoration:none;border-bottom:1px solid transparent;transition:border-color .3s}
+.exp-card a:hover{border-bottom-color:#8b6914}
+
+/* ── PROJECT CARD ── */
+.project-card{
+  position:relative;
+  background:#faf6f0;
+  padding:2rem 2rem;
+  border:1.5px solid #c4956a;
+  border-radius:6px;
+  box-shadow:0 2px 10px rgba(196,149,106,.1);
+  overflow:hidden;
+}
+.project-card::before,.project-card::after{
+  content:'';position:absolute;width:50px;height:50px;opacity:.25;
+}
+.project-card::before{
+  top:8px;left:8px;
+  border-top:2px solid #5a7c5a;border-left:2px solid #5a7c5a;border-radius:4px 0 0 0;
+}
+.project-card::after{
+  bottom:8px;right:8px;
+  border-bottom:2px solid #5a7c5a;border-right:2px solid #5a7c5a;border-radius:0 0 4px 0;
+}
+.project-card h3{color:#c4956a}
+.project-card .tech{font-size:.85rem;color:#5a7c5a;margin-top:.5rem}
+.project-card .proj-link{
+  display:inline-block;margin-top:1rem;
+  font-size:.88rem;font-weight:500;color:#8b6914;
+  text-decoration:none;border-bottom:1.5px solid #8b6914;
+  transition:color .3s,border-color .3s;
+}
+.project-card .proj-link:hover{color:#c4956a;border-color:#c4956a}
+
+/* ── SKILLS ── */
+.skills-group{margin-bottom:2rem}
+.skills-group h3{
+  font-size:.85rem;letter-spacing:.18em;text-transform:uppercase;
+  color:#8b6914;margin-bottom:.8rem;text-align:center;
+}
+.tags{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center}
+.tag{
+  font-size:.82rem;font-weight:500;
+  padding:.35rem 1rem;
+  border-radius:20px;
+  transition:transform .25s,box-shadow .25s;
+}
+.tag:hover{transform:translateY(-2px);box-shadow:0 3px 8px rgba(45,59,45,.12)}
+.tag.hard{background:#dbe8db;color:#2d3b2d;border:1px solid #b0cdb0}
+.tag.soft{background:#e8dfd0;color:#5a4a30;border:1px solid #d4c8b4}
+
+/* ── EDUCATION (specimen label) ── */
+.edu-card{
+  max-width:520px;margin:0 auto;
+  text-align:center;
+  padding:2.5rem 2rem;
+  position:relative;
+  background:#faf6f0;
+}
+.edu-border{
+  position:absolute;inset:0;pointer-events:none;
+}
+.edu-card .degree{font-family:'Lora',serif;font-size:1.2rem;font-weight:600;color:#2d3b2d}
+.edu-card .inst{color:#5a7c5a;font-size:.95rem;margin-top:.3rem}
+.edu-card .years{font-size:.85rem;color:#8b6914;margin-top:.25rem;letter-spacing:.1em}
+
+/* ── CERTIFICATES GRID ── */
+.cert-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:1rem;
+}
+.cert-card{
+  background:#faf6f0;
+  border:1px solid #e0d6c8;
+  border-radius:4px;
+  padding:1.2rem 1rem;
+  text-align:center;
+  transition:box-shadow .3s,transform .3s;
+  position:relative;
+  overflow:hidden;
+}
+.cert-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,#5a7c5a,#c4956a);
+}
+.cert-card:hover{box-shadow:0 4px 14px rgba(45,59,45,.1);transform:translateY(-2px)}
+.cert-card .cert-name{font-family:'Lora',serif;font-size:.95rem;font-weight:600;color:#2d3b2d}
+.cert-card .cert-org{font-size:.82rem;color:#5a7c5a;margin-top:.2rem}
+.cert-card .cert-year{font-size:.78rem;color:#8b6914;margin-top:.15rem}
+.cert-card a{
+  display:inline-block;margin-top:.6rem;
+  font-size:.78rem;color:#c4956a;text-decoration:none;
+  border-bottom:1px solid transparent;transition:border-color .3s;
+}
+.cert-card a:hover{border-bottom-color:#c4956a}
+
+/* ── CONTACT ── */
+.contact-list{list-style:none;padding:0;text-align:center}
+.contact-list li{
+  margin-bottom:.7rem;font-size:.95rem;
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+}
+.contact-list a{color:#5a7c5a;text-decoration:none;border-bottom:1px solid transparent;transition:border-color .3s,color .3s}
+.contact-list a:hover{color:#2d3b2d;border-bottom-color:#2d3b2d}
+
+/* ── FOOTER ── */
+footer{
+  text-align:center;padding:2rem 0 3rem;
+  font-size:.78rem;color:#8b6914;letter-spacing:.1em;
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  h1{font-size:1.8rem}
+  nav .nav-inner{gap:1rem}
+  nav a{font-size:.72rem;letter-spacing:.12em}
+  .exp-card{padding:1.2rem 1.2rem}
+  .project-card{padding:1.5rem 1.2rem}
+  .cert-grid{grid-template-columns:1fr}
+  .container{padding:0 1rem 3rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAVIGATION ═══ -->
+<nav>
+  <div class="nav-inner">
+    <a href="#inicio">Inicio</a>
+    <a href="#experiencia">Experiencia</a>
+    <a href="#proyectos">Proyectos</a>
+    <a href="#habilidades">Habilidades</a>
+    <a href="#educacion">Educacion</a>
+    <a href="#certificados">Certificados</a>
+    <a href="#contacto">Contacto</a>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- ═══ HERO ═══ -->
+<section id="inicio" class="hero">
+  <!-- decorative top leaf -->
+  <svg width="60" height="40" viewBox="0 0 60 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:1rem;opacity:.4">
+    <path d="M30 38 C30 38 18 28 12 18 C8 11 10 4 18 3 C24 2 30 10 30 10 C30 10 36 2 42 3 C50 4 52 11 48 18 C42 28 30 38 30 38Z" stroke="#5a7c5a" stroke-width="1.2" fill="none"/>
+    <path d="M30 10 L30 38" stroke="#5a7c5a" stroke-width="1" fill="none"/>
+    <path d="M30 18 L22 12" stroke="#5a7c5a" stroke-width=".8" fill="none"/>
+    <path d="M30 18 L38 12" stroke="#5a7c5a" stroke-width=".8" fill="none"/>
+    <path d="M30 26 L24 21" stroke="#5a7c5a" stroke-width=".8" fill="none"/>
+    <path d="M30 26 L36 21" stroke="#5a7c5a" stroke-width=".8" fill="none"/>
+  </svg>
+  <h1>Diego Santibanez Oyarce</h1>
+  <p class="subtitle">Cientifico de Datos</p>
+  <p class="bio">Egresado de Ingenieria Civil en Ciencia de datos en Agosto 2025, apasionado por la tecnologia y con un gran interes en el uso de la inteligencia artificial como herramienta para la resolucion de problemas del mundo real. Mi formacion academica me proporciono una solida comprension de algoritmos de aprendizaje automatico, analisis y visualizacion de datos. Me gusta proponerme desafios donde pueda poner en practica mis conocimientos y donde ademas pueda aprender cosas nuevas.</p>
+</section>
+
+<!-- divider -->
+<div class="divider">
+  <svg width="120" height="24" viewBox="0 0 120 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 12 H50" stroke="#5a7c5a" stroke-width=".8"/>
+    <path d="M54 12 C54 6 60 2 60 2 C60 2 66 6 66 12 C66 6 60 2 60 2" stroke="#5a7c5a" stroke-width="1" fill="none"/>
+    <path d="M60 2 L60 12" stroke="#5a7c5a" stroke-width=".7"/>
+    <ellipse cx="60" cy="14" rx="2" ry="2" fill="#5a7c5a" opacity=".4"/>
+    <path d="M70 12 H110" stroke="#5a7c5a" stroke-width=".8"/>
+  </svg>
+</div>
+
+<!-- ═══ EXPERIENCIA ═══ -->
+<section id="experiencia">
+  <h2 class="section-title">Experiencia</h2>
+
+  <div class="exp-card">
+    <div class="role">Asistente de Investigacion</div>
+    <div class="org">UTEM</div>
+    <div class="period">Dic 2023 — Sep 2025</div>
+    <ul>
+      <li>Poster "1ras Jornadas Ciencia de Datos y Salud Publica" (Ene 2024) — <a href="https://drive.google.com/file/d/124VDD5x6pBidyC1Wx4ZLehAQixdjZ9dS/view?usp=sharing" target="_blank">Certificado</a> · <a href="https://drive.google.com/file/d/1gRjnIt9xa5CYPhbgGFTKR1o5WV3RB8H6/view?usp=drive_link" target="_blank">Poster</a></li>
+      <li>Flash Talk + poster Carla2024 (Sep 2024) — <a href="https://drive.google.com/file/d/1jHc_2fZiakh2G9t8EkiB7Z3l0iuWBJ7n/view?usp=sharing" target="_blank">Certificado</a> · <a href="https://drive.google.com/file/d/1jfS4S75dwoBnUMZ3xeQOFfBzX6HP5gpc/view?usp=drive_link" target="_blank">Poster</a></li>
+      <li>Poster "III Congreso Vive la Investigacion" (Oct 2024) — <a href="https://drive.google.com/file/d/1unqW5oOxe5wl84-vmq4Y8AhXmD1sJJL_/view?usp=sharing" target="_blank">Certificado</a> · <a href="https://drive.google.com/file/d/1OEKXi8gl7Z9bGySQ8esoomkDJLPiBLCE/view?usp=drive_link" target="_blank">Poster</a></li>
+      <li>Poster "XIV Congreso Argentino Bioinformatica" (Nov 2024) — <a href="https://drive.google.com/file/d/1br_Vv35RmHxvyPScFlhDCJxucFz0ckii/view?usp=sharing" target="_blank">Certificado</a> · <a href="https://drive.google.com/file/d/1wLUe3ssEY_XcOgoTbVJj0B5C7plK-G9n/view?usp=drive_link" target="_blank">Poster</a></li>
+      <li>Flash Talk "III Reunion Soc. Chilena Bioinformatica" (Nov 2024). Invitacion publicar en Bioinformatics Advances (Oxford) — <a href="https://drive.google.com/file/d/1-dZ_CdZlYkd58OlGr3v92n8pLshnurje/view?usp=sharing" target="_blank">Certificado</a></li>
+      <li>Poster Carla2025 (Sep 2025). Premio al mejor poster — <a href="https://drive.google.com/file/d/10tcRQonSWMgKQ8FciWOsCobzQAlWCPr9/view?usp=sharing" target="_blank">Certificado</a> · <a href="https://drive.google.com/file/d/1M_MhsoB8BCUO5LITTVvQw0Hi9l7RU4Vj/view?usp=sharing" target="_blank">Premio</a> · <a href="https://drive.google.com/file/d/14Fc9u_zCtxiKG7RKW3W85Rv6X4OJy5HP/view?usp=drive_link" target="_blank">Poster</a></li>
+    </ul>
+  </div>
+
+  <div class="exp-card">
+    <div class="role">Tecnico para Analisis de Datos Avanzado</div>
+    <div class="org">UTEM</div>
+    <div class="period">Feb 2025 — Sep 2025</div>
+    <ul>
+      <li>Web scrapping con Python (Selenium y BeautifulSoup)</li>
+      <li>Dashboard interactivos con Plotly y Streamlit</li>
+      <li>Bases de datos en MariaDB y PostgreSQL</li>
+      <li>NLP para analisis y filtrado de datos</li>
+    </ul>
+  </div>
+
+  <div class="exp-card">
+    <div class="role">Ayudante de Catedra — Visualizacion de Datos</div>
+    <div class="org">UTEM</div>
+    <div class="period">Mar 2025 — Jul 2025</div>
+    <ul>
+      <li>Ensenanza y mentoria en visualizacion de datos</li>
+    </ul>
+  </div>
+
+  <div class="exp-card">
+    <div class="role">Practicante Profesional</div>
+    <div class="org">Contraloria General de la Republica</div>
+    <div class="period">Ago 2024 — Ene 2025</div>
+    <ul>
+      <li>Analisis de datos con Impala y Oracle</li>
+      <li>SQL y automatizacion con Python</li>
+    </ul>
+  </div>
+</section>
+
+<!-- divider -->
+<div class="divider">
+  <svg width="140" height="28" viewBox="0 0 140 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M8 14 H55" stroke="#5a7c5a" stroke-width=".7"/>
+    <path d="M60 14 Q65 4 70 14 Q75 24 80 14" stroke="#5a7c5a" stroke-width="1" fill="none"/>
+    <path d="M63 10 C60 6 56 8 58 12" stroke="#5a7c5a" stroke-width=".8" fill="none"/>
+    <path d="M77 18 C80 22 84 20 82 16" stroke="#5a7c5a" stroke-width=".8" fill="none"/>
+    <path d="M70 4 L70 10" stroke="#5a7c5a" stroke-width=".6"/>
+    <circle cx="70" cy="3" r="1.2" fill="#5a7c5a" opacity=".4"/>
+    <path d="M85 14 H132" stroke="#5a7c5a" stroke-width=".7"/>
+  </svg>
+</div>
+
+<!-- ═══ PROYECTOS ═══ -->
+<section id="proyectos">
+  <h2 class="section-title">Proyectos</h2>
+  <div class="project-card">
+    <h3>Dashboard de Avance de Proyecto</h3>
+    <p style="margin-top:.5rem;color:#4a5a4a;font-size:.95rem;">Panel interactivo para seguimiento y visualizacion del avance de proyecto de investigacion.</p>
+    <p class="tech">Python · Streamlit · Pandas · Plotly · DuckDB · Folium</p>
+    <a class="proj-link" href="https://dashboarddatalake-fiut-utem.streamlit.app/" target="_blank">Ver proyecto &rarr;</a>
+  </div>
+</section>
+
+<!-- divider -->
+<div class="divider">
+  <svg width="100" height="22" viewBox="0 0 100 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M5 11 H38" stroke="#5a7c5a" stroke-width=".7"/>
+    <path d="M42 11 C46 3 50 3 50 11 C50 3 54 3 58 11" stroke="#5a7c5a" stroke-width="1" fill="none"/>
+    <path d="M46 7 L44 4" stroke="#5a7c5a" stroke-width=".6"/>
+    <path d="M54 7 L56 4" stroke="#5a7c5a" stroke-width=".6"/>
+    <ellipse cx="50" cy="11" rx="1.5" ry="1.5" fill="#c4956a" opacity=".5"/>
+    <path d="M62 11 H95" stroke="#5a7c5a" stroke-width=".7"/>
+  </svg>
+</div>
+
+<!-- ═══ HABILIDADES ═══ -->
+<section id="habilidades">
+  <h2 class="section-title">Habilidades</h2>
+
+  <div class="skills-group">
+    <h3>Hard Skills</h3>
+    <div class="tags">
+      <span class="tag hard">Python</span>
+      <span class="tag hard">SQL</span>
+      <span class="tag hard">TensorFlow</span>
+      <span class="tag hard">scikit-learn</span>
+      <span class="tag hard">Pandas</span>
+      <span class="tag hard">Jupyter Notebooks</span>
+      <span class="tag hard">Visualizacion de datos</span>
+      <span class="tag hard">Plotly</span>
+      <span class="tag hard">Streamlit</span>
+      <span class="tag hard">Web Scraping</span>
+      <span class="tag hard">PostgreSQL</span>
+      <span class="tag hard">MariaDB</span>
+      <span class="tag hard">SpaCy</span>
+    </div>
+  </div>
+
+  <div class="skills-group">
+    <h3>Soft Skills</h3>
+    <div class="tags">
+      <span class="tag soft">Resolucion de Problemas</span>
+      <span class="tag soft">Pensamiento Critico</span>
+      <span class="tag soft">Adaptabilidad</span>
+      <span class="tag soft">Mentoria</span>
+      <span class="tag soft">Curiosidad intelectual</span>
+      <span class="tag soft">Responsabilidad</span>
+      <span class="tag soft">Mentalidad de experimentacion</span>
+      <span class="tag soft">Mentalidad analitica</span>
+    </div>
+  </div>
+</section>
+
+<!-- divider -->
+<div class="divider">
+  <svg width="120" height="24" viewBox="0 0 120 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 12 H50" stroke="#5a7c5a" stroke-width=".8"/>
+    <path d="M54 12 C54 6 60 2 60 2 C60 2 66 6 66 12 C66 6 60 2 60 2" stroke="#5a7c5a" stroke-width="1" fill="none"/>
+    <path d="M60 2 L60 12" stroke="#5a7c5a" stroke-width=".7"/>
+    <ellipse cx="60" cy="14" rx="2" ry="2" fill="#c4956a" opacity=".4"/>
+    <path d="M70 12 H110" stroke="#5a7c5a" stroke-width=".8"/>
+  </svg>
+</div>
+
+<!-- ═══ EDUCACION ═══ -->
+<section id="educacion">
+  <h2 class="section-title">Educacion</h2>
+  <div class="edu-card">
+    <!-- botanical border SVG -->
+    <svg class="edu-border" viewBox="0 0 520 180" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <rect x="6" y="6" width="508" height="168" rx="4" stroke="#5a7c5a" stroke-width="1.2" fill="none"/>
+      <rect x="12" y="12" width="496" height="156" rx="2" stroke="#5a7c5a" stroke-width=".6" fill="none" stroke-dasharray="4 3"/>
+      <!-- corner leaves -->
+      <path d="M16 16 C22 10 28 14 24 20" stroke="#5a7c5a" stroke-width=".8" fill="none"/>
+      <path d="M16 16 C10 22 14 28 20 24" stroke="#5a7c5a" stroke-width=".8" fill="none"/>
+      <path d="M504 16 C498 10 492 14 496 20" stroke="#5a7c5a" stroke-width=".8" fill="none"/>
+      <path d="M504 16 C510 22 506 28 500 24" stroke="#5a7c5a" stroke-width=".8" fill="none"/>
+      <path d="M16 164 C22 170 28 166 24 160" stroke="#5a7c5a" stroke-width=".8" fill="none"/>
+      <path d="M16 164 C10 158 14 152 20 156" stroke="#5a7c5a" stroke-width=".8" fill="none"/>
+      <path d="M504 164 C498 170 492 166 496 160" stroke="#5a7c5a" stroke-width=".8" fill="none"/>
+      <path d="M504 164 C510 158 506 152 500 156" stroke="#5a7c5a" stroke-width=".8" fill="none"/>
+    </svg>
+    <div class="degree">Ingeniero Civil en Ciencia de Datos</div>
+    <div class="inst">Universidad Tecnologica Metropolitana (UTEM)</div>
+    <div class="years">2020 — 2025</div>
+  </div>
+</section>
+
+<!-- divider -->
+<div class="divider">
+  <svg width="140" height="28" viewBox="0 0 140 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M8 14 H55" stroke="#5a7c5a" stroke-width=".7"/>
+    <path d="M60 14 Q65 4 70 14 Q75 24 80 14" stroke="#5a7c5a" stroke-width="1" fill="none"/>
+    <path d="M63 10 C60 6 56 8 58 12" stroke="#5a7c5a" stroke-width=".8" fill="none"/>
+    <path d="M77 18 C80 22 84 20 82 16" stroke="#5a7c5a" stroke-width=".8" fill="none"/>
+    <circle cx="70" cy="3" r="1.2" fill="#c4956a" opacity=".4"/>
+    <path d="M70 4 L70 10" stroke="#5a7c5a" stroke-width=".6"/>
+    <path d="M85 14 H132" stroke="#5a7c5a" stroke-width=".7"/>
+  </svg>
+</div>
+
+<!-- ═══ CERTIFICADOS ═══ -->
+<section id="certificados">
+  <h2 class="section-title">Certificados</h2>
+  <div class="cert-grid">
+    <div class="cert-card">
+      <div class="cert-name">Power BI</div>
+      <div class="cert-org">Santander X</div>
+      <div class="cert-year">2025</div>
+      <a href="https://drive.google.com/file/d/1IOp4gjfLcW8XhqbiwwOd9dzlz8l60P5q/view?usp=drive_link" target="_blank">Ver certificado</a>
+    </div>
+    <div class="cert-card">
+      <div class="cert-name">Ingles B2 Upper Intermediate</div>
+      <div class="cert-org">Certificacion Internacional</div>
+      <div class="cert-year">2025</div>
+      <a href="https://drive.google.com/file/d/1KT12-fKSs20wCu_AO6c6nEHYi5_v0mK1/view?usp=sharing" target="_blank">Ver certificado</a>
+    </div>
+    <div class="cert-card">
+      <div class="cert-name">AWS Data Center Technician</div>
+      <div class="cert-org">AWS</div>
+      <div class="cert-year">2024</div>
+      <a href="https://drive.google.com/file/d/1pYCaTdbJQAmruxvoknp92QbIys4Bt7Ws/view?usp=sharing" target="_blank">Ver certificado</a>
+    </div>
+    <div class="cert-card">
+      <div class="cert-name">Introduccion a la Ciencia de Datos</div>
+      <div class="cert-org">Santander Open Academy</div>
+      <div class="cert-year">2025</div>
+      <a href="https://drive.google.com/file/d/1vmeQuzoZEwUTC0Pz7Xl_rlobqXcreX5w/view?usp=sharing" target="_blank">Ver certificado</a>
+    </div>
+  </div>
+</section>
+
+<!-- divider -->
+<div class="divider">
+  <svg width="100" height="22" viewBox="0 0 100 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M5 11 H38" stroke="#5a7c5a" stroke-width=".7"/>
+    <path d="M42 11 C46 3 50 3 50 11 C50 3 54 3 58 11" stroke="#5a7c5a" stroke-width="1" fill="none"/>
+    <path d="M46 7 L44 4" stroke="#5a7c5a" stroke-width=".6"/>
+    <path d="M54 7 L56 4" stroke="#5a7c5a" stroke-width=".6"/>
+    <ellipse cx="50" cy="11" rx="1.5" ry="1.5" fill="#5a7c5a" opacity=".4"/>
+    <path d="M62 11 H95" stroke="#5a7c5a" stroke-width=".7"/>
+  </svg>
+</div>
+
+<!-- ═══ CONTACTO ═══ -->
+<section id="contacto">
+  <h2 class="section-title">Contacto</h2>
+  <ul class="contact-list">
+    <li>
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 4 L7 8 L12 4" stroke="#5a7c5a" stroke-width="1.2" fill="none"/><rect x="1" y="3" width="12" height="8" rx="1.5" stroke="#5a7c5a" stroke-width="1" fill="none"/></svg>
+      <a href="mailto:dsantibanezo@utem.cl" target="_blank">dsantibanezo@utem.cl</a>
+    </li>
+    <li>
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 1 H12 C12.5 1 13 1.5 13 2 V12 C13 12.5 12.5 13 12 13 H2 C1.5 13 1 12.5 1 12 V2 C1 1.5 1.5 1 2 1Z" stroke="#5a7c5a" stroke-width="1" fill="none"/><path d="M4 6 V10 M4 3.5 V3.6 M7 10 V7 C7 6 8 5.5 9 6 V10" stroke="#5a7c5a" stroke-width="1" fill="none"/></svg>
+      <a href="https://www.linkedin.com/in/diego-santibanez-oyarce/" target="_blank">LinkedIn</a>
+    </li>
+    <li>
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1 C3.7 1 1 3.7 1 7 C1 9.8 2.8 12.1 5.3 12.8 C5.5 12.8 5.6 12.7 5.6 12.5 V11.4 C3.9 11.7 3.5 10.7 3.5 10.7 C3.2 10 2.8 9.8 2.8 9.8 C2.3 9.5 2.9 9.5 2.9 9.5 C3.4 9.5 3.7 10 3.7 10 C4.2 10.8 5 10.5 5.6 10.3 C5.6 9.9 5.8 9.7 6 9.5 C4.6 9.3 3.2 8.8 3.2 6.5 C3.2 5.8 3.5 5.3 3.8 4.9 C3.7 4.7 3.4 4.1 3.9 3.3 C3.9 3.3 4.4 3.1 5.6 3.9 C6 3.8 6.5 3.7 7 3.7 C7.5 3.7 8 3.8 8.4 3.9 C9.6 3.1 10.1 3.3 10.1 3.3 C10.6 4.1 10.3 4.7 10.2 4.9 C10.5 5.3 10.8 5.8 10.8 6.5 C10.8 8.8 9.4 9.3 8 9.5 C8.2 9.7 8.4 10 8.4 10.5 V12.5 C8.4 12.7 8.5 12.9 8.7 12.8 C11.2 12.1 13 9.8 13 7 C13 3.7 10.3 1 7 1Z" stroke="#5a7c5a" stroke-width=".8" fill="none"/></svg>
+      <a href="https://github.com/daso42" target="_blank">GitHub</a>
+    </li>
+    <li>
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 1.5 C2 2.5 1.5 4 2 5.5 L5.5 12 C5.8 12.5 6.5 12.5 6.8 12 L8 9.5 L12 5.5 C12.5 4 12 2.5 11 1.5 C9.5 0 7.5 0.5 7 2 C6.5 0.5 4.5 0 3 1.5Z" stroke="#5a7c5a" stroke-width="1" fill="none"/></svg>
+      +56 9 8434 1477
+    </li>
+  </ul>
+</section>
+
+</div>
+
+<footer>
+  <svg width="30" height="20" viewBox="0 0 30 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity:.35;display:block;margin:0 auto .5rem">
+    <path d="M15 18 C15 18 8 12 6 8 C4 4 7 2 10 4 C12 5.5 15 10 15 10 C15 10 18 5.5 20 4 C23 2 26 4 24 8 C22 12 15 18 15 18Z" stroke="#5a7c5a" stroke-width="1" fill="none"/>
+    <path d="M15 10 L15 18" stroke="#5a7c5a" stroke-width=".6"/>
+  </svg>
+  &copy; 2025 Diego Santibanez Oyarce
+</footer>
+
+<script>
+// Fade-in on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('section').forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

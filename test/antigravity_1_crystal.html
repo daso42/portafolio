@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diego Santibáñez Oyarce — Crystal Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0c0a1a;
+      --surface: rgba(255, 255, 255, 0.03);
+      --glass: rgba(255, 255, 255, 0.06);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --text: #f0eef6;
+      --text-dim: #8b85a2;
+      --accent-1: #a78bfa;
+      --accent-2: #6ee7b7;
+      --accent-3: #f9a8d4;
+      --radius: 20px;
+      --font-main: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Animated prismatic background */
+    .prism-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .prism-bg::before,
+    .prism-bg::after {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.15;
+    }
+
+    .prism-bg::before {
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
+      top: -200px;
+      right: -100px;
+      animation: drift1 25s infinite alternate ease-in-out;
+    }
+
+    .prism-bg::after {
+      background: linear-gradient(135deg, var(--accent-2), var(--accent-1));
+      bottom: -200px;
+      left: -100px;
+      animation: drift2 30s infinite alternate ease-in-out;
+    }
+
+    @keyframes drift1 {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      100% { transform: translate(-80px, 60px) rotate(45deg); }
+    }
+
+    @keyframes drift2 {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      100% { transform: translate(80px, -60px) rotate(-30deg); }
+    }
+
+    /* Floating crystal shapes */
+    .crystal {
+      position: fixed;
+      z-index: -1;
+      opacity: 0.08;
+      border: 1px solid rgba(167, 139, 250, 0.3);
+      animation: float-crystal 20s infinite ease-in-out;
+    }
+
+    .crystal-1 {
+      width: 200px; height: 200px;
+      top: 10%; left: 5%;
+      transform: rotate(45deg);
+      border-radius: 30% 70% 50% 50%;
+      background: linear-gradient(135deg, transparent, rgba(167, 139, 250, 0.1));
+    }
+
+    .crystal-2 {
+      width: 150px; height: 150px;
+      top: 60%; right: 8%;
+      transform: rotate(20deg);
+      border-radius: 60% 40% 30% 70%;
+      background: linear-gradient(135deg, transparent, rgba(110, 231, 183, 0.1));
+      animation-delay: -7s;
+    }
+
+    .crystal-3 {
+      width: 100px; height: 100px;
+      top: 35%; right: 25%;
+      transform: rotate(-15deg);
+      border-radius: 40% 60% 70% 30%;
+      background: linear-gradient(135deg, transparent, rgba(249, 168, 212, 0.1));
+      animation-delay: -14s;
+    }
+
+    @keyframes float-crystal {
+      0%, 100% { transform: translateY(0) rotate(45deg); }
+      50% { transform: translateY(-30px) rotate(90deg); }
+    }
+
+    /* Layout */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* Nav */
+    nav {
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .nav-logo {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--text);
+      text-decoration: none;
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      font-weight: 400;
+      transition: color 0.3s;
+      letter-spacing: 0.02em;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent-1);
+    }
+
+    /* Glass Card */
+    .glass-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    }
+
+    .glass-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(167, 139, 250, 0.2);
+    }
+
+    /* Sections */
+    section {
+      margin-bottom: 4rem;
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent-1);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent-1), transparent);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 8rem 0 6rem;
+      text-align: left;
+    }
+
+    .hero-greeting {
+      font-size: 1rem;
+      color: var(--accent-2);
+      font-weight: 300;
+      margin-bottom: 1rem;
+      letter-spacing: 0.05em;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--text) 0%, var(--accent-1) 50%, var(--accent-2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      background-size: 200% 200%;
+      animation: gradient-shift 8s ease infinite;
+    }
+
+    @keyframes gradient-shift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .hero-subtitle {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: var(--accent-1);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-bio {
+      font-size: 1.05rem;
+      color: var(--text-dim);
+      max-width: 600px;
+      line-height: 1.8;
+      font-weight: 300;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 3rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 0.25rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 0.75rem 1.75rem;
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      color: var(--bg);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border-radius: 12px;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+
+    .btn-secondary {
+      display: inline-block;
+      padding: 0.75rem 1.75rem;
+      border: 1px solid var(--glass-border);
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      border-radius: 12px;
+      transition: all 0.2s;
+      background: transparent;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent-1);
+      color: var(--accent-1);
+    }
+
+    /* Experience */
+    .exp-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .exp-card {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 640px) {
+      .exp-card { grid-template-columns: 1fr; gap: 0.5rem; }
+    }
+
+    .exp-date {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      padding-top: 0.25rem;
+    }
+
+    .exp-body h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .exp-org {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--accent-2);
+      margin-bottom: 0.75rem;
+    }
+
+    .exp-desc {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+    }
+
+    .exp-sub {
+      list-style: none;
+      margin-top: 0.75rem;
+    }
+
+    .exp-sub li {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      padding: 0.3rem 0;
+      padding-left: 1.25rem;
+      position: relative;
+    }
+
+    .exp-sub li::before {
+      content: '◇';
+      position: absolute;
+      left: 0;
+      color: var(--accent-3);
+      font-size: 0.7rem;
+    }
+
+    /* Projects */
+    .project-card .glass-card {
+      padding: 2rem;
+    }
+
+    .proj-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .proj-desc {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+
+    .tech-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .tech-tag {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.3rem 0.8rem;
+      border-radius: 100px;
+      border: 1px solid var(--glass-border);
+      color: var(--text-dim);
+      background: rgba(167, 139, 250, 0.05);
+      transition: all 0.2s;
+    }
+
+    .tech-tag:hover {
+      border-color: var(--accent-1);
+      color: var(--accent-1);
+    }
+
+    /* Skills */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 640px) {
+      .skills-grid { grid-template-columns: 1fr; }
+    }
+
+    .skill-category {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent-3);
+      margin-bottom: 1rem;
+    }
+
+    .skill-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .skill-item:last-child {
+      border-bottom: none;
+    }
+
+    .skill-name {
+      font-size: 0.95rem;
+      font-weight: 400;
+    }
+
+    .skill-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-2);
+    }
+
+    /* Education */
+    .edu-item {
+      margin-bottom: 1.5rem;
+    }
+
+    .edu-degree {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .edu-meta {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      margin-top: 0.25rem;
+    }
+
+    .cert-list {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .cert-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .cert-item:last-child { border-bottom: none; }
+
+    .cert-name {
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    .cert-meta {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-dim);
+    }
+
+    /* Contact */
+    .contact-section {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    .contact-section h2 {
+      font-size: 2rem;
+      font-weight: 300;
+      margin-bottom: 1rem;
+    }
+
+    .contact-section h2 span {
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 600;
+    }
+
+    .contact-email {
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px solid var(--glass-border);
+      padding-bottom: 2px;
+      transition: all 0.3s;
+    }
+
+    .contact-email:hover {
+      color: var(--accent-1);
+      border-color: var(--accent-1);
+    }
+
+    /* Footer */
+    footer {
+      padding: 3rem 0;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    /* Animations */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 640px) {
+      nav { flex-direction: column; gap: 1rem; }
+      .hero { padding: 4rem 0 3rem; }
+      .hero-stats { gap: 1.5rem; flex-wrap: wrap; }
+      .glass-card { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="prism-bg"></div>
+  <div class="crystal crystal-1"></div>
+  <div class="crystal crystal-2"></div>
+  <div class="crystal crystal-3"></div>
+
+  <nav>
+    <a href="#" class="nav-logo">DS.OY</a>
+    <ul class="nav-links">
+      <li><a href="#experiencia">Experiencia</a></li>
+      <li><a href="#proyectos">Proyectos</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+  </nav>
+
+  <main class="container">
+
+    <!-- Hero -->
+    <section class="hero fade-up">
+      <p class="hero-greeting">Hola, soy</p>
+      <h1>Diego Santibáñez<br>Oyarce</h1>
+      <p class="hero-subtitle">// Científico de Datos</p>
+      <p class="hero-bio">
+        Egresado de Ingeniería Civil en Ciencia de Datos, apasionado por la tecnología y con un gran interés en el uso de la inteligencia artificial como herramienta para la resolución de problemas del mundo real.
+      </p>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-value">1+</span>
+          <span class="stat-label">Años Exp.</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">7</span>
+          <span class="stat-label">Congresos</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">4</span>
+          <span class="stat-label">Certificaciones</span>
+        </div>
+      </div>
+      <div class="hero-actions">
+        <a href="mailto:dsantibanezo@utem.cl" class="btn-primary">Contacto</a>
+        <a href="https://linkedin.com/in/diego-santibanez-oyarce" target="_blank" class="btn-secondary">LinkedIn ↗</a>
+      </div>
+    </section>
+
+    <!-- Experience -->
+    <section id="experiencia" class="fade-up">
+      <div class="section-label">01 — Experiencia</div>
+      <div class="glass-card">
+        <div class="exp-list">
+          <div class="exp-card">
+            <div class="exp-date">DIC 2023 — SEP 2025</div>
+            <div class="exp-body">
+              <h3>Asistente de Investigación</h3>
+              <div class="exp-org">UTEM</div>
+              <p class="exp-desc">Presentaciones en congresos nacionales e internacionales:</p>
+              <ul class="exp-sub">
+                <li>1ras Jornadas Ciencia de Datos y Salud Pública — U. Chile, ene 2024</li>
+                <li>Carla2024 Flash Talk — sep 2024</li>
+                <li>III Congreso Vive la Investigación 2024</li>
+                <li>XIV Congreso Argentino Bioinformática — nov 2024</li>
+                <li>III Reunión Soc. Chilena de Bioinformática — Flash Talk 15min</li>
+                <li>Carla2025 — Mejor póster, sep 2025</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="exp-card">
+            <div class="exp-date">FEB 2025 — SEP 2025</div>
+            <div class="exp-body">
+              <h3>Técnico Análisis de Datos Avanzado</h3>
+              <div class="exp-org">UTEM</div>
+              <p class="exp-desc">Web scraping con Python (Selenium, BeautifulSoup), dashboards interactivos con Plotly y Streamlit, administración de bases de datos MariaDB y PostgreSQL, procesamiento de lenguaje natural (NLP).</p>
+            </div>
+          </div>
+
+          <div class="exp-card">
+            <div class="exp-date">MAR 2025 — JUL 2025</div>
+            <div class="exp-body">
+              <h3>Ayudante de Cátedra — Visualización de Datos</h3>
+              <div class="exp-org">UTEM</div>
+              <p class="exp-desc">Enseñanza y mentoría a estudiantes en visualización de datos. Apoyo docente en clases prácticas y elaboración de material de apoyo.</p>
+            </div>
+          </div>
+
+          <div class="exp-card">
+            <div class="exp-date">AGO 2024 — ENE 2025</div>
+            <div class="exp-body">
+              <h3>Practicante Profesional</h3>
+              <div class="exp-org">Contraloría General de la República</div>
+              <p class="exp-desc">Análisis de datos con Impala y Oracle, elaboración de consultas SQL complejas, automatización de procesos mediante Python.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section id="proyectos" class="fade-up">
+      <div class="section-label">02 — Proyectos</div>
+      <div class="glass-card">
+        <h3 class="proj-title">Dashboard de Avance de Proyecto</h3>
+        <p class="proj-desc">Dashboard interactivo para el seguimiento y análisis de avance de proyectos. Incorpora visualizaciones geográficas, tablas dinámicas y filtros en tiempo real. Desarrollado con enfoque en usabilidad y rendimiento sobre grandes volúmenes de datos.</p>
+        <div class="tech-tags">
+          <span class="tech-tag">Streamlit</span>
+          <span class="tech-tag">Pandas</span>
+          <span class="tech-tag">Plotly</span>
+          <span class="tech-tag">DuckDB</span>
+          <span class="tech-tag">Folium</span>
+          <span class="tech-tag">Python</span>
+        </div>
+        <a href="https://dashboarddatalake-fiut-utem.streamlit.app/" target="_blank" class="btn-secondary">Ver proyecto ↗</a>
+      </div>
+    </section>
+
+    <!-- Skills -->
+    <section id="skills" class="fade-up">
+      <div class="section-label">03 — Habilidades</div>
+      <div class="skills-grid">
+        <div class="glass-card">
+          <div class="skill-category">Habilidades Técnicas</div>
+          <div class="skill-item"><span class="skill-name">Python</span><span class="skill-dot"></span></div>
+          <div class="skill-item"><span class="skill-name">SQL</span><span class="skill-dot"></span></div>
+          <div class="skill-item"><span class="skill-name">TensorFlow</span><span class="skill-dot"></span></div>
+          <div class="skill-item"><span class="skill-name">scikit-learn</span><span class="skill-dot"></span></div>
+          <div class="skill-item"><span class="skill-name">Pandas</span><span class="skill-dot"></span></div>
+          <div class="skill-item"><span class="skill-name">Jupyter Notebooks</span><span class="skill-dot"></span></div>
+          <div class="skill-item"><span class="skill-name">Plotly / Streamlit</span><span class="skill-dot"></span></div>
+          <div class="skill-item"><span class="skill-name">Web Scraping</span><span class="skill-dot"></span></div>
+          <div class="skill-item"><span class="skill-name">PostgreSQL / MariaDB</span><span class="skill-dot"></span></div>
+          <div class="skill-item"><span class="skill-name">SpaCy (NLP)</span><span class="skill-dot"></span></div>
+        </div>
+        <div class="glass-card">
+          <div class="skill-category">Habilidades Blandas</div>
+          <div class="skill-item"><span class="skill-name">Resolución de Problemas</span><span class="skill-dot"></span></div>
+          <div class="skill-item"><span class="skill-name">Pensamiento Crítico</span><span class="skill-dot"></span></div>
+          <div class="skill-item"><span class="skill-name">Adaptabilidad</span><span class="skill-dot"></span></div>
+          <div class="skill-item"><span class="skill-name">Mentoría</span><span class="skill-dot"></span></div>
+          <div class="skill-item"><span class="skill-name">Curiosidad Intelectual</span><span class="skill-dot"></span></div>
+          <div class="skill-item"><span class="skill-name">Responsabilidad</span><span class="skill-dot"></span></div>
+          <div class="skill-item"><span class="skill-name">Mentalidad Analítica</span><span class="skill-dot"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Education -->
+    <section id="educacion" class="fade-up">
+      <div class="section-label">04 — Educación & Certificaciones</div>
+      <div class="glass-card">
+        <div class="edu-item">
+          <div class="edu-degree">Ingeniero Civil en Ciencia de Datos</div>
+          <div class="edu-meta">UTEM | 2020 — 2025</div>
+        </div>
+        <div class="cert-list">
+          <div class="skill-category">Certificaciones</div>
+          <div class="cert-item">
+            <span class="cert-name">Power BI</span>
+            <span class="cert-meta">Santander X | 2025</span>
+          </div>
+          <div class="cert-item">
+            <span class="cert-name">Inglés B2 Upper Intermediate</span>
+            <span class="cert-meta">Certificación Internacional | 2025</span>
+          </div>
+          <div class="cert-item">
+            <span class="cert-name">AWS Data Center Technician</span>
+            <span class="cert-meta">Amazon Web Services | 2024</span>
+          </div>
+          <div class="cert-item">
+            <span class="cert-name">Introducción a la Ciencia de Datos</span>
+            <span class="cert-meta">Santander Open Academy | 2025</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contacto" class="fade-up">
+      <div class="section-label">05 — Contacto</div>
+      <div class="glass-card contact-section">
+        <h2>¿Interesado en <span>colaborar</span>?</h2>
+        <p style="color: var(--text-dim); margin-bottom: 2rem; font-size: 0.95rem;">Correspondencia formal, oportunidades laborales y colaboraciones académicas.</p>
+        <a href="mailto:dsantibanezo@utem.cl" class="contact-email">dsantibanezo@utem.cl</a>
+        <div style="margin-top: 1.5rem;">
+          <a href="https://linkedin.com/in/diego-santibanez-oyarce" target="_blank" class="btn-secondary">LinkedIn ↗</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="container">
+    <p>© 2025 Diego Santibáñez Oyarce — Crystal Design</p>
+  </footer>
+
+  <script>
+    // Intersection Observer for fade-up animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  </script>
+</body>
+</html>

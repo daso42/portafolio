@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diego Santibáñez Oyarce — Typewriter Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #faf8f2;
+      --text: #2a2420;
+      --dim: #7a706a;
+      --rule: #d4c9b8;
+      --red-ink: #c0392b;
+      --blue-ink: #2c5aa0;
+      --courier: 'Courier Prime', 'Courier New', monospace;
+      --bask: 'Libre Baskerville', serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='200' height='200' fill='%23faf8f2'/%3E%3Ccircle cx='3' cy='3' r='0.5' fill='%23d4c9b8' opacity='0.4'/%3E%3Ccircle cx='103' cy='53' r='0.4' fill='%23d4c9b8' opacity='0.3'/%3E%3Ccircle cx='53' cy='153' r='0.3' fill='%23d4c9b8' opacity='0.3'/%3E%3C/svg%3E");
+      color: var(--text);
+      font-family: var(--courier);
+      font-size: 15px;
+      line-height: 1.8;
+      padding: 3rem 2rem;
+      min-height: 100vh;
+    }
+    .page {
+      max-width: 700px;
+      margin: 0 auto;
+      position: relative;
+      padding-left: 60px;
+    }
+    /* Left margin line */
+    .page::before {
+      content: '';
+      position: absolute;
+      left: 48px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--red-ink);
+      opacity: 0.2;
+    }
+
+    /* Typewriter strike-through animation */
+    @keyframes typeIn {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    /* Header */
+    .letterhead {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 2px solid var(--rule);
+      position: relative;
+    }
+    .letterhead::after {
+      content: '✦';
+      position: absolute;
+      bottom: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg);
+      padding: 0 1rem;
+      color: var(--rule);
+      font-size: 1.2rem;
+    }
+    .letterhead h1 {
+      font-family: var(--bask);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .letterhead .subtitle {
+      font-size: 0.9rem;
+      color: var(--dim);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    /* Typed date line */
+    .date-line {
+      text-align: right;
+      font-size: 0.8rem;
+      color: var(--dim);
+      margin-bottom: 2rem;
+    }
+
+    /* Body */
+    .typed-block {
+      margin-bottom: 2.5rem;
+    }
+    .typed-heading {
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      font-size: 0.85rem;
+      color: var(--blue-ink);
+      margin-bottom: 0.75rem;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      text-decoration-color: var(--blue-ink);
+    }
+    .typed-p {
+      color: var(--text);
+      margin-bottom: 1rem;
+      text-indent: 2rem;
+    }
+    .typed-p.no-indent { text-indent: 0; }
+
+    /* Correction / strikethrough with red */
+    .correction {
+      position: relative;
+      color: var(--dim);
+      text-decoration: line-through;
+      text-decoration-color: var(--red-ink);
+    }
+    .inserted {
+      color: var(--blue-ink);
+      font-style: italic;
+    }
+
+    /* Annotation (handwritten feel) */
+    .margin-note {
+      position: absolute;
+      left: -50px;
+      width: 45px;
+      font-size: 0.6rem;
+      color: var(--red-ink);
+      text-align: right;
+      font-style: italic;
+      transform: rotate(-2deg);
+      opacity: 0.7;
+    }
+
+    /* Experience entries */
+    .entry {
+      margin-bottom: 1.5rem;
+      position: relative;
+      padding: 1rem 0;
+      border-bottom: 1px dashed var(--rule);
+    }
+    .entry:last-child { border-bottom: none; }
+    .entry-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.25rem;
+    }
+    .entry-role { font-weight: 700; font-size: 0.95rem; }
+    .entry-date { font-size: 0.75rem; color: var(--dim); }
+    .entry-org { font-size: 0.82rem; color: var(--blue-ink); margin-bottom: 0.5rem; }
+    .entry-desc { font-size: 0.88rem; color: var(--dim); }
+    .entry-list {
+      list-style: none;
+      margin-top: 0.5rem;
+    }
+    .entry-list li {
+      font-size: 0.82rem;
+      color: var(--dim);
+      padding: 0.15rem 0;
+    }
+    .entry-list li::before {
+      content: '> ';
+      color: var(--red-ink);
+    }
+
+    /* Project box */
+    .project-box {
+      border: 1px solid var(--rule);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .project-box::before {
+      content: 'PROYECTO';
+      position: absolute;
+      top: -8px; left: 12px;
+      background: var(--bg);
+      padding: 0 0.5rem;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      color: var(--blue-ink);
+    }
+    .proj-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; }
+    .proj-desc { font-size: 0.85rem; color: var(--dim); margin-bottom: 0.75rem; }
+    .proj-tags { font-size: 0.75rem; color: var(--blue-ink); }
+
+    /* Skills as typed list */
+    .skills-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    @media (max-width: 600px) { .skills-cols { grid-template-columns: 1fr; } }
+    .skill-col-title {
+      font-weight: 700; font-size: 0.75rem; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--blue-ink);
+      margin-bottom: 0.5rem;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .skill-line {
+      font-size: 0.85rem;
+      padding: 0.2rem 0;
+      color: var(--text);
+    }
+    .skill-line::before {
+      content: '• ';
+      color: var(--red-ink);
+    }
+
+    /* Cert list */
+    .cert-line {
+      font-size: 0.85rem;
+      padding: 0.3rem 0;
+      border-bottom: 1px dotted var(--rule);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .cert-year { font-size: 0.75rem; color: var(--dim); }
+
+    /* Signature block */
+    .signature-block {
+      margin-top: 3rem;
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 2px solid var(--rule);
+    }
+    .sig-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--dim);
+      margin-bottom: 0.5rem;
+    }
+    .sig-email {
+      font-family: var(--bask);
+      font-size: 1.1rem;
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px solid var(--text);
+      font-style: italic;
+    }
+    .sig-email:hover { color: var(--blue-ink); border-color: var(--blue-ink); }
+    .sig-links {
+      margin-top: 1rem;
+      font-size: 0.8rem;
+    }
+    .sig-links a {
+      color: var(--blue-ink);
+      text-decoration: none;
+    }
+    .sig-links a:hover { text-decoration: underline; }
+
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      font-size: 0.7rem;
+      color: var(--dim);
+      letter-spacing: 0.1em;
+    }
+
+    @media (max-width: 640px) {
+      .page { padding-left: 0; }
+      .page::before { display: none; }
+      .margin-note { display: none; }
+      body { padding: 2rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <header class="letterhead">
+    <h1>Diego Santibáñez Oyarce</h1>
+    <div class="subtitle">Científico de Datos · Santiago, Chile</div>
+  </header>
+
+  <div class="date-line">Santiago, Marzo 2026</div>
+
+  <div class="typed-block">
+    <div class="typed-heading">Perfil Profesional</div>
+    <p class="typed-p">Egresado de Ingeniería Civil en Ciencia de Datos en Agosto 2025, apasionado por la tecnología y con un gran interés en el uso de la inteligencia artificial como herramienta para la resolución de problemas del mundo real. Mi formación académica me proporcionó una sólida comprensión de algoritmos de aprendizaje automático, análisis y visualización de datos.</p>
+    <p class="typed-p no-indent" style="font-size:0.82rem;color:var(--dim);">Experiencia: <strong>1+ años</strong> &nbsp;|&nbsp; Congresos: <strong>7 presentaciones</strong> &nbsp;|&nbsp; Certificaciones: <strong>4 activas</strong></p>
+  </div>
+
+  <div class="typed-block">
+    <div class="typed-heading">Experiencia Laboral</div>
+    <div class="entry" style="position:relative;">
+      <span class="margin-note">★</span>
+      <div class="entry-header"><span class="entry-role">Asistente de Investigación</span><span class="entry-date">DIC 2023 — SEP 2025</span></div>
+      <div class="entry-org">UTEM</div>
+      <div class="entry-desc">Presentaciones en congresos nacionales e internacionales:</div>
+      <ul class="entry-list">
+        <li>1ras Jornadas Ciencia de Datos y Salud Pública — U. Chile</li>
+        <li>Carla2024 Flash Talk — sep 2024</li>
+        <li>III Congreso Vive la Investigación 2024</li>
+        <li>XIV Congreso Argentino Bioinformática</li>
+        <li>III Reunión Soc. Chilena de Bioinformática</li>
+        <li>Carla2025 — Mejor póster</li>
+      </ul>
+    </div>
+    <div class="entry">
+      <div class="entry-header"><span class="entry-role">Técnico Análisis de Datos Avanzado</span><span class="entry-date">FEB 2025 — SEP 2025</span></div>
+      <div class="entry-org">UTEM</div>
+      <div class="entry-desc">Web scraping con Python, dashboards interactivos con Plotly y Streamlit, administración de bases de datos MariaDB y PostgreSQL, NLP.</div>
+    </div>
+    <div class="entry">
+      <div class="entry-header"><span class="entry-role">Ayudante de Cátedra — Visualización de Datos</span><span class="entry-date">MAR 2025 — JUL 2025</span></div>
+      <div class="entry-org">UTEM</div>
+      <div class="entry-desc">Enseñanza y mentoría a estudiantes en visualización de datos.</div>
+    </div>
+    <div class="entry">
+      <div class="entry-header"><span class="entry-role">Practicante Profesional</span><span class="entry-date">AGO 2024 — ENE 2025</span></div>
+      <div class="entry-org">Contraloría General de la República</div>
+      <div class="entry-desc">Análisis de datos con Impala y Oracle, consultas SQL complejas, automatización con Python.</div>
+    </div>
+  </div>
+
+  <div class="typed-block">
+    <div class="typed-heading">Proyectos</div>
+    <div class="project-box">
+      <div class="proj-title">Dashboard de Avance de Proyecto</div>
+      <div class="proj-desc">Dashboard interactivo para seguimiento y análisis de avance de proyectos con visualizaciones geográficas, tablas dinámicas y filtros en tiempo real.</div>
+      <div class="proj-tags">Stack: Streamlit, Pandas, Plotly, DuckDB, Folium</div>
+    </div>
+  </div>
+
+  <div class="typed-block">
+    <div class="typed-heading">Habilidades</div>
+    <div class="skills-cols">
+      <div>
+        <div class="skill-col-title">Técnicas</div>
+        <div class="skill-line">Python</div><div class="skill-line">SQL</div>
+        <div class="skill-line">TensorFlow / scikit-learn</div><div class="skill-line">Pandas / Jupyter</div>
+        <div class="skill-line">Plotly / Streamlit</div><div class="skill-line">Web Scraping</div>
+        <div class="skill-line">PostgreSQL / MariaDB</div><div class="skill-line">SpaCy (NLP)</div>
+      </div>
+      <div>
+        <div class="skill-col-title">Blandas</div>
+        <div class="skill-line">Resolución de Problemas</div><div class="skill-line">Pensamiento Crítico</div>
+        <div class="skill-line">Adaptabilidad</div><div class="skill-line">Mentoría</div>
+        <div class="skill-line">Curiosidad Intelectual</div><div class="skill-line">Responsabilidad</div>
+        <div class="skill-line">Mentalidad Analítica</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="typed-block">
+    <div class="typed-heading">Educación & Certificaciones</div>
+    <p class="typed-p no-indent"><strong>Ingeniero Civil en Ciencia de Datos</strong> — UTEM, 2020–2025</p>
+    <div style="margin-top:1rem;">
+      <div class="cert-line"><span>Power BI</span><span class="cert-year">Santander X | 2025</span></div>
+      <div class="cert-line"><span>Inglés B2 Upper Intermediate</span><span class="cert-year">2025</span></div>
+      <div class="cert-line"><span>AWS Data Center Technician</span><span class="cert-year">AWS | 2024</span></div>
+      <div class="cert-line"><span>Intro. Ciencia de Datos</span><span class="cert-year">Santander | 2025</span></div>
+    </div>
+  </div>
+
+  <div class="signature-block">
+    <div class="sig-label">Correspondencia</div>
+    <a href="mailto:dsantibanezo@utem.cl" class="sig-email">dsantibanezo@utem.cl</a>
+    <div class="sig-links"><a href="https://linkedin.com/in/diego-santibanez-oyarce" target="_blank">LinkedIn ↗</a></div>
+  </div>
+
+  <footer>— fin del documento — © 2025 Diego Santibáñez Oyarce —</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diego Santibáñez Oyarce — Científico de Datos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FAFAFA;
+      --text: #111111;
+      --text-sec: #666666;
+      --border: #E0E0E0;
+      --accent: #000000;
+      
+      --font-serif: 'Playfair Display', serif;
+      --font-sans: 'Inter', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      padding: 0 5vw;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* Minimalist Navbar */
+    nav {
+      padding: 2rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(250, 250, 250, 0.9);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+    }
+
+    .logo {
+      font-family: var(--font-serif);
+      font-weight: 700;
+      font-size: 1.5rem;
+      text-decoration: none;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-sec);
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    /* Sections */
+    section {
+      padding: 8rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    section:last-child {
+      border-bottom: none;
+    }
+
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: 2.5rem;
+      font-weight: 400;
+      margin-bottom: 4rem;
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 12rem 0;
+      text-align: center;
+    }
+
+    header h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 600;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    header h2 {
+      font-family: var(--font-sans);
+      font-weight: 300;
+      font-size: 1.25rem;
+      color: var(--text-sec);
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .bio {
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin: 0 auto 4rem;
+      color: var(--text-sec);
+      line-height: 1.8;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 1rem 2rem;
+      background: var(--accent);
+      color: var(--bg);
+      text-decoration: none;
+      font-family: var(--font-sans);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 0.85rem;
+      border: 1px solid var(--accent);
+      transition: all 0.3s;
+    }
+
+    .btn:hover {
+      background: transparent;
+      color: var(--accent);
+    }
+
+    /* Grid layout for Experience */
+    .exp-item {
+      display: grid;
+      grid-template-columns: 1fr 3fr;
+      gap: 3rem;
+      margin-bottom: 4rem;
+    }
+
+    @media (max-width: 768px) {
+      .exp-item { grid-template-columns: 1fr; gap: 1rem; }
+    }
+
+    .exp-meta {
+      font-family: var(--font-sans);
+    }
+
+    .exp-date {
+      font-size: 0.85rem;
+      color: var(--text-sec);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .exp-org {
+      font-weight: 500;
+      font-size: 1.1rem;
+    }
+
+    .exp-role {
+      font-family: var(--font-serif);
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .exp-desc {
+      color: var(--text-sec);
+      margin-bottom: 1rem;
+    }
+
+    .exp-bullets {
+      list-style-type: none;
+    }
+
+    .exp-bullets li {
+      position: relative;
+      padding-left: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--text-sec);
+      font-size: 0.95rem;
+    }
+
+    .exp-bullets li::before {
+      content: "—";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+    }
+
+    /* Projects */
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 3rem;
+    }
+
+    .project-card {
+      padding: 3rem;
+      border: 1px solid var(--border);
+      transition: transform 0.3s;
+    }
+
+    .project-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .project-title {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .project-desc {
+      color: var(--text-sec);
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.75rem;
+      background: var(--border);
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Skills */
+    .skills-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+    }
+
+    @media (max-width: 600px) {
+      .skills-wrapper { grid-template-columns: 1fr; }
+    }
+
+    .skill-cat {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 2rem;
+      color: var(--text-sec);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+
+    .skill-list {
+      list-style: none;
+    }
+
+    .skill-list li {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+    }
+
+    /* Education & Certs */
+    .edu-item {
+      margin-bottom: 2rem;
+    }
+
+    .edu-degree {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+    }
+
+    .edu-inst {
+      font-size: 0.9rem;
+      color: var(--text-sec);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 0.25rem;
+    }
+
+    /* Footer */
+    footer {
+      padding: 4rem 0;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-sec);
+    }
+
+    .fade-in {
+      animation: fadeIn 1s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="container fade-in">
+    <a href="#" class="logo">DS.OY</a>
+    <ul class="nav-links">
+      <li><a href="#experiencia">Experiencia</a></li>
+      <li><a href="#proyectos">Proyectos</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+  </nav>
+
+  <main class="container">
+    <section class="hero fade-in">
+      <header>
+        <h1>Diego Santibáñez Oyarce</h1>
+        <h2>Científico de Datos</h2>
+      </header>
+      <p class="bio">
+        Egresado de Ingeniería Civil en Ciencia de Datos, apasionado por la tecnología y con un gran interés en el uso de la inteligencia artificial como herramienta para la resolución de problemas del mundo real.
+      </p>
+      <a href="mailto:dsantibanezo@utem.cl" class="btn">Contáctame</a>
+    </section>
+
+    <section id="experiencia">
+      <h2 class="section-title">Experiencia</h2>
+      
+      <div class="exp-item">
+        <div class="exp-meta">
+          <div class="exp-date">DIC 2023 — SEP 2025</div>
+          <div class="exp-org">UTEM</div>
+        </div>
+        <div>
+          <h3 class="exp-role">Asistente de Investigación</h3>
+          <p class="exp-desc">Presentaciones en congresos nacionales e internacionales:</p>
+          <ul class="exp-bullets">
+            <li>1ras Jornadas Ciencia de Datos y Salud Publica — U. Chile, ene 2024</li>
+            <li>Carla2024 Flash Talk — sep 2024</li>
+            <li>III Congreso Vive la Investigacion 2024</li>
+            <li>XIV Congreso Argentino Bioinformatica</li>
+            <li>III Reunión Sociedad Chilena de Bioinformatica — Flash Talk</li>
+            <li>Carla2025 — Mejor poster, sep 2025</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-meta">
+          <div class="exp-date">FEB 2025 — SEP 2025</div>
+          <div class="exp-org">UTEM</div>
+        </div>
+        <div>
+          <h3 class="exp-role">Técnico Análisis de Datos Avanzado</h3>
+          <p class="exp-desc">
+            Web scraping con Python (Selenium, BeautifulSoup), dashboards interactivos con Plotly y Streamlit, administración de bases de datos MariaDB y PostgreSQL, procesamiento de lenguaje natural (NLP).
+          </p>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-meta">
+          <div class="exp-date">AGO 2024 — ENE 2025</div>
+          <div class="exp-org">Contraloría General de la República</div>
+        </div>
+        <div>
+          <h3 class="exp-role">Practicante Profesional</h3>
+          <p class="exp-desc">
+            Análisis de datos con Impala y Oracle, elaboración de consultas SQL complejas, automatización de procesos mediante Python.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="proyectos">
+      <h2 class="section-title">Proyectos</h2>
+      <div class="project-grid">
+        <div class="project-card">
+          <h3 class="project-title">Dashboard de Avance de Proyecto</h3>
+          <p class="project-desc">
+            Dashboard interactivo para el seguimiento y análisis de avance de proyectos. Incorpora visualizaciones geográficas, tablas dinámicas y filtros en tiempo real. Desarrollado con enfoque en usabilidad y rendimiento sobre grandes volúmenes de datos.
+          </p>
+          <div class="tags">
+            <span class="tag">Streamlit</span>
+            <span class="tag">Python</span>
+            <span class="tag">DuckDB</span>
+            <span class="tag">Plotly</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills">
+      <h2 class="section-title">Habilidades</h2>
+      <div class="skills-wrapper">
+        <div>
+          <div class="skill-cat">Técnicas</div>
+          <ul class="skill-list">
+            <li>Python & SQL</li>
+            <li>TensorFlow & scikit-learn</li>
+            <li>Pandas & Jupyter</li>
+            <li>Data Visualization (Plotly)</li>
+            <li>Streamlit</li>
+            <li>PostgreSQL & MariaDB</li>
+          </ul>
+        </div>
+        <div>
+          <div class="skill-cat">Educación</div>
+          <div class="edu-item">
+            <div class="edu-degree">Ingeniero Civil en Ciencia de Datos</div>
+            <div class="edu-inst">UTEM | 2020 — 2025</div>
+          </div>
+          <div class="skill-cat" style="margin-top: 3rem;">Certificaciones</div>
+          <ul class="skill-list" style="font-size: 1.1rem;">
+            <li style="font-family: var(--font-sans); font-size: 1rem; font-weight: 500;">Power BI (Santander X, 2025)</li>
+            <li style="font-family: var(--font-sans); font-size: 1rem; font-weight: 500;">Inglés B2 (2025)</li>
+            <li style="font-family: var(--font-sans); font-size: 1rem; font-weight: 500;">AWS Data Center Tech (2024)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="contacto">
+      <h2 class="section-title">Contacto</h2>
+      <div style="text-align: center;">
+        <p class="bio" style="margin-bottom: 2rem;">¿Interesado en colaborar o tienes alguna pregunta?</p>
+        <a href="mailto:dsantibanezo@utem.cl" class="btn" style="font-size: 1.2rem; padding: 1.5rem 3rem;">dsantibanezo@utem.cl</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 Diego Santibáñez Oyarce. Minimal Monochrome Design.</p>
+  </footer>
+
+  <script>
+    // Simple smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diego Santibanez Oyarce — Blueprint</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;900&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ============================================================
+       RESET & TOKENS
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:       #0b1e3d;
+      --navy-light: #0f2a52;
+      --navy-mid:   #132d5a;
+      --text:       #e8f0fe;
+      --text-dim:   #a8c0e8;
+      --blue:       #4fc3f7;
+      --blue-dim:   #2196c4;
+      --red:        #ff6b6b;
+      --white:      #ffffff;
+      --sidebar-w:  200px;
+      --grid-color: rgba(79, 195, 247, 0.07);
+      --grid-large: rgba(79, 195, 247, 0.12);
+      --transition: 0.25s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'IBM Plex Mono', monospace;
+      background-color: var(--navy);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ============================================================
+       GRID PAPER BACKGROUND
+    ============================================================ */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 39px,
+          var(--grid-large) 39px,
+          var(--grid-large) 40px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 39px,
+          var(--grid-large) 39px,
+          var(--grid-large) 40px
+        ),
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 7px,
+          var(--grid-color) 7px,
+          var(--grid-color) 8px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 7px,
+          var(--grid-color) 7px,
+          var(--grid-color) 8px
+        );
+    }
+
+    /* ============================================================
+       LAYOUT
+    ============================================================ */
+    .layout {
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 1fr;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ============================================================
+       SIDEBAR
+    ============================================================ */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: var(--sidebar-w);
+      height: 100vh;
+      background: rgba(11, 30, 61, 0.82);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-right: 1px dashed rgba(79, 195, 247, 0.35);
+      display: flex;
+      flex-direction: column;
+      padding: 2rem 0;
+      z-index: 100;
+      overflow-y: auto;
+    }
+
+    .sidebar-logo {
+      padding: 0 1.25rem 1.5rem;
+      border-bottom: 1px dashed rgba(79, 195, 247, 0.25);
+      margin-bottom: 1.5rem;
+    }
+
+    .sidebar-logo .monogram {
+      font-family: 'Archivo', sans-serif;
+      font-weight: 900;
+      font-size: 1.6rem;
+      color: var(--blue);
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .sidebar-logo .tagline {
+      font-size: 0.6rem;
+      color: var(--text-dim);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 0.3rem;
+    }
+
+    .sidebar-corner-mark {
+      font-size: 0.55rem;
+      color: rgba(79, 195, 247, 0.4);
+      letter-spacing: 0.1em;
+      padding: 0 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .nav-list {
+      list-style: none;
+      flex: 1;
+    }
+
+    .nav-list li {
+      position: relative;
+    }
+
+    .nav-list li::after {
+      content: '';
+      display: block;
+      width: calc(100% - 2.5rem);
+      height: 1px;
+      background: repeating-linear-gradient(
+        90deg,
+        rgba(79, 195, 247, 0.2) 0px,
+        rgba(79, 195, 247, 0.2) 4px,
+        transparent 4px,
+        transparent 8px
+      );
+      margin: 0 1.25rem;
+    }
+
+    .nav-list li:last-child::after { display: none; }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.7rem 1.25rem;
+      text-decoration: none;
+      color: var(--text-dim);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      transition: color var(--transition), background var(--transition);
+      position: relative;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      color: var(--blue);
+      background: rgba(79, 195, 247, 0.06);
+    }
+
+    .nav-link:hover .nav-num,
+    .nav-link.active .nav-num {
+      color: var(--red);
+    }
+
+    .nav-link::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 0;
+      background: var(--blue);
+      transition: height var(--transition);
+    }
+
+    .nav-link:hover::before,
+    .nav-link.active::before {
+      height: 60%;
+    }
+
+    .nav-num {
+      font-weight: 600;
+      color: rgba(79, 195, 247, 0.5);
+      min-width: 1.5rem;
+      font-size: 0.65rem;
+      transition: color var(--transition);
+    }
+
+    .sidebar-footer {
+      padding: 1.25rem;
+      border-top: 1px dashed rgba(79, 195, 247, 0.25);
+      font-size: 0.55rem;
+      color: rgba(79, 195, 247, 0.35);
+      letter-spacing: 0.08em;
+      line-height: 1.7;
+    }
+
+    /* ============================================================
+       MOBILE TOPBAR
+    ============================================================ */
+    .topbar {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      background: rgba(11, 30, 61, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px dashed rgba(79, 195, 247, 0.35);
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1rem;
+      z-index: 200;
+    }
+
+    .topbar-brand {
+      font-family: 'Archivo', sans-serif;
+      font-weight: 900;
+      font-size: 1.1rem;
+      color: var(--blue);
+      letter-spacing: -0.01em;
+    }
+
+    .hamburger {
+      background: none;
+      border: 1px dashed rgba(79, 195, 247, 0.5);
+      color: var(--blue);
+      padding: 0.35rem 0.6rem;
+      cursor: pointer;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      transition: background var(--transition);
+    }
+
+    .hamburger:hover {
+      background: rgba(79, 195, 247, 0.1);
+    }
+
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 56px;
+      left: 0;
+      right: 0;
+      background: rgba(11, 30, 61, 0.97);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px dashed rgba(79, 195, 247, 0.35);
+      z-index: 190;
+      padding: 0.5rem 0;
+    }
+
+    .mobile-nav.open { display: block; }
+
+    .mobile-nav .nav-link {
+      padding: 0.75rem 1.5rem;
+      font-size: 0.75rem;
+    }
+
+    /* ============================================================
+       MAIN CONTENT
+    ============================================================ */
+    .main {
+      margin-left: var(--sidebar-w);
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    /* ============================================================
+       SECTION BASE
+    ============================================================ */
+    .section {
+      padding: 5rem 3.5rem 5rem;
+      border-bottom: 1px dashed rgba(79, 195, 247, 0.18);
+      position: relative;
+    }
+
+    .section:last-child { border-bottom: none; }
+
+    /* Stamp */
+    .section-stamp {
+      position: absolute;
+      top: 2rem;
+      right: 2.5rem;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      color: rgba(79, 195, 247, 0.35);
+      border: 1px solid rgba(79, 195, 247, 0.2);
+      padding: 0.25rem 0.5rem;
+      text-transform: uppercase;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .section-title {
+      font-family: 'Archivo', sans-serif;
+      font-weight: 900;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      color: var(--text);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-title .accent {
+      color: var(--blue);
+    }
+
+    .section-underline {
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--blue), transparent);
+      margin-bottom: 2.5rem;
+    }
+
+    .annotation {
+      font-size: 0.65rem;
+      color: var(--red);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .annotation::before {
+      content: '▸';
+      color: var(--red);
+      font-size: 0.55rem;
+    }
+
+    /* ============================================================
+       SECTION: INICIO (HERO)
+    ============================================================ */
+    #inicio {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 3rem;
+      padding-bottom: 3rem;
+    }
+
+    .hero-pre {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--blue);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .hero-pre::before {
+      content: '';
+      display: inline-block;
+      width: 30px;
+      height: 1px;
+      background: var(--blue);
+    }
+
+    .hero-name {
+      font-family: 'Archivo', sans-serif;
+      font-weight: 900;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      color: var(--text);
+      letter-spacing: -0.03em;
+      line-height: 0.95;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-name span {
+      color: var(--blue);
+      display: block;
+    }
+
+    .hero-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: clamp(0.85rem, 1.5vw, 1.05rem);
+      color: var(--red);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      font-weight: 500;
+    }
+
+    .hero-bio {
+      max-width: 640px;
+      font-size: 0.82rem;
+      line-height: 1.85;
+      color: var(--text-dim);
+      border-left: 3px dashed rgba(79, 195, 247, 0.4);
+      padding-left: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.7rem 1.5rem;
+      transition: all var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: var(--navy);
+      clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+    }
+
+    .btn-primary:hover {
+      background: #81d4fa;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--blue);
+      border: 1px dashed rgba(79, 195, 247, 0.6);
+    }
+
+    .btn-outline:hover {
+      background: rgba(79, 195, 247, 0.1);
+      border-color: var(--blue);
+    }
+
+    /* Crosshair corner decoration */
+    .hero-deco {
+      position: absolute;
+      top: 3rem;
+      right: 3rem;
+      width: 120px;
+      height: 120px;
+      pointer-events: none;
+      opacity: 0.25;
+    }
+
+    .hero-deco-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border: 1px dashed rgba(79, 195, 247, 0.6);
+      border-radius: 50%;
+    }
+
+    .hero-deco-inner::before,
+    .hero-deco-inner::after {
+      content: '';
+      position: absolute;
+      background: rgba(79, 195, 247, 0.7);
+    }
+
+    .hero-deco-inner::before {
+      width: 1px;
+      height: 100%;
+      left: 50%;
+      top: 0;
+    }
+
+    .hero-deco-inner::after {
+      height: 1px;
+      width: 100%;
+      top: 50%;
+      left: 0;
+    }
+
+    /* ============================================================
+       SECTION: EXPERIENCIA — VERTICAL TIMELINE
+    ============================================================ */
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: repeating-linear-gradient(
+        180deg,
+        var(--blue) 0px,
+        var(--blue) 6px,
+        transparent 6px,
+        transparent 12px
+      );
+      opacity: 0.5;
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 3rem;
+    }
+
+    .timeline-item:last-child { margin-bottom: 0; }
+
+    .timeline-dot {
+      position: absolute;
+      left: -2rem;
+      top: 0.4rem;
+      width: 10px;
+      height: 10px;
+      background: var(--blue);
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+      transform: translateX(-50%);
+    }
+
+    .timeline-dot::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border: 1px dashed rgba(79, 195, 247, 0.5);
+      clip-path: none;
+    }
+
+    .timeline-header {
+      margin-bottom: 0.75rem;
+    }
+
+    .timeline-role {
+      font-family: 'Archivo', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 0.2rem;
+    }
+
+    .timeline-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .timeline-org {
+      font-size: 0.72rem;
+      color: var(--blue);
+      font-weight: 500;
+      letter-spacing: 0.05em;
+    }
+
+    .timeline-date {
+      font-size: 0.65rem;
+      color: var(--red);
+      letter-spacing: 0.08em;
+      border: 1px solid rgba(255, 107, 107, 0.4);
+      padding: 0.15rem 0.45rem;
+    }
+
+    .timeline-body {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      line-height: 1.8;
+    }
+
+    .timeline-body ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .timeline-body ul li {
+      position: relative;
+      padding-left: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-body ul li::before {
+      content: '//';
+      position: absolute;
+      left: 0;
+      color: var(--blue);
+      font-size: 0.65rem;
+      opacity: 0.6;
+    }
+
+    .timeline-sub {
+      margin-top: 0.5rem;
+      padding-left: 1rem;
+      border-left: 1px dashed rgba(79, 195, 247, 0.2);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .doc-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.65rem;
+      color: var(--blue);
+      text-decoration: none;
+      border: 1px dashed rgba(79, 195, 247, 0.35);
+      padding: 0.2rem 0.5rem;
+      transition: all var(--transition);
+      letter-spacing: 0.05em;
+    }
+
+    .doc-link:hover {
+      background: rgba(79, 195, 247, 0.1);
+      border-color: var(--blue);
+    }
+
+    .doc-link-red {
+      color: var(--red);
+      border-color: rgba(255, 107, 107, 0.35);
+    }
+
+    .doc-link-red:hover {
+      background: rgba(255, 107, 107, 0.1);
+      border-color: var(--red);
+    }
+
+    /* ============================================================
+       SECTION: PROYECTOS
+    ============================================================ */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .project-card {
+      border: 1px dashed rgba(79, 195, 247, 0.3);
+      padding: 1.75rem;
+      background: rgba(15, 42, 82, 0.5);
+      position: relative;
+      transition: border-color var(--transition), background var(--transition);
+      clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+    }
+
+    .project-card:hover {
+      border-color: rgba(79, 195, 247, 0.7);
+      background: rgba(15, 42, 82, 0.75);
+    }
+
+    .project-card::before {
+      content: attr(data-index);
+      position: absolute;
+      top: 0.75rem;
+      right: 1.5rem;
+      font-size: 2rem;
+      font-family: 'Archivo', sans-serif;
+      font-weight: 900;
+      color: rgba(79, 195, 247, 0.06);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .project-year {
+      font-size: 0.6rem;
+      color: var(--red);
+      letter-spacing: 0.15em;
+      margin-bottom: 0.5rem;
+    }
+
+    .project-name {
+      font-family: 'Archivo', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 0.6rem;
+    }
+
+    .project-desc {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      line-height: 1.75;
+      margin-bottom: 1rem;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .tag {
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      color: var(--blue);
+      border: 1px solid rgba(79, 195, 247, 0.3);
+      padding: 0.15rem 0.45rem;
+      background: rgba(79, 195, 247, 0.05);
+    }
+
+    /* ============================================================
+       SECTION: HABILIDADES
+    ============================================================ */
+    .skills-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .skills-group-title {
+      font-family: 'Archivo', sans-serif;
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px dashed rgba(79, 195, 247, 0.25);
+    }
+
+    .skill-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .skill-label {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      min-width: 130px;
+      font-weight: 400;
+    }
+
+    .skill-bar-track {
+      flex: 1;
+      height: 4px;
+      background: rgba(79, 195, 247, 0.1);
+      border: 1px solid rgba(79, 195, 247, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .skill-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), #81d4fa);
+      position: relative;
+    }
+
+    .skill-bar-fill::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 6px;
+      background: var(--white);
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    }
+
+    .soft-skills-list {
+      list-style: none;
+    }
+
+    .soft-skills-list li {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      padding: 0.45rem 0;
+      border-bottom: 1px dashed rgba(79, 195, 247, 0.1);
+    }
+
+    .soft-skills-list li::before {
+      content: '◈';
+      color: var(--blue);
+      font-size: 0.6rem;
+      opacity: 0.7;
+    }
+
+    /* ============================================================
+       SECTION: EDUCACION & CERTIFICADOS
+    ============================================================ */
+    .edu-block {
+      border: 1px dashed rgba(79, 195, 247, 0.25);
+      padding: 1.75rem;
+      margin-bottom: 2rem;
+      background: rgba(15, 42, 82, 0.4);
+      position: relative;
+    }
+
+    .edu-block::before {
+      content: 'EDU';
+      position: absolute;
+      top: -0.6rem;
+      left: 1rem;
+      background: var(--navy);
+      padding: 0 0.5rem;
+      font-size: 0.6rem;
+      color: var(--blue);
+      letter-spacing: 0.15em;
+    }
+
+    .edu-degree {
+      font-family: 'Archivo', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text);
+      margin-bottom: 0.35rem;
+    }
+
+    .edu-meta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.75rem;
+    }
+
+    .edu-inst {
+      font-size: 0.72rem;
+      color: var(--blue);
+      font-weight: 500;
+    }
+
+    .edu-year {
+      font-size: 0.65rem;
+      color: var(--red);
+    }
+
+    .edu-desc {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      line-height: 1.75;
+    }
+
+    .certs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+
+    .cert-card {
+      border: 1px dashed rgba(79, 195, 247, 0.25);
+      padding: 1.25rem;
+      background: rgba(15, 42, 82, 0.35);
+      position: relative;
+      transition: border-color var(--transition), background var(--transition);
+    }
+
+    .cert-card:hover {
+      border-color: rgba(79, 195, 247, 0.6);
+      background: rgba(15, 42, 82, 0.6);
+    }
+
+    .cert-issuer {
+      font-size: 0.6rem;
+      color: var(--red);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.35rem;
+    }
+
+    .cert-name {
+      font-family: 'Archivo', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text);
+      margin-bottom: 0.6rem;
+      line-height: 1.3;
+    }
+
+    .cert-year {
+      font-size: 0.62rem;
+      color: var(--text-dim);
+      margin-bottom: 0.75rem;
+    }
+
+    /* ============================================================
+       SECTION: CONTACTO
+    ============================================================ */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .contact-card {
+      border: 1px dashed rgba(79, 195, 247, 0.25);
+      padding: 1.5rem;
+      background: rgba(15, 42, 82, 0.4);
+      transition: border-color var(--transition), background var(--transition);
+    }
+
+    .contact-card:hover {
+      border-color: rgba(79, 195, 247, 0.6);
+      background: rgba(15, 42, 82, 0.65);
+    }
+
+    .contact-label {
+      font-size: 0.6rem;
+      color: var(--red);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+
+    .contact-value {
+      font-size: 0.8rem;
+      color: var(--blue);
+      word-break: break-all;
+    }
+
+    .contact-value a {
+      color: var(--blue);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+
+    .contact-value a:hover {
+      color: var(--white);
+    }
+
+    /* ============================================================
+       CORNER DECORATIONS (reusable)
+    ============================================================ */
+    .corner-tl,
+    .corner-br {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      pointer-events: none;
+    }
+
+    .corner-tl {
+      top: 0.75rem;
+      left: 0.75rem;
+      border-top: 2px solid rgba(79, 195, 247, 0.5);
+      border-left: 2px solid rgba(79, 195, 247, 0.5);
+    }
+
+    .corner-br {
+      bottom: 0.75rem;
+      right: 0.75rem;
+      border-bottom: 2px solid rgba(79, 195, 247, 0.5);
+      border-right: 2px solid rgba(79, 195, 247, 0.5);
+    }
+
+    /* ============================================================
+       DIVIDER
+    ============================================================ */
+    .rule {
+      border: none;
+      border-top: 1px dashed rgba(79, 195, 247, 0.18);
+      margin: 2.5rem 0;
+    }
+
+    /* ============================================================
+       SUBSECTION TITLE
+    ============================================================ */
+    .sub-title {
+      font-family: 'Archivo', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text);
+      letter-spacing: 0.05em;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .sub-title::before {
+      content: '//';
+      color: var(--blue);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.75rem;
+      opacity: 0.7;
+    }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    .footer {
+      margin-left: var(--sidebar-w);
+      padding: 1.5rem 3.5rem;
+      border-top: 1px dashed rgba(79, 195, 247, 0.18);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      font-size: 0.6rem;
+      color: rgba(79, 195, 247, 0.3);
+      letter-spacing: 0.08em;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ============================================================
+       RESPONSIVE — TABLET
+    ============================================================ */
+    @media (max-width: 900px) {
+      :root { --sidebar-w: 0px; }
+
+      .sidebar { display: none; }
+      .topbar { display: flex; }
+      .main { margin-left: 0; padding-top: 56px; }
+      .footer { margin-left: 0; }
+
+      .section { padding: 3.5rem 1.75rem; }
+      .section-stamp { top: 1rem; right: 1rem; }
+
+      .skills-wrapper { grid-template-columns: 1fr; gap: 2rem; }
+    }
+
+    /* ============================================================
+       RESPONSIVE — MOBILE
+    ============================================================ */
+    @media (max-width: 600px) {
+      .section { padding: 3rem 1.25rem; }
+      .hero-deco { display: none; }
+      .hero-cta-group { flex-direction: column; }
+      .btn { width: 100%; justify-content: center; }
+      .timeline-meta { flex-direction: column; gap: 0.35rem; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .certs-grid { grid-template-columns: 1fr; }
+      .skill-label { min-width: 90px; font-size: 0.7rem; }
+      .footer { padding: 1.25rem; flex-direction: column; text-align: center; }
+    }
+
+    /* ============================================================
+       SCROLL ANIMATION UTILITY
+    ============================================================ */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<!-- Background grid -->
+<div class="bg-grid" aria-hidden="true"></div>
+
+<!-- ============================================================
+     SIDEBAR (desktop)
+============================================================ -->
+<aside class="sidebar" aria-label="Navegacion principal">
+  <div class="sidebar-logo">
+    <div class="monogram">DS</div>
+    <div class="tagline">Blueprint Portfolio</div>
+  </div>
+  <div class="sidebar-corner-mark">REV-A &nbsp;|&nbsp; 2025</div>
+  <nav>
+    <ul class="nav-list">
+      <li><a href="#inicio"       class="nav-link active"><span class="nav-num">01</span>Inicio</a></li>
+      <li><a href="#experiencia"  class="nav-link"><span class="nav-num">02</span>Experiencia</a></li>
+      <li><a href="#proyectos"    class="nav-link"><span class="nav-num">03</span>Proyectos</a></li>
+      <li><a href="#habilidades"  class="nav-link"><span class="nav-num">04</span>Habilidades</a></li>
+      <li><a href="#educacion"    class="nav-link"><span class="nav-num">05</span>Educacion</a></li>
+      <li><a href="#contacto"     class="nav-link"><span class="nav-num">06</span>Contacto</a></li>
+    </ul>
+  </nav>
+  <div class="sidebar-footer">
+    DIEGO SANTIBANEZ<br>
+    CIENTIFICO DE DATOS<br>
+    SANTIAGO, CL
+  </div>
+</aside>
+
+<!-- ============================================================
+     TOPBAR (mobile)
+============================================================ -->
+<header class="topbar" aria-label="Barra de navegacion movil">
+  <div class="topbar-brand">DS</div>
+  <button class="hamburger" id="hamburger-btn" aria-expanded="false" aria-controls="mobile-menu">MENU</button>
+</header>
+<nav class="mobile-nav" id="mobile-menu" aria-label="Menu movil">
+  <ul class="nav-list">
+    <li><a href="#inicio"       class="nav-link" onclick="closeMobileMenu()"><span class="nav-num">01</span>Inicio</a></li>
+    <li><a href="#experiencia"  class="nav-link" onclick="closeMobileMenu()"><span class="nav-num">02</span>Experiencia</a></li>
+    <li><a href="#proyectos"    class="nav-link" onclick="closeMobileMenu()"><span class="nav-num">03</span>Proyectos</a></li>
+    <li><a href="#habilidades"  class="nav-link" onclick="closeMobileMenu()"><span class="nav-num">04</span>Habilidades</a></li>
+    <li><a href="#educacion"    class="nav-link" onclick="closeMobileMenu()"><span class="nav-num">05</span>Educacion</a></li>
+    <li><a href="#contacto"     class="nav-link" onclick="closeMobileMenu()"><span class="nav-num">06</span>Contacto</a></li>
+  </ul>
+</nav>
+
+<!-- ============================================================
+     MAIN
+============================================================ -->
+<main class="main">
+
+  <!-- ==================== INICIO ==================== -->
+  <section id="inicio" class="section" aria-label="Inicio">
+    <span class="section-stamp">SEC-01 / PERFIL</span>
+
+    <!-- Crosshair decoration -->
+    <div class="hero-deco" aria-hidden="true">
+      <div class="hero-deco-inner"></div>
+    </div>
+
+    <p class="hero-pre">Portafolio Profesional</p>
+    <h1 class="hero-name">
+      Diego<br>
+      <span>Santibanez</span>
+    </h1>
+    <p class="hero-title">// Cientifico de datos</p>
+
+    <p class="hero-bio">
+      Egresado de Ingenieria Civil en Ciencia de datos en Agosto 2025, apasionado por la tecnologia
+      y con un gran interes en el uso de la inteligencia artificial como herramienta para la
+      resolucion de problemas del mundo real. Mi formacion academica me proporciono una solida
+      comprension de algoritmos de aprendizaje automatico, analisis y visualizacion de datos.
+      Me gusta proponerme desafios donde pueda poner en practica mis conocimientos y donde
+      ademas pueda aprender cosas nuevas.
+    </p>
+
+    <div class="hero-cta-group">
+      <a href="#proyectos" class="btn btn-primary">Ver Proyectos</a>
+      <a href="#contacto"  class="btn btn-outline">Contacto</a>
+    </div>
+  </section>
+
+  <!-- ==================== EXPERIENCIA ==================== -->
+  <section id="experiencia" class="section fade-up" aria-label="Experiencia">
+    <span class="section-stamp">SEC-02 / EXPERIENCIA</span>
+    <p class="annotation">Historial profesional</p>
+    <h2 class="section-title"><span class="accent">02.</span> Experiencia</h2>
+    <div class="section-underline"></div>
+
+    <div class="timeline">
+
+      <!-- Item 1 -->
+      <div class="timeline-item fade-up">
+        <div class="timeline-dot"></div>
+        <div class="timeline-header">
+          <div class="timeline-role">Asistente de investigacion</div>
+          <div class="timeline-meta">
+            <span class="timeline-org">UTEM</span>
+            <span class="timeline-date">Dic 2023 — Sep 2025</span>
+          </div>
+        </div>
+        <div class="timeline-body">
+          <ul>
+            <li>
+              Presentacion poster en "1ras Jornadas de Ciencia de Datos y Salud Publica" — Universidad de Chile, Enero 2024
+              <div class="timeline-sub">
+                <a href="https://drive.google.com/file/d/124VDD5x6pBidyC1Wx4ZLehAQixdjZ9dS/view?usp=sharing" class="doc-link" target="_blank">⟁ Certificado</a>
+                <a href="https://drive.google.com/file/d/1gRjnIt9xa5CYPhbgGFTKR1o5WV3RB8H6/view?usp=drive_link" class="doc-link" target="_blank">◻ Poster</a>
+              </div>
+            </li>
+            <li>
+              Flash Talk (5 min) + poster en CARLA2024, Septiembre 2024
+              <div class="timeline-sub">
+                <a href="https://drive.google.com/file/d/1jHc_2fZiakh2G9t8EkiB7Z3l0iuWBJ7n/view?usp=sharing" class="doc-link" target="_blank">⟁ Certificado</a>
+                <a href="https://drive.google.com/file/d/1jfS4S75dwoBnUMZ3xeQOFfBzX6HP5gpc/view?usp=drive_link" class="doc-link" target="_blank">◻ Poster</a>
+              </div>
+            </li>
+            <li>
+              Poster en "III Congreso Vive la Investigacion 2024", Octubre 2024
+              <div class="timeline-sub">
+                <a href="https://drive.google.com/file/d/1unqW5oOxe5wl84-vmq4Y8AhXmD1sJJL_/view?usp=sharing" class="doc-link" target="_blank">⟁ Certificado</a>
+                <a href="https://drive.google.com/file/d/1OEKXi8gl7Z9bGySQ8esoomkDJLPiBLCE/view?usp=drive_link" class="doc-link" target="_blank">◻ Poster</a>
+              </div>
+            </li>
+            <li>
+              Poster en "XIV Congreso Argentino de Bioinformatica y Biologia Computacional", Noviembre 2024
+              <div class="timeline-sub">
+                <a href="https://drive.google.com/file/d/1br_Vv35RmHxvyPScFlhDCJxucFz0ckii/view?usp=sharing" class="doc-link" target="_blank">⟁ Certificado</a>
+                <a href="https://drive.google.com/file/d/1wLUe3ssEY_XcOgoTbVJj0B5C7plK-G9n/view?usp=drive_link" class="doc-link" target="_blank">◻ Poster</a>
+              </div>
+            </li>
+            <li>
+              Flash Talk (15 min) en "III Reunion Anual de la Sociedad Chilena de Bioinformatica", Noviembre 2024. Invitacion a publicar manuscrito en <em>Bioinformatics Advances</em> (Oxford University Press).
+              <div class="timeline-sub">
+                <a href="https://drive.google.com/file/d/1-dZ_CdZlYkd58OlGr3v92n8pLshnurje/view?usp=sharing" class="doc-link" target="_blank">⟁ Certificado</a>
+              </div>
+            </li>
+            <li>
+              Poster en CARLA2025, Septiembre 2025. <strong style="color:var(--red)">Premio al mejor poster.</strong>
+              <div class="timeline-sub">
+                <a href="https://drive.google.com/file/d/10tcRQonSWMgKQ8FciWOsCobzQAlWCPr9/view?usp=sharing" class="doc-link" target="_blank">⟁ Certificado</a>
+                <a href="https://drive.google.com/file/d/1M_MhsoB8BCUO5LITTVvQw0Hi9l7RU4Vj/view?usp=sharing" class="doc-link doc-link-red" target="_blank">★ Premio</a>
+                <a href="https://drive.google.com/file/d/14Fc9u_zCtxiKG7RKW3W85Rv6X4OJy5HP/view?usp=drive_link" class="doc-link" target="_blank">◻ Poster</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Item 2 -->
+      <div class="timeline-item fade-up">
+        <div class="timeline-dot"></div>
+        <div class="timeline-header">
+          <div class="timeline-role">Tecnico para analisis de datos avanzado</div>
+          <div class="timeline-meta">
+            <span class="timeline-org">UTEM</span>
+            <span class="timeline-date">Feb 2025 — Sep 2025</span>
+          </div>
+        </div>
+        <div class="timeline-body">
+          <ul>
+            <li>Implementacion de web scraping con Python (Selenium y BeautifulSoup) para la extraccion automatizada de datos</li>
+            <li>Creacion de dashboards interactivos utilizando Plotly y Streamlit para visualizar avances del proyecto</li>
+            <li>Diseno y gestion de bases de datos en MariaDB y PostgreSQL para el almacenamiento de datos estructurados</li>
+            <li>Aplicacion de procesamiento de lenguaje natural para analisis y filtrado de datos</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Item 3 -->
+      <div class="timeline-item fade-up">
+        <div class="timeline-dot"></div>
+        <div class="timeline-header">
+          <div class="timeline-role">Ayudante de Catedra — Visualizacion de Datos</div>
+          <div class="timeline-meta">
+            <span class="timeline-org">UTEM</span>
+            <span class="timeline-date">Mar 2025 — Jul 2025</span>
+          </div>
+        </div>
+        <div class="timeline-body">
+          <ul>
+            <li>Ensenanza y mentoria a estudiantes en tecnicas de visualizacion de datos</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Item 4 -->
+      <div class="timeline-item fade-up">
+        <div class="timeline-dot"></div>
+        <div class="timeline-header">
+          <div class="timeline-role">Practicante Profesional</div>
+          <div class="timeline-meta">
+            <span class="timeline-org">Contraloria General de la Republica</span>
+            <span class="timeline-date">Ago 2024 — Ene 2025</span>
+          </div>
+        </div>
+        <div class="timeline-body">
+          <ul>
+            <li>Analisis de datos utilizando Impala y Oracle</li>
+            <li>Desarrollo de consultas SQL y automatizacion de procesos mediante codigos de Python</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== PROYECTOS ==================== -->
+  <section id="proyectos" class="section fade-up" aria-label="Proyectos">
+    <span class="section-stamp">SEC-03 / PROYECTOS</span>
+    <p class="annotation">Trabajos destacados</p>
+    <h2 class="section-title"><span class="accent">03.</span> Proyectos</h2>
+    <div class="section-underline"></div>
+
+    <div class="projects-grid">
+
+      <div class="project-card" data-index="01">
+        <div class="corner-tl"></div>
+        <div class="corner-br"></div>
+        <div class="project-year">// 2025</div>
+        <div class="project-name">Dashboard de avance de proyecto</div>
+        <p class="project-desc">
+          Dashboard interactivo desarrollado con Streamlit para visualizar el avance y estado
+          de los datos utilizados en el proyecto. Integracion de multiples fuentes de datos
+          con visualizaciones dinamicas y geoespaciales.
+        </p>
+        <div class="tag-list">
+          <span class="tag">Python</span>
+          <span class="tag">Streamlit</span>
+          <span class="tag">Pandas</span>
+          <span class="tag">Plotly</span>
+          <span class="tag">DuckDB</span>
+          <span class="tag">Folium</span>
+        </div>
+        <a href="https://dashboarddatalake-fiut-utem.streamlit.app/" class="doc-link" target="_blank">
+          ↗ Ver aplicacion
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== HABILIDADES ==================== -->
+  <section id="habilidades" class="section fade-up" aria-label="Habilidades">
+    <span class="section-stamp">SEC-04 / HABILIDADES</span>
+    <p class="annotation">Competencias tecnicas y blandas</p>
+    <h2 class="section-title"><span class="accent">04.</span> Habilidades</h2>
+    <div class="section-underline"></div>
+
+    <div class="skills-wrapper">
+
+      <!-- Hard Skills -->
+      <div>
+        <div class="skills-group-title">Hard Skills</div>
+
+        <div class="skill-item">
+          <span class="skill-label">Python</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:95%"></div></div>
+        </div>
+        <div class="skill-item">
+          <span class="skill-label">SQL</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:88%"></div></div>
+        </div>
+        <div class="skill-item">
+          <span class="skill-label">scikit-learn</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:82%"></div></div>
+        </div>
+        <div class="skill-item">
+          <span class="skill-label">TensorFlow</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:72%"></div></div>
+        </div>
+        <div class="skill-item">
+          <span class="skill-label">Pandas</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:90%"></div></div>
+        </div>
+        <div class="skill-item">
+          <span class="skill-label">Plotly</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:85%"></div></div>
+        </div>
+        <div class="skill-item">
+          <span class="skill-label">Streamlit</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:88%"></div></div>
+        </div>
+        <div class="skill-item">
+          <span class="skill-label">Web Scraping</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:80%"></div></div>
+        </div>
+        <div class="skill-item">
+          <span class="skill-label">PostgreSQL</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:78%"></div></div>
+        </div>
+        <div class="skill-item">
+          <span class="skill-label">SpaCy</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:70%"></div></div>
+        </div>
+        <div class="skill-item">
+          <span class="skill-label">Jupyter Notebooks</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:92%"></div></div>
+        </div>
+        <div class="skill-item">
+          <span class="skill-label">MariaDB</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:75%"></div></div>
+        </div>
+        <div class="skill-item">
+          <span class="skill-label">Visualizacion</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:87%"></div></div>
+        </div>
+      </div>
+
+      <!-- Soft Skills -->
+      <div>
+        <div class="skills-group-title">Soft Skills</div>
+        <ul class="soft-skills-list">
+          <li>Resolucion de Problemas</li>
+          <li>Pensamiento Critico</li>
+          <li>Adaptabilidad</li>
+          <li>Mentoria</li>
+          <li>Curiosidad intelectual</li>
+          <li>Responsabilidad</li>
+          <li>Mentalidad de experimentacion</li>
+          <li>Mentalidad analitica</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== EDUCACION & CERTIFICADOS ==================== -->
+  <section id="educacion" class="section fade-up" aria-label="Educacion y Certificados">
+    <span class="section-stamp">SEC-05 / FORMACION</span>
+    <p class="annotation">Educacion y certificaciones</p>
+    <h2 class="section-title"><span class="accent">05.</span> Educacion &amp; Certificados</h2>
+    <div class="section-underline"></div>
+
+    <!-- Education -->
+    <div class="sub-title">Formacion academica</div>
+    <div class="edu-block">
+      <div class="corner-tl"></div>
+      <div class="edu-degree">Ingeniero Civil en Ciencia de Datos</div>
+      <div class="edu-meta">
+        <span class="edu-inst">UTEM — Universidad Tecnologica Metropolitana</span>
+        <span class="edu-year">2020 — 2025</span>
+      </div>
+      <p class="edu-desc">
+        Formacion integral en algoritmos de aprendizaje automatico, analisis y visualizacion de datos,
+        con enfoque en aplicaciones de inteligencia artificial para problemas del mundo real.
+      </p>
+    </div>
+
+    <hr class="rule" />
+
+    <!-- Certificates -->
+    <div class="sub-title">Certificaciones</div>
+    <div class="certs-grid">
+
+      <div class="cert-card">
+        <div class="cert-issuer">Santander X</div>
+        <div class="cert-name">Power BI</div>
+        <div class="cert-year">2025</div>
+        <a href="https://drive.google.com/file/d/1IOp4gjfLcW8XhqbiwwOd9dzlz8l60P5q/view?usp=drive_link" class="doc-link" target="_blank">⟁ Ver certificado</a>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-issuer">Certificacion Internacional</div>
+        <div class="cert-name">Ingles B2 Upper Intermediate</div>
+        <div class="cert-year">2025</div>
+        <a href="https://drive.google.com/file/d/1KT12-fKSs20wCu_AO6c6nEHYi5_v0mK1/view?usp=sharing" class="doc-link" target="_blank">⟁ Ver certificado</a>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-issuer">Amazon Web Services</div>
+        <div class="cert-name">AWS Data Center Technician</div>
+        <div class="cert-year">2024</div>
+        <a href="https://drive.google.com/file/d/1pYCaTdbJQAmruxvoknp92QbIys4Bt7Ws/view?usp=sharing" class="doc-link" target="_blank">⟁ Ver certificado</a>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-issuer">Santander Open Academy</div>
+        <div class="cert-name">Introduccion a la Ciencia de Datos</div>
+        <div class="cert-year">2025</div>
+        <a href="https://drive.google.com/file/d/1vmeQuzoZEwUTC0Pz7Xl_rlobqXcreX5w/view?usp=sharing" class="doc-link" target="_blank">⟁ Ver certificado</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== CONTACTO ==================== -->
+  <section id="contacto" class="section fade-up" aria-label="Contacto">
+    <span class="section-stamp">SEC-06 / CONTACTO</span>
+    <p class="annotation">Vias de comunicacion</p>
+    <h2 class="section-title"><span class="accent">06.</span> Contacto</h2>
+    <div class="section-underline"></div>
+
+    <div class="contact-grid">
+
+      <div class="contact-card">
+        <div class="contact-label">// Email</div>
+        <div class="contact-value">
+          <a href="mailto:dsantibanezo@utem.cl" target="_blank">dsantibanezo@utem.cl</a>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-label">// LinkedIn</div>
+        <div class="contact-value">
+          <a href="https://www.linkedin.com/in/diego-santibanez-oyarce/" target="_blank">diego-santibanez-oyarce</a>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-label">// GitHub</div>
+        <div class="contact-value">
+          <a href="https://github.com/daso42" target="_blank">github.com/daso42</a>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-label">// Telefono</div>
+        <div class="contact-value">
+          <a href="tel:+56984341477" target="_blank">+56 9 8434 1477</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+<footer class="footer">
+  <span>DIEGO SANTIBANEZ OYARCE &mdash; CIENTIFICO DE DATOS</span>
+  <span>DWG NO. DSO-2025 &nbsp;|&nbsp; SHEET 01 OF 01 &nbsp;|&nbsp; SCALE: 1:1</span>
+</footer>
+
+<!-- ============================================================
+     JAVASCRIPT
+============================================================ -->
+<script>
+  /* ----- Mobile menu toggle ----- */
+  const btn = document.getElementById('hamburger-btn');
+  const menu = document.getElementById('mobile-menu');
+
+  btn.addEventListener('click', () => {
+    const isOpen = menu.classList.toggle('open');
+    btn.setAttribute('aria-expanded', isOpen);
+    btn.textContent = isOpen ? 'CERRAR' : 'MENU';
+  });
+
+  function closeMobileMenu() {
+    menu.classList.remove('open');
+    btn.setAttribute('aria-expanded', false);
+    btn.textContent = 'MENU';
+  }
+
+  /* ----- Active nav link on scroll ----- */
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.sidebar .nav-link');
+
+  function updateActiveLink() {
+    let current = '';
+    sections.forEach(sec => {
+      const top = sec.offsetTop - 120;
+      if (window.scrollY >= top) current = sec.id;
+    });
+    navLinks.forEach(link => {
+      link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+    });
+  }
+
+  window.addEventListener('scroll', updateActiveLink, { passive: true });
+  updateActiveLink();
+
+  /* ----- Scroll-triggered fade-up ----- */
+  const fadeEls = document.querySelectorAll('.fade-up');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  fadeEls.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

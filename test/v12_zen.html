@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diego Santibanez Oyarce</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Karla:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #faf8f5;
+            --text: #1a1a18;
+            --gold: #c4a882;
+            --sand: #e8e2d8;
+            --earth: #8b7355;
+            --spacing-xl: 180px;
+            --spacing-lg: 120px;
+            --spacing-md: 60px;
+            --spacing-sm: 30px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Karla', sans-serif;
+            font-weight: 300;
+            line-height: 1.8;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection {
+            background-color: var(--sand);
+            color: var(--text);
+        }
+
+        /* ── Fade-in on scroll ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.9s cubic-bezier(0.23, 1, 0.32, 1),
+                        transform 0.9s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── Typography ── */
+        h1, h2, h3, h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 300;
+        }
+
+        .section-label {
+            font-family: 'Karla', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--earth);
+            margin-bottom: 40px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-label::before {
+            content: '';
+            position: absolute;
+            left: -28px;
+            top: 50%;
+            width: 16px;
+            height: 1px;
+            background-color: var(--gold);
+        }
+
+        /* ── Links ── */
+        a {
+            color: var(--text);
+            text-decoration: none;
+            position: relative;
+        }
+
+        a.underline-link {
+            display: inline-block;
+        }
+
+        a.underline-link::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            width: 0;
+            height: 1px;
+            background-color: var(--gold);
+            transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+                        left 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        a.underline-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        /* ── Delicate rule ── */
+        .rule {
+            width: 100%;
+            height: 1px;
+            background-color: var(--sand);
+            border: none;
+            margin: var(--spacing-md) 0;
+        }
+
+        /* ── Container ── */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* ── Section spacing ── */
+        section {
+            padding: var(--spacing-xl) 0;
+            position: relative;
+        }
+
+        /* ── Decorative elements ── */
+        .deco-circle {
+            width: 6px;
+            height: 6px;
+            border: 1px solid var(--gold);
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .deco-line-v {
+            width: 1px;
+            height: 40px;
+            background-color: var(--sand);
+            margin: 0 auto;
+            display: block;
+        }
+
+        /* ══════════════════════════════════════
+           HERO
+        ══════════════════════════════════════ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0;
+        }
+
+        .hero-inner {
+            width: 100%;
+        }
+
+        .hero-name {
+            font-size: clamp(2.4rem, 6vw, 4.8rem);
+            letter-spacing: 0.15em;
+            font-weight: 300;
+            line-height: 1.15;
+            margin-bottom: 20px;
+        }
+
+        .hero-title {
+            font-family: 'Karla', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--earth);
+            font-weight: 400;
+            margin-bottom: 60px;
+        }
+
+        .hero-bio {
+            max-width: 560px;
+            font-size: 0.95rem;
+            line-height: 2;
+            color: var(--text);
+            opacity: 0.75;
+        }
+
+        .hero-deco {
+            position: absolute;
+            right: 10%;
+            top: 20%;
+            width: 120px;
+            height: 120px;
+            border: 1px solid var(--sand);
+            border-radius: 50%;
+            opacity: 0.5;
+        }
+
+        .hero-deco-sm {
+            position: absolute;
+            right: 8%;
+            top: 55%;
+            width: 8px;
+            height: 8px;
+            border: 1px solid var(--gold);
+            border-radius: 50%;
+            opacity: 0.6;
+        }
+
+        .hero-scroll {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hero-scroll span {
+            font-size: 0.6rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--earth);
+            writing-mode: vertical-rl;
+        }
+
+        .hero-scroll .deco-line-v {
+            height: 50px;
+            background-color: var(--gold);
+            opacity: 0.4;
+        }
+
+        /* ══════════════════════════════════════
+           EXPERIENCE
+        ══════════════════════════════════════ */
+        .exp-item {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 40px;
+            margin-bottom: 80px;
+            align-items: start;
+        }
+
+        .exp-date {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: var(--earth);
+            padding-top: 4px;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .exp-content {
+            border-left: 1px solid var(--sand);
+            padding-left: 40px;
+        }
+
+        .exp-role {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 0.08em;
+            margin-bottom: 4px;
+        }
+
+        .exp-org {
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--earth);
+            margin-bottom: 24px;
+        }
+
+        .exp-detail {
+            font-size: 0.88rem;
+            line-height: 1.9;
+            margin-bottom: 8px;
+            color: var(--text);
+            opacity: 0.8;
+        }
+
+        .exp-links {
+            margin-top: 4px;
+            margin-bottom: 12px;
+            padding-left: 16px;
+        }
+
+        .exp-links a {
+            font-size: 0.8rem;
+            color: var(--earth);
+            display: inline-block;
+            margin-right: 16px;
+            position: relative;
+        }
+
+        .exp-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            width: 0;
+            height: 1px;
+            background-color: var(--gold);
+            transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+                        left 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .exp-links a:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        /* ══════════════════════════════════════
+           PROJECTS
+        ══════════════════════════════════════ */
+        .project-item {
+            max-width: 600px;
+            margin-left: auto;
+        }
+
+        .project-year {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.9rem;
+            color: var(--earth);
+            letter-spacing: 0.15em;
+            margin-bottom: 12px;
+        }
+
+        .project-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 300;
+            letter-spacing: 0.12em;
+            margin-bottom: 16px;
+        }
+
+        .project-desc {
+            font-size: 0.88rem;
+            line-height: 2;
+            opacity: 0.75;
+            margin-bottom: 16px;
+        }
+
+        .project-tech {
+            font-size: 0.75rem;
+            color: var(--earth);
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+        }
+
+        .project-link {
+            font-size: 0.85rem;
+            color: var(--text);
+            position: relative;
+            border-bottom: 1px solid var(--gold);
+            padding-bottom: 2px;
+            transition: color 0.3s;
+        }
+
+        .project-link:hover {
+            color: var(--earth);
+        }
+
+        /* ══════════════════════════════════════
+           SKILLS
+        ══════════════════════════════════════ */
+        .skills-section {
+            max-width: 600px;
+        }
+
+        .skills-category {
+            font-family: 'Karla', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--earth);
+            margin-bottom: 16px;
+        }
+
+        .skills-list {
+            font-size: 0.92rem;
+            line-height: 2.2;
+            margin-bottom: 50px;
+            color: var(--text);
+            opacity: 0.8;
+        }
+
+        .skills-list .sep {
+            display: inline-block;
+            margin: 0 12px;
+            color: var(--sand);
+            font-weight: 300;
+        }
+
+        /* ══════════════════════════════════════
+           EDUCATION & CERTIFICATES
+        ══════════════════════════════════════ */
+        .edu-section {
+            max-width: 600px;
+            margin-left: auto;
+        }
+
+        .edu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--sand);
+        }
+
+        .edu-item:first-of-type {
+            border-top: 1px solid var(--sand);
+        }
+
+        .edu-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.15rem;
+            font-weight: 300;
+            letter-spacing: 0.06em;
+            flex: 1;
+        }
+
+        .edu-org {
+            font-size: 0.78rem;
+            color: var(--earth);
+            letter-spacing: 0.05em;
+            margin-top: 2px;
+        }
+
+        .edu-year {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.9rem;
+            color: var(--earth);
+            letter-spacing: 0.1em;
+            margin-left: 40px;
+            white-space: nowrap;
+        }
+
+        .edu-desc {
+            font-size: 0.82rem;
+            line-height: 1.8;
+            opacity: 0.65;
+            margin-top: 6px;
+        }
+
+        .cert-link {
+            font-size: 0.75rem;
+            color: var(--earth);
+            position: relative;
+        }
+
+        .cert-link::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            width: 0;
+            height: 1px;
+            background-color: var(--gold);
+            transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+                        left 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .cert-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        /* ══════════════════════════════════════
+           CONTACT
+        ══════════════════════════════════════ */
+        .contact-section {
+            text-align: left;
+            max-width: 600px;
+        }
+
+        .contact-email {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.6rem, 3.5vw, 2.8rem);
+            font-weight: 300;
+            letter-spacing: 0.08em;
+            margin-bottom: 50px;
+            display: inline-block;
+        }
+
+        .contact-email::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: var(--gold);
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .contact-email:hover::after {
+            transform: scaleX(1);
+        }
+
+        .contact-links {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .contact-links a {
+            font-size: 0.78rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--earth);
+        }
+
+        .contact-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            width: 0;
+            height: 1px;
+            background-color: var(--gold);
+            transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+                        left 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .contact-links a:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        /* ══════════════════════════════════════
+           FOOTER
+        ══════════════════════════════════════ */
+        footer {
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        footer .deco-circle {
+            margin-bottom: 20px;
+        }
+
+        footer p {
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            color: var(--earth);
+            opacity: 0.6;
+        }
+
+        /* ══════════════════════════════════════
+           FLOATING NAV
+        ══════════════════════════════════════ */
+        .float-nav {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            z-index: 1000;
+        }
+
+        .float-nav-toggle {
+            width: 44px;
+            height: 44px;
+            border: 1px solid var(--sand);
+            border-radius: 50%;
+            background: var(--bg);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .float-nav-toggle:hover {
+            border-color: var(--gold);
+        }
+
+        .float-nav-toggle .dot {
+            width: 4px;
+            height: 4px;
+            background-color: var(--earth);
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        .float-nav-menu {
+            position: absolute;
+            bottom: 60px;
+            right: 0;
+            background: var(--bg);
+            border: 1px solid var(--sand);
+            padding: 24px 32px;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            white-space: nowrap;
+        }
+
+        .float-nav.open .float-nav-menu {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateY(0);
+        }
+
+        .float-nav-menu a {
+            display: block;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--earth);
+            padding: 8px 0;
+            transition: color 0.3s;
+        }
+
+        .float-nav-menu a:hover {
+            color: var(--text);
+        }
+
+        /* ══════════════════════════════════════
+           DECORATIVE LARGE TEXT
+        ══════════════════════════════════════ */
+        .deco-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(3rem, 8vw, 5.5rem);
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            color: var(--sand);
+            position: relative;
+            line-height: 1;
+            margin-bottom: 60px;
+            user-select: none;
+        }
+
+        /* ══════════════════════════════════════
+           RESPONSIVE
+        ══════════════════════════════════════ */
+        @media (max-width: 768px) {
+            :root {
+                --spacing-xl: 100px;
+                --spacing-lg: 80px;
+                --spacing-md: 40px;
+                --spacing-sm: 20px;
+            }
+
+            .container {
+                padding: 0 24px;
+            }
+
+            .exp-item {
+                grid-template-columns: 1fr;
+                gap: 8px;
+                margin-bottom: 60px;
+            }
+
+            .exp-date {
+                text-align: left;
+                font-size: 0.85rem;
+            }
+
+            .exp-content {
+                border-left: none;
+                padding-left: 0;
+                border-top: 1px solid var(--sand);
+                padding-top: 20px;
+            }
+
+            .project-item {
+                margin-left: 0;
+            }
+
+            .edu-section {
+                margin-left: 0;
+            }
+
+            .edu-item {
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .edu-year {
+                margin-left: 0;
+            }
+
+            .hero-deco,
+            .hero-deco-sm {
+                display: none;
+            }
+
+            .hero-scroll {
+                display: none;
+            }
+
+            .section-label::before {
+                display: none;
+            }
+
+            .contact-links {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .float-nav {
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .exp-links a {
+                display: block;
+                margin-bottom: 4px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-name {
+                letter-spacing: 0.08em;
+            }
+
+            .deco-text {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Floating Navigation -->
+    <nav class="float-nav" id="floatNav">
+        <div class="float-nav-menu">
+            <a href="#inicio">Inicio</a>
+            <a href="#experiencia">Experiencia</a>
+            <a href="#proyectos">Proyectos</a>
+            <a href="#habilidades">Habilidades</a>
+            <a href="#educacion">Educacion</a>
+            <a href="#contacto">Contacto</a>
+        </div>
+        <button class="float-nav-toggle" aria-label="Menu de navegacion">
+            <span class="dot"></span>
+        </button>
+    </nav>
+
+    <!-- ════ HERO ════ -->
+    <section class="hero" id="inicio">
+        <div class="hero-deco"></div>
+        <div class="hero-deco-sm"></div>
+        <div class="container hero-inner">
+            <div class="reveal">
+                <h1 class="hero-name">Diego<br>Santibanez<br>Oyarce</h1>
+                <p class="hero-title">Cientifico de datos</p>
+                <p class="hero-bio">
+                    Egresado de Ingenieria Civil en Ciencia de datos en Agosto 2025, apasionado por la tecnologia y con un gran interes en el uso de la inteligencia artificial como herramienta para la resolucion de problemas del mundo real. Mi formacion academica me proporciono una solida comprension de algoritmos de aprendizaje automatico, analisis y visualizacion de datos. Me gusta proponerme desafios donde pueda poner en practica mis conocimientos y donde ademas pueda aprender cosas nuevas.
+                </p>
+            </div>
+        </div>
+        <div class="hero-scroll">
+            <span>scroll</span>
+            <div class="deco-line-v"></div>
+        </div>
+    </section>
+
+    <!-- ════ EXPERIENCE ════ -->
+    <section id="experiencia">
+        <div class="container">
+            <div class="reveal">
+                <span class="section-label">Experiencia</span>
+            </div>
+
+            <div class="reveal">
+                <div class="deco-text">01</div>
+            </div>
+
+            <!-- Role 1 -->
+            <div class="exp-item reveal">
+                <div class="exp-date">Dic 2023 — Sep 2025</div>
+                <div class="exp-content">
+                    <h3 class="exp-role">Asistente de investigacion</h3>
+                    <p class="exp-org">Universidad Tecnologica Metropolitana (UTEM)</p>
+
+                    <p class="exp-detail">Presentacion poster en "1ras Jornadas de Ciencia de Datos y Salud Publica" de la Universidad de Chile en Enero de 2024</p>
+                    <div class="exp-links">
+                        <a href="https://drive.google.com/file/d/124VDD5x6pBidyC1Wx4ZLehAQixdjZ9dS/view?usp=sharing" target="_blank">Certificado</a>
+                        <a href="https://drive.google.com/file/d/1gRjnIt9xa5CYPhbgGFTKR1o5WV3RB8H6/view?usp=drive_link" target="_blank">Poster</a>
+                    </div>
+
+                    <p class="exp-detail">Flash Talk y presentacion de poster en Carla2024 en Septiembre 2024</p>
+                    <div class="exp-links">
+                        <a href="https://drive.google.com/file/d/1jHc_2fZiakh2G9t8EkiB7Z3l0iuWBJ7n/view?usp=sharing" target="_blank">Certificado</a>
+                        <a href="https://drive.google.com/file/d/1jfS4S75dwoBnUMZ3xeQOFfBzX6HP5gpc/view?usp=drive_link" target="_blank">Poster</a>
+                    </div>
+
+                    <p class="exp-detail">Presentacion poster en "III Congreso Vive la Investigacion 2024" en Octubre 2024</p>
+                    <div class="exp-links">
+                        <a href="https://drive.google.com/file/d/1unqW5oOxe5wl84-vmq4Y8AhXmD1sJJL_/view?usp=sharing" target="_blank">Certificado</a>
+                        <a href="https://drive.google.com/file/d/1OEKXi8gl7Z9bGySQ8esoomkDJLPiBLCE/view?usp=drive_link" target="_blank">Poster</a>
+                    </div>
+
+                    <p class="exp-detail">Presentacion de poster en "XIV Congreso Argentino de Bioinformatica y Biologia Computacional" en Noviembre de 2024</p>
+                    <div class="exp-links">
+                        <a href="https://drive.google.com/file/d/1br_Vv35RmHxvyPScFlhDCJxucFz0ckii/view?usp=sharing" target="_blank">Certificado</a>
+                        <a href="https://drive.google.com/file/d/1wLUe3ssEY_XcOgoTbVJj0B5C7plK-G9n/view?usp=drive_link" target="_blank">Poster</a>
+                    </div>
+
+                    <p class="exp-detail">Flash Talk en "III Reunion Anual de la Sociedad Chilena de Bioinformatica" en Noviembre de 2024. Invitacion a publicar un manuscrito en revista "Bioinformatics Advances (Oxford University Press)".</p>
+                    <div class="exp-links">
+                        <a href="https://drive.google.com/file/d/1-dZ_CdZlYkd58OlGr3v92n8pLshnurje/view?usp=sharing" target="_blank">Certificado</a>
+                    </div>
+
+                    <p class="exp-detail">Presentacion de poster en Carla2025 en Septiembre 2025. Obtencion premio al mejor poster.</p>
+                    <div class="exp-links">
+                        <a href="https://drive.google.com/file/d/10tcRQonSWMgKQ8FciWOsCobzQAlWCPr9/view?usp=sharing" target="_blank">Certificado</a>
+                        <a href="https://drive.google.com/file/d/1M_MhsoB8BCUO5LITTVvQw0Hi9l7RU4Vj/view?usp=sharing" target="_blank">Premio</a>
+                        <a href="https://drive.google.com/file/d/14Fc9u_zCtxiKG7RKW3W85Rv6X4OJy5HP/view?usp=drive_link" target="_blank">Poster</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Role 2 -->
+            <div class="exp-item reveal">
+                <div class="exp-date">Feb 2025 — Sep 2025</div>
+                <div class="exp-content">
+                    <h3 class="exp-role">Tecnico para analisis de datos avanzado</h3>
+                    <p class="exp-org">UTEM</p>
+                    <p class="exp-detail">Implementacion de web scrapping con Python (Selenium y BeautifulSoup) para la extraccion automatizada de datos</p>
+                    <p class="exp-detail">Creacion de dashboard interactivos utilizando Plotly y Streamlit para visualizar avances del proyecto</p>
+                    <p class="exp-detail">Diseno y gestion de bases de datos en MariaDB y PostgreSQL para el almacenamiento de datos estructurados</p>
+                    <p class="exp-detail">Aplicacion de procesamiento de lenguaje natural para analisis y filtrado de datos</p>
+                </div>
+            </div>
+
+            <!-- Role 3 -->
+            <div class="exp-item reveal">
+                <div class="exp-date">Mar 2025 — Jul 2025</div>
+                <div class="exp-content">
+                    <h3 class="exp-role">Ayudante de Catedra — Visualizacion de Datos</h3>
+                    <p class="exp-org">UTEM</p>
+                    <p class="exp-detail">Ensenanza y mentoria a estudiantes en tecnicas de visualizacion de datos</p>
+                </div>
+            </div>
+
+            <!-- Role 4 -->
+            <div class="exp-item reveal">
+                <div class="exp-date">Ago 2024 — Ene 2025</div>
+                <div class="exp-content">
+                    <h3 class="exp-role">Practicante Profesional</h3>
+                    <p class="exp-org">Contraloria General de la Republica</p>
+                    <p class="exp-detail">Analisis de datos utilizando Impala y Oracle</p>
+                    <p class="exp-detail">Desarrollo de consultas SQL y automatizacion de procesos mediante codigos de Python</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════ PROJECTS ════ -->
+    <section id="proyectos">
+        <div class="container">
+            <div class="reveal" style="text-align: right;">
+                <span class="section-label">Proyectos</span>
+            </div>
+
+            <div class="reveal">
+                <div class="project-item">
+                    <p class="project-year">2025</p>
+                    <h3 class="project-title">Dashboard de avance de proyecto</h3>
+                    <p class="project-desc">
+                        Dashboard interactivo desarrollado con Streamlit para visualizar el avance y estado de los datos utilizados en el proyecto.
+                    </p>
+                    <p class="project-tech">Python <span class="sep">|</span> Streamlit <span class="sep">|</span> Pandas <span class="sep">|</span> Plotly <span class="sep">|</span> DuckDB <span class="sep">|</span> Folium</p>
+                    <a href="https://dashboarddatalake-fiut-utem.streamlit.app/" target="_blank" class="project-link">Ver proyecto</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════ SKILLS ════ -->
+    <section id="habilidades">
+        <div class="container">
+            <div class="reveal">
+                <span class="section-label">Habilidades</span>
+            </div>
+
+            <div class="skills-section reveal">
+                <p class="skills-category">Habilidades tecnicas</p>
+                <p class="skills-list">
+                    Python <span class="sep">|</span>
+                    SQL <span class="sep">|</span>
+                    TensorFlow <span class="sep">|</span>
+                    scikit-learn <span class="sep">|</span>
+                    Pandas <span class="sep">|</span>
+                    Jupyter Notebooks <span class="sep">|</span>
+                    Visualizacion de datos <span class="sep">|</span>
+                    Plotly <span class="sep">|</span>
+                    Streamlit <span class="sep">|</span>
+                    Web Scraping <span class="sep">|</span>
+                    PostgreSQL <span class="sep">|</span>
+                    MariaDB <span class="sep">|</span>
+                    SpaCy
+                </p>
+
+                <p class="skills-category">Habilidades blandas</p>
+                <p class="skills-list">
+                    Resolucion de Problemas <span class="sep">|</span>
+                    Pensamiento Critico <span class="sep">|</span>
+                    Adaptabilidad <span class="sep">|</span>
+                    Mentoria <span class="sep">|</span>
+                    Curiosidad intelectual <span class="sep">|</span>
+                    Responsabilidad <span class="sep">|</span>
+                    Mentalidad de experimentacion <span class="sep">|</span>
+                    Mentalidad analitica
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════ EDUCATION & CERTIFICATES ════ -->
+    <section id="educacion">
+        <div class="container">
+            <div class="reveal" style="text-align: right;">
+                <span class="section-label">Educacion y Certificados</span>
+            </div>
+
+            <div class="reveal">
+                <div class="deco-text" style="text-align: right;">学</div>
+            </div>
+
+            <div class="edu-section reveal">
+                <div class="edu-item">
+                    <div>
+                        <div class="edu-name">Ingeniero Civil en Ciencia de Datos</div>
+                        <div class="edu-org">Universidad Tecnologica Metropolitana</div>
+                        <p class="edu-desc">Formacion integral en algoritmos de aprendizaje automatico, analisis y visualizacion de datos, con enfoque en aplicaciones de inteligencia artificial para problemas del mundo real.</p>
+                    </div>
+                    <div class="edu-year">2020 — 2025</div>
+                </div>
+            </div>
+
+            <div style="height: 60px;"></div>
+
+            <div class="edu-section reveal">
+                <div class="edu-item">
+                    <div>
+                        <div class="edu-name">Power BI</div>
+                        <div class="edu-org">Santander X</div>
+                    </div>
+                    <div class="edu-year"><a href="https://drive.google.com/file/d/1IOp4gjfLcW8XhqbiwwOd9dzlz8l60P5q/view?usp=drive_link" target="_blank" class="cert-link">2025</a></div>
+                </div>
+
+                <div class="edu-item">
+                    <div>
+                        <div class="edu-name">Ingles B2 Upper Intermediate</div>
+                        <div class="edu-org">Certificacion Internacional</div>
+                    </div>
+                    <div class="edu-year"><a href="https://drive.google.com/file/d/1KT12-fKSs20wCu_AO6c6nEHYi5_v0mK1/view?usp=sharing" target="_blank" class="cert-link">2025</a></div>
+                </div>
+
+                <div class="edu-item">
+                    <div>
+                        <div class="edu-name">AWS Data Center Technician</div>
+                        <div class="edu-org">Amazon Web Services</div>
+                    </div>
+                    <div class="edu-year"><a href="https://drive.google.com/file/d/1pYCaTdbJQAmruxvoknp92QbIys4Bt7Ws/view?usp=sharing" target="_blank" class="cert-link">2024</a></div>
+                </div>
+
+                <div class="edu-item">
+                    <div>
+                        <div class="edu-name">Introduccion a la Ciencia de Datos</div>
+                        <div class="edu-org">Santander Open Academy</div>
+                    </div>
+                    <div class="edu-year"><a href="https://drive.google.com/file/d/1vmeQuzoZEwUTC0Pz7Xl_rlobqXcreX5w/view?usp=sharing" target="_blank" class="cert-link">2025</a></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════ CONTACT ════ -->
+    <section id="contacto">
+        <div class="container">
+            <div class="reveal">
+                <span class="section-label">Contacto</span>
+            </div>
+
+            <div class="contact-section reveal">
+                <a href="mailto:dsantibanezo@utem.cl" class="contact-email">dsantibanezo@utem.cl</a>
+
+                <div class="contact-links">
+                    <a href="https://www.linkedin.com/in/diego-santibanez-oyarce/" target="_blank">LinkedIn</a>
+                    <a href="https://github.com/daso42" target="_blank">GitHub</a>
+                    <a href="tel:+56984341477">+56 9 8434 1477</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════ FOOTER ════ -->
+    <footer>
+        <div class="container">
+            <span class="deco-circle"></span>
+            <p>Diego Santibanez Oyarce</p>
+        </div>
+    </footer>
+
+    <script>
+        // ── Intersection Observer for fade-in ──
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.08,
+            rootMargin: '0px 0px -40px 0px'
+        });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // ── Floating nav toggle ──
+        const floatNav = document.getElementById('floatNav');
+        const toggle = floatNav.querySelector('.float-nav-toggle');
+
+        toggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            floatNav.classList.toggle('open');
+        });
+
+        document.addEventListener('click', () => {
+            floatNav.classList.remove('open');
+        });
+
+        floatNav.querySelector('.float-nav-menu').addEventListener('click', () => {
+            floatNav.classList.remove('open');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diego Santibáñez Oyarce — Glassmorphism Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --text: #ffffff;
+      --text-dim: rgba(255, 255, 255, 0.7);
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+      --accent: #FCA311; /* Warm elegant accent */
+
+      --sans: 'Outfit', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: #0F172A;
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Ambient Animated Background */
+    .ambient-bg {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: -1;
+      overflow: hidden;
+      background: #0F172A;
+    }
+    
+    .blob {
+      position: absolute;
+      filter: blur(90px);
+      border-radius: 50%;
+      opacity: 0.6;
+      animation: drift 25s infinite alternate ease-in-out;
+    }
+
+    .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: #3B82F6; }
+    .blob-2 { bottom: -20%; right: -10%; width: 60vw; height: 60vw; background: #EC4899; animation-delay: -5s; }
+    .blob-3 { top: 40%; left: 60%; width: 40vw; height: 40vw; background: #8B5CF6; animation-delay: -12s; }
+
+    @keyframes drift {
+      0% { transform: scale(1) translate(0, 0); }
+      50% { transform: scale(1.2) translate(10%, 10%); }
+      100% { transform: scale(0.9) translate(-10%, -5%); }
+    }
+
+    /* Layout */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Glass Panels */
+    .glass-panel {
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 3rem;
+      box-shadow: var(--glass-shadow);
+      margin-bottom: 2.5rem;
+      transition: transform 0.4s, background 0.4s;
+    }
+    
+    .glass-panel:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateY(-5px);
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 5rem 2rem;
+    }
+    
+    h1 {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-role {
+      font-family: var(--mono);
+      font-size: 1.1rem;
+      color: var(--accent);
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+
+    .hero-bio {
+      font-size: 1.15rem;
+      color: var(--text-dim);
+      max-width: 700px;
+      margin: 0 auto 3rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 1rem 2.5rem;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 100px;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s;
+    }
+
+    .btn:hover {
+      background: var(--text);
+      color: #0F172A;
+      box-shadow: 0 0 20px rgba(255,255,255,0.3);
+    }
+
+    /* Section Headers */
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 2.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--glass-border) 0%, transparent 100%);
+    }
+
+    /* Experience List */
+    .exp-item {
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+
+    .exp-item:last-child { margin-bottom: 0; }
+
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .exp-role {
+      font-size: 1.4rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .exp-meta {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--accent);
+    }
+
+    .exp-org {
+      font-size: 1rem;
+      color: var(--text-dim);
+      margin-bottom: 1rem;
+      font-weight: 300;
+    }
+
+    .exp-desc {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    /* Skills Grid */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 1rem;
+    }
+
+    .skill-tag {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--glass-border);
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 300;
+      transition: all 0.3s;
+    }
+
+    .skill-tag:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.3);
+      transform: translateY(-2px);
+    }
+
+    /* Project Cards inside Glass */
+    .project-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .project {
+      background: rgba(0,0,0,0.2);
+      border-radius: 16px;
+      padding: 2rem;
+      border: 1px solid var(--glass-border);
+    }
+
+    .proj-title {
+      font-size: 1.3rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    .proj-tech {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--accent);
+      margin-top: 1.5rem;
+    }
+
+    /* Education */
+    .edu-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .edu-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .edu-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .edu-deg { font-size: 1.1rem; font-weight: 500; }
+    .edu-inst { font-size: 0.9rem; color: var(--text-dim); font-weight: 300; }
+    .edu-date { font-family: var(--mono); font-size: 0.85rem; color: var(--accent); }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 2rem 0;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      font-family: var(--mono);
+    }
+
+    /* Entrances */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUpAnim 1s ease forwards;
+    }
+    .d-1 { animation-delay: 0.2s; }
+    .d-2 { animation-delay: 0.4s; }
+    .d-3 { animation-delay: 0.6s; }
+    .d-4 { animation-delay: 0.8s; }
+
+    @keyframes fadeUpAnim {
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Background -->
+  <div class="ambient-bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <div class="container">
+
+    <!-- Hero -->
+    <header class="glass-panel hero fade-up">
+      <h1>Diego Santibáñez Oyarce</h1>
+      <div class="hero-role">Científico de Datos</div>
+      <p class="hero-bio">
+        Egresado de Ingeniería Civil en Ciencia de Datos, apasionado por la tecnología y con un gran interés en el uso de la inteligencia artificial como herramienta para la resolución de problemas del mundo real.
+      </p>
+      <a href="mailto:dsantibanezo@utem.cl" class="btn">Conectar</a>
+    </header>
+
+    <!-- Experience -->
+    <section class="glass-panel fade-up d-1">
+      <h2 class="section-title">Experiencia Profesional</h2>
+      
+      <div class="exp-item">
+        <div class="exp-header">
+          <div class="exp-role">Asistente de Investigación</div>
+          <div class="exp-meta">DIC 2023 — SEP 2025</div>
+        </div>
+        <div class="exp-org">UTEM</div>
+        <div class="exp-desc">
+          Múltiples presentaciones en congresos nacionales e internacionales. Participación destacada en 1ras Jornadas Ciencia de Datos (U. Chile), Carla2024, XIV Congreso Argentino Bioinformática, y Carla2025 obteniendo el reconocimiento de Mejor Póster.
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <div class="exp-role">Técnico Análisis de Datos Avanzado</div>
+          <div class="exp-meta">FEB 2025 — SEP 2025</div>
+        </div>
+        <div class="exp-org">UTEM</div>
+        <div class="exp-desc">
+          Desarrollo de scripts de web scraping con Python (Selenium, BeautifulSoup), creación de dashboards interactivos con Plotly y Streamlit, y administración de bases de datos relacionales (MariaDB, PostgreSQL).
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <div class="exp-role">Practicante Profesional</div>
+          <div class="exp-meta">AGO 2024 — ENE 2025</div>
+        </div>
+        <div class="exp-org">Contraloría General de la República</div>
+        <div class="exp-desc">
+          Análisis masivo de datos mediante Impala y Oracle. Automatización de procesos mediante Python y elaboración de consultas SQL avanzadas.
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section class="glass-panel fade-up d-2">
+      <h2 class="section-title">Desarrollos</h2>
+      <div class="project-grid">
+        <div class="project">
+          <h3 class="proj-title">Dashboard de Avance de Proyecto</h3>
+          <p class="exp-desc">
+            Dashboard interactivo para el seguimiento y análisis de avance de proyectos. Incorpora visualizaciones geográficas, tablas dinámicas y filtros en tiempo real. Desarrollado con enfoque en usabilidad y alto rendimiento sobre grandes volúmenes de datos.
+          </p>
+          <div class="proj-tech">Streamlit / Python / DuckDB / Plotly</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills & Education Layout -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2.5rem;" class="fade-up d-3">
+      
+      <section class="glass-panel" style="margin-bottom: 0;">
+        <h2 class="section-title" style="font-size: 1.5rem;">Stack Técnico</h2>
+        <div class="skills-grid">
+          <div class="skill-tag">Python</div>
+          <div class="skill-tag">SQL</div>
+          <div class="skill-tag">TensorFlow</div>
+          <div class="skill-tag">scikit-learn</div>
+          <div class="skill-tag">Pandas</div>
+          <div class="skill-tag">Plotly</div>
+          <div class="skill-tag">Streamlit</div>
+          <div class="skill-tag">PostgreSQL</div>
+        </div>
+      </section>
+
+      <section class="glass-panel" style="margin-bottom: 0;">
+        <h2 class="section-title" style="font-size: 1.5rem;">Formación</h2>
+        <div class="edu-list">
+          <div class="edu-item">
+            <div>
+              <div class="edu-deg">Ingeniería en Ciencia de Datos</div>
+              <div class="edu-inst">UTEM</div>
+            </div>
+            <div class="edu-date">2020-2025</div>
+          </div>
+          <div class="edu-item">
+            <div>
+              <div class="edu-deg">Power BI</div>
+              <div class="edu-inst">Santander X</div>
+            </div>
+            <div class="edu-date">2025</div>
+          </div>
+          <div class="edu-item">
+            <div>
+              <div class="edu-deg">AWS Data Center Tech</div>
+              <div class="edu-inst">Amazon Web Services</div>
+            </div>
+            <div class="edu-date">2024</div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <footer class="fade-up d-4">
+      <p>— 2025. Glass & Code —</p>
+    </footer>
+
+  </div>
+
+</body>
+</html>

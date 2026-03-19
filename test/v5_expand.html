@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diego Santibanez Oyarce — Cientifico de Datos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: #0e141c;
+      color: #bdb3a3;
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    body.locked {
+      overflow: hidden;
+    }
+
+    /* 5-column grid layout */
+    .page-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+      width: 100%;
+    }
+
+    .center-col {
+      grid-column: 2 / 5;
+      padding: 0 1rem;
+    }
+
+    /* HEADER */
+    .header {
+      padding-top: clamp(3rem, 8vw, 6rem);
+      padding-bottom: 0;
+    }
+
+    .header-name {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 700;
+      color: #bdb3a3;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+    }
+
+    .header-title {
+      font-size: clamp(1rem, 2.5vw, 1.5rem);
+      font-weight: 300;
+      color: #8197ac;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-top: 0.75rem;
+    }
+
+    .header-rule {
+      border: none;
+      border-top: 1px solid #314b6e;
+      margin-top: 2.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    /* CARDS SECTION */
+    .cards-section {
+      padding-bottom: 0;
+    }
+
+    /* CARD */
+    .card-wrapper {
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .card-placeholder {
+      display: none;
+      border-radius: 16px;
+      background: transparent;
+      pointer-events: none;
+    }
+
+    .card {
+      background: #314b6e;
+      border-radius: 16px;
+      padding: 1.8rem 2rem;
+      border: 1px solid rgba(129, 151, 172, 0.2);
+      cursor: pointer;
+      transition: border-color 0.25s ease, filter 0.25s ease;
+      position: relative;
+      width: 100%;
+    }
+
+    .card:hover {
+      border-color: rgba(129, 151, 172, 0.5);
+      filter: brightness(1.08);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #bdb3a3;
+      flex-shrink: 0;
+    }
+
+    .card-preview {
+      font-size: 0.9rem;
+      color: #8197ac;
+      text-align: right;
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-expand-icon {
+      font-size: 1.2rem;
+      color: #8197ac;
+      font-weight: 300;
+      flex-shrink: 0;
+      line-height: 1;
+      transition: transform 0.2s ease;
+      user-select: none;
+    }
+
+    /* EXPANDED STATE */
+    .card.is-expanding,
+    .card.is-expanded {
+      background: #0e141c;
+      border-radius: 0;
+      border-color: transparent;
+      cursor: default;
+    }
+
+    .card.is-expanding:hover,
+    .card.is-expanded:hover {
+      filter: none;
+      border-color: transparent;
+    }
+
+    .card-full-content {
+      opacity: 0;
+      display: none;
+      padding-top: 2rem;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .card-full-content.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Expanded card inner layout */
+    .expanded-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 4rem 2rem 6rem;
+    }
+
+    .expanded-card-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      color: #bdb3a3;
+      margin-bottom: 2rem;
+    }
+
+    /* Close button */
+    .close-btn {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      width: 2.5rem;
+      height: 2.5rem;
+      background: rgba(49, 75, 110, 0.8);
+      border: 1px solid rgba(129, 151, 172, 0.3);
+      border-radius: 50%;
+      color: #bdb3a3;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1100;
+      transition: background 0.2s ease, border-color 0.2s ease;
+      line-height: 1;
+    }
+
+    .close-btn:hover {
+      background: rgba(49, 75, 110, 1);
+      border-color: rgba(129, 151, 172, 0.7);
+    }
+
+    .close-btn.visible {
+      display: flex;
+    }
+
+    /* BIO paragraph */
+    .bio-text {
+      font-size: 1.05rem;
+      font-weight: 400;
+      color: #bdb3a3;
+      line-height: 1.75;
+      margin-bottom: 2.5rem;
+    }
+
+    /* Stats row */
+    .stats-row {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+    }
+
+    .stat-item {
+      background: rgba(129, 151, 172, 0.1);
+      border: 1px solid rgba(129, 151, 172, 0.25);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      flex: 1;
+      min-width: 150px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #bdb3a3;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: #8197ac;
+      display: block;
+      margin-top: 0.25rem;
+    }
+
+    /* Contact buttons */
+    .contact-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .contact-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.25rem;
+      border: 1px solid rgba(129, 151, 172, 0.35);
+      border-radius: 8px;
+      color: #8197ac;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 400;
+      transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+    }
+
+    .contact-btn:hover {
+      border-color: rgba(129, 151, 172, 0.7);
+      color: #bdb3a3;
+      background: rgba(129, 151, 172, 0.08);
+    }
+
+    /* TIMELINE */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+
+    .timeline-entry {
+      position: relative;
+      padding-left: 1.5rem;
+      border-left: 2px solid rgba(129, 151, 172, 0.25);
+    }
+
+    .timeline-role {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #bdb3a3;
+      margin-bottom: 0.2rem;
+    }
+
+    .timeline-org {
+      font-size: 0.95rem;
+      color: #8197ac;
+      font-weight: 400;
+      margin-bottom: 0.15rem;
+    }
+
+    .timeline-period {
+      font-size: 0.82rem;
+      color: #8197ac;
+      opacity: 0.7;
+      margin-bottom: 0.85rem;
+    }
+
+    .timeline-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .timeline-bullets li {
+      font-size: 0.9rem;
+      color: #bdb3a3;
+      padding-left: 1.1rem;
+      position: relative;
+      line-height: 1.55;
+    }
+
+    .timeline-bullets li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.6em;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #8197ac;
+      opacity: 0.6;
+    }
+
+    /* PROJECTS */
+    .project-card {
+      background: rgba(129, 151, 172, 0.07);
+      border: 1px solid rgba(129, 151, 172, 0.2);
+      border-radius: 14px;
+      padding: 1.8rem;
+    }
+
+    .project-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #bdb3a3;
+      margin-bottom: 0.75rem;
+    }
+
+    .project-description {
+      font-size: 0.95rem;
+      color: #8197ac;
+      line-height: 1.65;
+      margin-bottom: 1.2rem;
+    }
+
+    .project-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.2rem;
+    }
+
+    .project-year {
+      font-size: 0.82rem;
+      color: #8197ac;
+      opacity: 0.7;
+    }
+
+    .tech-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.4rem;
+    }
+
+    .pill {
+      background: rgba(129, 151, 172, 0.15);
+      border: 1px solid rgba(129, 151, 172, 0.3);
+      color: #bdb3a3;
+      border-radius: 6px;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.82rem;
+      font-weight: 400;
+    }
+
+    .pill-outline {
+      background: transparent;
+      border: 1px solid rgba(189, 179, 163, 0.3);
+      color: #8197ac;
+      border-radius: 6px;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.82rem;
+      font-weight: 400;
+    }
+
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.6rem 1.25rem;
+      background: rgba(129, 151, 172, 0.12);
+      border: 1px solid rgba(129, 151, 172, 0.35);
+      border-radius: 8px;
+      color: #bdb3a3;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .project-link:hover {
+      background: rgba(129, 151, 172, 0.22);
+      border-color: rgba(129, 151, 172, 0.6);
+    }
+
+    /* SKILLS */
+    .skills-section-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #8197ac;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.85rem;
+    }
+
+    .skills-group {
+      margin-bottom: 2rem;
+    }
+
+    /* EDUCATION + CERTS */
+    .education-entry {
+      margin-bottom: 2rem;
+    }
+
+    .edu-degree {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #bdb3a3;
+      margin-bottom: 0.2rem;
+    }
+
+    .edu-org {
+      font-size: 0.95rem;
+      color: #8197ac;
+      margin-bottom: 0.15rem;
+    }
+
+    .edu-period {
+      font-size: 0.82rem;
+      color: #8197ac;
+      opacity: 0.7;
+      margin-bottom: 0.6rem;
+    }
+
+    .edu-desc {
+      font-size: 0.9rem;
+      color: #bdb3a3;
+      line-height: 1.6;
+    }
+
+    .section-divider {
+      border: none;
+      border-top: 1px solid rgba(129, 151, 172, 0.15);
+      margin: 2rem 0;
+    }
+
+    .cert-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .cert-item {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.9rem 1.1rem;
+      background: rgba(129, 151, 172, 0.06);
+      border: 1px solid rgba(129, 151, 172, 0.15);
+      border-radius: 10px;
+    }
+
+    .cert-info {
+      flex: 1;
+    }
+
+    .cert-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #bdb3a3;
+    }
+
+    .cert-org {
+      font-size: 0.82rem;
+      color: #8197ac;
+      margin-top: 0.15rem;
+    }
+
+    .cert-link {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.35rem 0.85rem;
+      border: 1px solid rgba(129, 151, 172, 0.3);
+      border-radius: 6px;
+      color: #8197ac;
+      text-decoration: none;
+      font-size: 0.8rem;
+      white-space: nowrap;
+      transition: border-color 0.2s ease, color 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .cert-link:hover {
+      border-color: rgba(129, 151, 172, 0.6);
+      color: #bdb3a3;
+    }
+
+    /* CONTACT ROWS */
+    .contact-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .contact-row {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1.1rem 1.5rem;
+      background: rgba(129, 151, 172, 0.06);
+      border: 1px solid rgba(129, 151, 172, 0.15);
+      border-radius: 12px;
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.2s ease, border-color 0.2s ease;
+      cursor: pointer;
+    }
+
+    .contact-row:hover {
+      background: rgba(129, 151, 172, 0.12);
+      border-color: rgba(129, 151, 172, 0.4);
+    }
+
+    .contact-row-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #8197ac;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      width: 90px;
+      flex-shrink: 0;
+    }
+
+    .contact-row-value {
+      font-size: 1rem;
+      color: #bdb3a3;
+      font-weight: 400;
+    }
+
+    /* FOOTER */
+    .footer {
+      padding-bottom: 2rem;
+      margin-top: 4rem;
+    }
+
+    .footer-text {
+      text-align: center;
+      color: #8197ac;
+      font-size: 0.8rem;
+      font-weight: 400;
+    }
+
+    /* Section heading inside expanded card */
+    .expanded-section-heading {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #8197ac;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1.2rem;
+      margin-top: 2rem;
+    }
+
+    .expanded-section-heading:first-child {
+      margin-top: 0;
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .page-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .center-col {
+        grid-column: 1 / -1;
+        padding: 0 1.25rem;
+      }
+
+      .card-preview {
+        display: none;
+      }
+
+      .stats-row {
+        flex-direction: column;
+      }
+
+      .cert-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .contact-buttons {
+        flex-direction: column;
+      }
+
+      .contact-btn {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .expanded-inner {
+        padding: 3rem 1.25rem 5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Close button (outside cards, fixed) -->
+  <button class="close-btn" id="closeBtn" aria-label="Cerrar">&times;</button>
+
+  <div class="page-grid">
+    <!-- HEADER -->
+    <header class="center-col header">
+      <h1 class="header-name">Diego Santibanez Oyarce</h1>
+      <p class="header-title">Cientifico de Datos</p>
+      <hr class="header-rule" />
+    </header>
+
+    <!-- CARDS SECTION -->
+    <main class="center-col cards-section">
+
+      <!-- Card A: Sobre Mi -->
+      <div class="card-wrapper" id="wrapper-a">
+        <div class="card-placeholder" id="placeholder-a"></div>
+        <div class="card" id="card-a" role="button" tabindex="0" aria-expanded="false">
+          <div class="card-header">
+            <span class="card-title">Sobre Mi</span>
+            <span class="card-preview">Cientifico de datos, egresado UTEM 2025</span>
+            <span class="card-expand-icon">+</span>
+          </div>
+          <div class="card-full-content" id="content-a">
+            <div class="expanded-inner">
+              <h2 class="expanded-card-title">Sobre Mi</h2>
+              <p class="bio-text">
+                Egresado de Ingenieria Civil en Ciencia de datos en Agosto 2025, apasionado por la tecnologia y con un gran interes en el uso de la inteligencia artificial como herramienta para la resolucion de problemas del mundo real. Mi formacion academica me proporciono una solida comprension de algoritmos de aprendizaje automatico, analisis y visualizacion de datos. Me gusta proponerme desafios donde pueda poner en practica mis conocimientos y aprender cosas nuevas.
+              </p>
+              <div class="stats-row">
+                <div class="stat-item">
+                  <span class="stat-value">1+</span>
+                  <span class="stat-label">anos de experiencia</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-value">7</span>
+                  <span class="stat-label">presentaciones en congresos</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-value">4</span>
+                  <span class="stat-label">certificaciones</span>
+                </div>
+              </div>
+              <div class="contact-buttons">
+                <a href="mailto:dsantibanezo@utem.cl" class="contact-btn" target="_blank" rel="noopener">
+                  Email
+                </a>
+                <a href="https://www.linkedin.com/in/diego-santibanez-oyarce/" class="contact-btn" target="_blank" rel="noopener">
+                  LinkedIn
+                </a>
+                <a href="https://github.com/daso42" class="contact-btn" target="_blank" rel="noopener">
+                  GitHub
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card B: Experiencia -->
+      <div class="card-wrapper" id="wrapper-b">
+        <div class="card-placeholder" id="placeholder-b"></div>
+        <div class="card" id="card-b" role="button" tabindex="0" aria-expanded="false">
+          <div class="card-header">
+            <span class="card-title">Experiencia</span>
+            <span class="card-preview">4 roles — UTEM, Contraloria General</span>
+            <span class="card-expand-icon">+</span>
+          </div>
+          <div class="card-full-content" id="content-b">
+            <div class="expanded-inner">
+              <h2 class="expanded-card-title">Experiencia</h2>
+              <div class="timeline">
+
+                <div class="timeline-entry">
+                  <div class="timeline-role">Asistente de investigacion</div>
+                  <div class="timeline-org">UTEM</div>
+                  <div class="timeline-period">Dic 2023 — Sep 2025 &nbsp;·&nbsp; 1 ano 9 meses</div>
+                  <ul class="timeline-bullets">
+                    <li>Presentacion poster "1ras Jornadas de Ciencia de Datos y Salud Publica" U.Chile, ene 2024</li>
+                    <li>Flash Talk y poster Carla2024, sep 2024</li>
+                    <li>Poster "III Congreso Vive la Investigacion 2024", oct 2024</li>
+                    <li>Poster "XIV Congreso Argentino de Bioinformatica y Biologia Computacional", nov 2024</li>
+                    <li>Flash Talk 15min "III Reunion Anual Sociedad Chilena de Bioinformatica", nov 2024 — invitacion a publicar en Bioinformatics Advances (Oxford University Press)</li>
+                    <li>Poster Carla2025, sep 2025 — Premio al mejor poster</li>
+                  </ul>
+                </div>
+
+                <div class="timeline-entry">
+                  <div class="timeline-role">Tecnico para analisis de datos avanzado</div>
+                  <div class="timeline-org">UTEM</div>
+                  <div class="timeline-period">Feb 2025 — Sep 2025 &nbsp;·&nbsp; 7 meses</div>
+                  <ul class="timeline-bullets">
+                    <li>Web scraping con Python (Selenium, BeautifulSoup)</li>
+                    <li>Dashboards interactivos con Plotly y Streamlit</li>
+                    <li>Bases de datos MariaDB y PostgreSQL</li>
+                    <li>Procesamiento de lenguaje natural para analisis y filtrado</li>
+                  </ul>
+                </div>
+
+                <div class="timeline-entry">
+                  <div class="timeline-role">Ayudante de Catedra — Visualizacion de Datos</div>
+                  <div class="timeline-org">UTEM</div>
+                  <div class="timeline-period">Mar 2025 — Jul 2025 &nbsp;·&nbsp; 4 meses</div>
+                  <ul class="timeline-bullets">
+                    <li>Ensenanza y mentoria a estudiantes en tecnicas de visualizacion de datos</li>
+                  </ul>
+                </div>
+
+                <div class="timeline-entry">
+                  <div class="timeline-role">Practicante Profesional</div>
+                  <div class="timeline-org">Contraloria General de la Republica</div>
+                  <div class="timeline-period">Ago 2024 — Ene 2025 &nbsp;·&nbsp; 5 meses</div>
+                  <ul class="timeline-bullets">
+                    <li>Analisis de datos con Impala y Oracle</li>
+                    <li>Consultas SQL y automatizacion con Python</li>
+                  </ul>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card C: Proyectos -->
+      <div class="card-wrapper" id="wrapper-c">
+        <div class="card-placeholder" id="placeholder-c"></div>
+        <div class="card" id="card-c" role="button" tabindex="0" aria-expanded="false">
+          <div class="card-header">
+            <span class="card-title">Proyectos</span>
+            <span class="card-preview">Dashboard interactivo — Streamlit, Plotly, DuckDB</span>
+            <span class="card-expand-icon">+</span>
+          </div>
+          <div class="card-full-content" id="content-c">
+            <div class="expanded-inner">
+              <h2 class="expanded-card-title">Proyectos</h2>
+              <div class="project-card">
+                <div class="project-name">Dashboard de avance de proyecto</div>
+                <p class="project-description">
+                  Dashboard interactivo desarrollado con Streamlit para visualizar el avance y estado de los datos utilizados en el proyecto.
+                </p>
+                <div class="project-meta">
+                  <span class="project-year">2025</span>
+                </div>
+                <div class="tech-pills">
+                  <span class="pill">Python</span>
+                  <span class="pill">Streamlit</span>
+                  <span class="pill">Pandas</span>
+                  <span class="pill">Plotly</span>
+                  <span class="pill">DuckDB</span>
+                  <span class="pill">Folium</span>
+                </div>
+                <a href="https://dashboarddatalake-fiut-utem.streamlit.app/" class="project-link" target="_blank" rel="noopener">
+                  Ver Proyecto
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card D: Habilidades -->
+      <div class="card-wrapper" id="wrapper-d">
+        <div class="card-placeholder" id="placeholder-d"></div>
+        <div class="card" id="card-d" role="button" tabindex="0" aria-expanded="false">
+          <div class="card-header">
+            <span class="card-title">Habilidades</span>
+            <span class="card-preview">Python, SQL, TensorFlow, scikit-learn y mas</span>
+            <span class="card-expand-icon">+</span>
+          </div>
+          <div class="card-full-content" id="content-d">
+            <div class="expanded-inner">
+              <h2 class="expanded-card-title">Habilidades</h2>
+
+              <div class="skills-group">
+                <div class="skills-section-label">Tecnicas</div>
+                <div class="tech-pills">
+                  <span class="pill">Python</span>
+                  <span class="pill">SQL</span>
+                  <span class="pill">TensorFlow</span>
+                  <span class="pill">scikit-learn</span>
+                  <span class="pill">Pandas</span>
+                  <span class="pill">Jupyter Notebooks</span>
+                  <span class="pill">Visualizacion de datos</span>
+                  <span class="pill">Plotly</span>
+                  <span class="pill">Streamlit</span>
+                  <span class="pill">Web Scraping</span>
+                  <span class="pill">PostgreSQL</span>
+                  <span class="pill">MariaDB</span>
+                  <span class="pill">SpaCy</span>
+                </div>
+              </div>
+
+              <div class="skills-group">
+                <div class="skills-section-label">Blandas</div>
+                <div class="tech-pills">
+                  <span class="pill-outline">Resolucion de Problemas</span>
+                  <span class="pill-outline">Pensamiento Critico</span>
+                  <span class="pill-outline">Adaptabilidad</span>
+                  <span class="pill-outline">Mentoria</span>
+                  <span class="pill-outline">Curiosidad intelectual</span>
+                  <span class="pill-outline">Responsabilidad</span>
+                  <span class="pill-outline">Mentalidad de experimentacion</span>
+                  <span class="pill-outline">Mentalidad analitica</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card E: Formacion y Certificados -->
+      <div class="card-wrapper" id="wrapper-e">
+        <div class="card-placeholder" id="placeholder-e"></div>
+        <div class="card" id="card-e" role="button" tabindex="0" aria-expanded="false">
+          <div class="card-header">
+            <span class="card-title">Formacion y Certificados</span>
+            <span class="card-preview">Ing. Civil Ciencia de Datos — UTEM 2025</span>
+            <span class="card-expand-icon">+</span>
+          </div>
+          <div class="card-full-content" id="content-e">
+            <div class="expanded-inner">
+              <h2 class="expanded-card-title">Formacion y Certificados</h2>
+
+              <p class="expanded-section-heading">Educacion</p>
+              <div class="education-entry">
+                <div class="edu-degree">Ingeniero Civil en Ciencia de Datos</div>
+                <div class="edu-org">UTEM</div>
+                <div class="edu-period">2020 — 2025</div>
+                <p class="edu-desc">Formacion en algoritmos de aprendizaje automatico, analisis y visualizacion de datos.</p>
+              </div>
+
+              <hr class="section-divider" />
+
+              <p class="expanded-section-heading">Certificados</p>
+              <div class="cert-list">
+
+                <div class="cert-item">
+                  <div class="cert-info">
+                    <div class="cert-name">Power BI</div>
+                    <div class="cert-org">Santander X &nbsp;·&nbsp; 2025</div>
+                  </div>
+                  <a href="https://drive.google.com/file/d/1IOp4gjfLcW8XhqbiwwOd9dzlz8l60P5q/view?usp=drive_link" class="cert-link" target="_blank" rel="noopener">Ver</a>
+                </div>
+
+                <div class="cert-item">
+                  <div class="cert-info">
+                    <div class="cert-name">Ingles B2 Upper Intermediate</div>
+                    <div class="cert-org">Certificacion Internacional &nbsp;·&nbsp; 2025</div>
+                  </div>
+                  <a href="https://drive.google.com/file/d/1KT12-fKSs20wCu_AO6c6nEHYi5_v0mK1/view?usp=sharing" class="cert-link" target="_blank" rel="noopener">Ver</a>
+                </div>
+
+                <div class="cert-item">
+                  <div class="cert-info">
+                    <div class="cert-name">AWS Data Center Technician</div>
+                    <div class="cert-org">Amazon Web Services &nbsp;·&nbsp; 2024</div>
+                  </div>
+                  <a href="https://drive.google.com/file/d/1pYCaTdbJQAmruxvoknp92QbIys4Bt7Ws/view?usp=sharing" class="cert-link" target="_blank" rel="noopener">Ver</a>
+                </div>
+
+                <div class="cert-item">
+                  <div class="cert-info">
+                    <div class="cert-name">Introduccion a la Ciencia de Datos</div>
+                    <div class="cert-org">Santander Open Academy &nbsp;·&nbsp; 2025</div>
+                  </div>
+                  <a href="https://drive.google.com/file/d/1vmeQuzoZEwUTC0Pz7Xl_rlobqXcreX5w/view?usp=sharing" class="cert-link" target="_blank" rel="noopener">Ver</a>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card F: Contacto -->
+      <div class="card-wrapper" id="wrapper-f">
+        <div class="card-placeholder" id="placeholder-f"></div>
+        <div class="card" id="card-f" role="button" tabindex="0" aria-expanded="false">
+          <div class="card-header">
+            <span class="card-title">Contacto</span>
+            <span class="card-preview">dsantibanezo@utem.cl — LinkedIn — GitHub</span>
+            <span class="card-expand-icon">+</span>
+          </div>
+          <div class="card-full-content" id="content-f">
+            <div class="expanded-inner">
+              <h2 class="expanded-card-title">Contacto</h2>
+              <div class="contact-rows">
+
+                <a href="mailto:dsantibanezo@utem.cl" class="contact-row">
+                  <span class="contact-row-label">Email</span>
+                  <span class="contact-row-value">dsantibanezo@utem.cl</span>
+                </a>
+
+                <div class="contact-row" style="cursor: default;">
+                  <span class="contact-row-label">Telefono</span>
+                  <span class="contact-row-value">+56 9 8434 1477</span>
+                </div>
+
+                <a href="https://www.linkedin.com/in/diego-santibanez-oyarce/" class="contact-row" target="_blank" rel="noopener">
+                  <span class="contact-row-label">LinkedIn</span>
+                  <span class="contact-row-value">linkedin.com/in/diego-santibanez-oyarce</span>
+                </a>
+
+                <a href="https://github.com/daso42" class="contact-row" target="_blank" rel="noopener">
+                  <span class="contact-row-label">GitHub</span>
+                  <span class="contact-row-value">github.com/daso42</span>
+                </a>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="center-col footer">
+      <p class="footer-text">Diego Santibanez Oyarce &mdash; 2025</p>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      const cardIds = ['a', 'b', 'c', 'd', 'e', 'f'];
+      let activeCard = null;
+      let activeWrapper = null;
+      let activePlaceholder = null;
+      let originalStyles = {};
+      let isAnimating = false;
+
+      const closeBtn = document.getElementById('closeBtn');
+
+      function getCard(id) {
+        return document.getElementById('card-' + id);
+      }
+      function getWrapper(id) {
+        return document.getElementById('wrapper-' + id);
+      }
+      function getPlaceholder(id) {
+        return document.getElementById('placeholder-' + id);
+      }
+      function getContent(id) {
+        return document.getElementById('content-' + id);
+      }
+
+      function expandCard(id) {
+        if (isAnimating || activeCard) return;
+        isAnimating = true;
+
+        const card = getCard(id);
+        const wrapper = getWrapper(id);
+        const placeholder = getPlaceholder(id);
+        const content = getContent(id);
+        const icon = card.querySelector('.card-expand-icon');
+
+        // Get current bounding rect before any style changes
+        const rect = card.getBoundingClientRect();
+
+        // Store original styles to restore later
+        originalStyles = {
+          position: card.style.position,
+          top: card.style.top,
+          left: card.style.left,
+          width: card.style.width,
+          height: card.style.height,
+          margin: card.style.margin,
+          transition: card.style.transition,
+          zIndex: card.style.zIndex,
+          borderRadius: card.style.borderRadius,
+          overflowY: card.style.overflowY,
+          background: card.style.background,
+        };
+
+        // Show placeholder to hold layout space
+        placeholder.style.display = 'block';
+        placeholder.style.width = rect.width + 'px';
+        placeholder.style.height = rect.height + 'px';
+
+        // Prepare content (hidden, block)
+        content.style.display = 'block';
+        content.style.opacity = '0';
+
+        // Phase 1: position fixed at exact current location, no transition
+        card.style.position = 'fixed';
+        card.style.top = rect.top + 'px';
+        card.style.left = rect.left + 'px';
+        card.style.width = rect.width + 'px';
+        card.style.height = rect.height + 'px';
+        card.style.margin = '0';
+        card.style.transition = 'none';
+        card.style.zIndex = '1000';
+        card.style.borderRadius = '16px';
+        card.style.overflowY = 'hidden';
+        card.classList.add('is-expanding');
+
+        // Hide header-only content during expansion
+        icon.style.opacity = '0';
+
+        // Lock body scroll
+        document.body.classList.add('locked');
+
+        // Phase 2: after two frames, animate to fullscreen
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            card.style.transition = 'top 0.45s cubic-bezier(0.4, 0, 0.2, 1), left 0.45s cubic-bezier(0.4, 0, 0.2, 1), width 0.45s cubic-bezier(0.4, 0, 0.2, 1), height 0.45s cubic-bezier(0.4, 0, 0.2, 1), border-radius 0.45s cubic-bezier(0.4, 0, 0.2, 1), background 0.45s cubic-bezier(0.4, 0, 0.2, 1)';
+            card.style.top = '0';
+            card.style.left = '0';
+            card.style.width = '100vw';
+            card.style.height = '100vh';
+            card.style.borderRadius = '0';
+            card.style.background = '#0e141c';
+            card.style.overflowY = 'auto';
+            card.classList.add('is-expanded');
+
+            // After transition ends, show content
+            card.addEventListener('transitionend', function onEnd(e) {
+              if (e.propertyName !== 'width') return;
+              card.removeEventListener('transitionend', onEnd);
+
+              content.classList.add('visible');
+              closeBtn.classList.add('visible');
+              card.setAttribute('aria-expanded', 'true');
+              isAnimating = false;
+            });
+          });
+        });
+
+        activeCard = card;
+        activeWrapper = wrapper;
+        activePlaceholder = placeholder;
+      }
+
+      function collapseCard() {
+        if (isAnimating || !activeCard) return;
+        isAnimating = true;
+
+        const card = activeCard;
+        const placeholder = activePlaceholder;
+        const content = card.querySelector('.card-full-content');
+        const icon = card.querySelector('.card-expand-icon');
+
+        // Hide content first
+        content.classList.remove('visible');
+        closeBtn.classList.remove('visible');
+
+        // Get placeholder rect (where card should return to)
+        const targetRect = placeholder.getBoundingClientRect();
+
+        // After content fades (short delay), animate back
+        setTimeout(function () {
+          card.style.transition = 'top 0.45s cubic-bezier(0.4, 0, 0.2, 1), left 0.45s cubic-bezier(0.4, 0, 0.2, 1), width 0.45s cubic-bezier(0.4, 0, 0.2, 1), height 0.45s cubic-bezier(0.4, 0, 0.2, 1), border-radius 0.45s cubic-bezier(0.4, 0, 0.2, 1), background 0.45s cubic-bezier(0.4, 0, 0.2, 1)';
+          card.style.top = targetRect.top + 'px';
+          card.style.left = targetRect.left + 'px';
+          card.style.width = targetRect.width + 'px';
+          card.style.height = targetRect.height + 'px';
+          card.style.borderRadius = '16px';
+          card.style.background = '#314b6e';
+
+          card.addEventListener('transitionend', function onEnd(e) {
+            if (e.propertyName !== 'width') return;
+            card.removeEventListener('transitionend', onEnd);
+
+            // Restore card to normal flow
+            card.style.position = '';
+            card.style.top = '';
+            card.style.left = '';
+            card.style.width = '';
+            card.style.height = '';
+            card.style.margin = '';
+            card.style.transition = '';
+            card.style.zIndex = '';
+            card.style.borderRadius = '';
+            card.style.overflowY = '';
+            card.style.background = '';
+            card.classList.remove('is-expanding', 'is-expanded');
+            card.setAttribute('aria-expanded', 'false');
+
+            // Hide content
+            content.style.display = 'none';
+            content.style.opacity = '0';
+            content.classList.remove('visible');
+
+            // Restore icon
+            icon.style.opacity = '';
+
+            // Hide placeholder
+            placeholder.style.display = 'none';
+
+            // Unlock body
+            document.body.classList.remove('locked');
+
+            activeCard = null;
+            activeWrapper = null;
+            activePlaceholder = null;
+            isAnimating = false;
+          });
+        }, 180);
+      }
+
+      // Attach click handlers to each card
+      cardIds.forEach(function (id) {
+        const card = getCard(id);
+
+        card.addEventListener('click', function (e) {
+          // If already expanded, ignore clicks on the card content area
+          // (only close button / overlay closes it)
+          if (card.classList.contains('is-expanded')) {
+            return;
+          }
+          expandCard(id);
+        });
+
+        card.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            if (!card.classList.contains('is-expanded')) {
+              e.preventDefault();
+              expandCard(id);
+            }
+          }
+        });
+      });
+
+      // Close button
+      closeBtn.addEventListener('click', function () {
+        collapseCard();
+      });
+
+      // ESC key
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && activeCard) {
+          collapseCard();
+        }
+      });
+
+      // Click on the background area of expanded card (not on content) closes it
+      document.addEventListener('click', function (e) {
+        if (!activeCard) return;
+        if (!activeCard.classList.contains('is-expanded')) return;
+        // Check if click is on the expanded card itself but outside the expanded-inner content
+        const inner = activeCard.querySelector('.expanded-inner');
+        if (inner && !inner.contains(e.target) && e.target !== closeBtn && !closeBtn.contains(e.target)) {
+          collapseCard();
+        }
+      });
+
+    })();
+  </script>
+</body>
+</html>

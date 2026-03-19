@@ -1,0 +1,1601 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diego Santibanez Oyarce — Portfolio OS</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --desktop-bg: #1e1e2e;
+  --window-frame: #313244;
+  --window-border: #45475a;
+  --titlebar-active: #000080;
+  --titlebar-inactive: #585b70;
+  --accent: #89b4fa;
+  --accent2: #74c7ec;
+  --text-light: #cdd6f4;
+  --text-dark: #1e1e2e;
+  --window-bg: #1e1e2e;
+  --window-content-bg: #11111b;
+  --taskbar-bg: #181825;
+  --taskbar-border: #313244;
+  --start-green: #a6e3a1;
+  --red: #f38ba8;
+  --yellow: #f9e2af;
+  --green: #a6e3a1;
+  --mauve: #cba6f7;
+  --peach: #fab387;
+  --surface0: #313244;
+  --surface1: #45475a;
+  --surface2: #585b70;
+  --overlay0: #6c7086;
+}
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--desktop-bg);
+  color: var(--text-light);
+  user-select: none;
+}
+
+/* ── Desktop ── */
+#desktop {
+  width: 100%; height: calc(100vh - 44px);
+  background: linear-gradient(135deg, #1e1e2e 0%, #181825 40%, #1e1e2e 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+#desktop::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(137,180,250,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(203,166,247,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 60% 80%, rgba(116,199,236,0.04) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* ── Desktop Icons ── */
+#desktop-icons {
+  position: absolute;
+  top: 16px; left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 1;
+}
+
+.desktop-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 84px;
+  padding: 8px 4px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border: 1px solid transparent;
+}
+
+.desktop-icon:hover {
+  background: rgba(137,180,250,0.1);
+  border-color: rgba(137,180,250,0.15);
+}
+
+.desktop-icon:active, .desktop-icon.selected {
+  background: rgba(137,180,250,0.18);
+  border-color: rgba(137,180,250,0.3);
+}
+
+.desktop-icon .icon-img {
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  margin-bottom: 4px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+}
+
+.desktop-icon .icon-label {
+  font-size: 11px;
+  text-align: center;
+  color: var(--text-light);
+  text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+/* ── Window ── */
+.os-window {
+  position: absolute;
+  min-width: 320px;
+  min-height: 200px;
+  background: var(--window-frame);
+  border: 1px solid var(--window-border);
+  border-radius: 10px;
+  box-shadow: 2px 2px 20px rgba(0,0,0,0.45), 0 0 60px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+
+.os-window.active-window {
+  box-shadow: 2px 2px 30px rgba(0,0,0,0.55), 0 0 80px rgba(137,180,250,0.07);
+}
+
+.os-window.minimized {
+  display: none !important;
+}
+
+/* Title bar */
+.window-titlebar {
+  height: 38px;
+  background: var(--surface0);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  cursor: move;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--window-border);
+  gap: 10px;
+}
+
+.os-window.active-window .window-titlebar {
+  background: linear-gradient(180deg, #3b3d54 0%, var(--surface0) 100%);
+}
+
+.os-window:not(.active-window) .window-titlebar {
+  background: var(--surface0);
+  opacity: 0.75;
+}
+
+.titlebar-buttons {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.titlebar-btn {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: filter 0.15s, transform 0.1s;
+  position: relative;
+}
+
+.titlebar-btn:hover { filter: brightness(1.2); transform: scale(1.15); }
+
+.btn-close { background: var(--red); }
+.btn-minimize { background: var(--yellow); }
+.btn-maximize { background: var(--green); }
+
+.titlebar-icon {
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.titlebar-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-light);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+/* Window content */
+.window-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--window-content-bg);
+  padding: 20px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-light);
+}
+
+.window-content::-webkit-scrollbar { width: 8px; }
+.window-content::-webkit-scrollbar-track { background: var(--window-content-bg); }
+.window-content::-webkit-scrollbar-thumb { background: var(--surface1); border-radius: 4px; }
+.window-content::-webkit-scrollbar-thumb:hover { background: var(--surface2); }
+
+.window-content a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+.window-content a:hover { border-bottom-color: var(--accent); }
+
+/* ── Taskbar ── */
+#taskbar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 44px;
+  background: var(--taskbar-bg);
+  border-top: 1px solid var(--taskbar-border);
+  display: flex;
+  align-items: center;
+  z-index: 9999;
+  padding: 0 6px;
+  backdrop-filter: blur(10px);
+}
+
+#start-btn {
+  height: 32px;
+  padding: 0 14px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--mauve) 100%);
+  border: none;
+  border-radius: 6px;
+  color: var(--text-dark);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: filter 0.15s, transform 0.1s;
+  flex-shrink: 0;
+}
+
+#start-btn:hover { filter: brightness(1.1); }
+#start-btn:active { transform: scale(0.97); }
+
+#start-btn .start-icon {
+  font-size: 16px;
+}
+
+#taskbar-windows {
+  display: flex;
+  flex: 1;
+  gap: 4px;
+  padding: 0 8px;
+  overflow-x: auto;
+  align-items: center;
+}
+
+#taskbar-windows::-webkit-scrollbar { height: 0; }
+
+.taskbar-item {
+  height: 30px;
+  padding: 0 12px;
+  background: var(--surface0);
+  border: 1px solid var(--window-border);
+  border-radius: 6px;
+  color: var(--text-light);
+  font-size: 12px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s;
+  flex-shrink: 0;
+}
+
+.taskbar-item:hover { background: var(--surface1); }
+
+.taskbar-item.active {
+  background: rgba(137,180,250,0.15);
+  border-color: var(--accent);
+}
+
+.taskbar-item.minimized-item {
+  opacity: 0.55;
+}
+
+#taskbar-tray {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  flex-shrink: 0;
+}
+
+#clock {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--text-light);
+  opacity: 0.85;
+}
+
+.tray-icon {
+  font-size: 14px;
+  opacity: 0.6;
+}
+
+/* ── Start Menu ── */
+#start-menu {
+  position: fixed;
+  bottom: 50px;
+  left: 6px;
+  width: 280px;
+  background: var(--taskbar-bg);
+  border: 1px solid var(--taskbar-border);
+  border-radius: 10px;
+  box-shadow: 0 -4px 30px rgba(0,0,0,0.5);
+  z-index: 10000;
+  display: none;
+  overflow: hidden;
+}
+
+#start-menu.open { display: block; }
+
+.start-menu-header {
+  padding: 16px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--mauve) 100%);
+  color: var(--text-dark);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.start-menu-header .avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+
+.start-menu-header .user-info h3 {
+  font-size: 14px; font-weight: 700;
+}
+.start-menu-header .user-info p {
+  font-size: 11px; opacity: 0.8;
+}
+
+.start-menu-items {
+  padding: 8px;
+}
+
+.start-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-size: 13px;
+}
+
+.start-menu-item:hover {
+  background: var(--surface0);
+}
+
+.start-menu-item .item-icon {
+  font-size: 18px;
+  width: 24px;
+  text-align: center;
+}
+
+.start-menu-divider {
+  height: 1px;
+  background: var(--surface0);
+  margin: 4px 8px;
+}
+
+/* ── Window Content Styles ── */
+
+/* About dialog */
+.about-dialog {
+  text-align: center;
+}
+
+.about-dialog .profile-section {
+  margin-bottom: 24px;
+}
+
+.about-dialog .profile-icon {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--mauve));
+  margin: 0 auto 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px;
+}
+
+.about-dialog h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-light);
+  margin-bottom: 4px;
+}
+
+.about-dialog .title-role {
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.about-dialog .bio {
+  text-align: left;
+  background: var(--surface0);
+  border-radius: 8px;
+  padding: 16px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-light);
+  border-left: 3px solid var(--accent);
+}
+
+.about-dialog .sys-info {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  text-align: left;
+}
+
+.about-dialog .sys-info-item {
+  background: var(--surface0);
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.about-dialog .sys-info-item .label {
+  color: var(--overlay0);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.about-dialog .sys-info-item .value {
+  color: var(--text-light);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+/* File manager style for experience */
+.file-manager {}
+
+.job-entry {
+  background: var(--surface0);
+  border-radius: 8px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  border: 1px solid var(--window-border);
+}
+
+.job-header {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.job-header:hover { background: rgba(137,180,250,0.05); }
+
+.job-header .folder-icon { font-size: 20px; flex-shrink: 0; }
+
+.job-header .job-info { flex: 1; }
+.job-header .job-title { font-size: 14px; font-weight: 600; color: var(--text-light); }
+.job-header .job-company { font-size: 12px; color: var(--accent); }
+.job-header .job-date { font-size: 11px; color: var(--overlay0); font-family: 'IBM Plex Mono', monospace; flex-shrink: 0; }
+
+.job-details {
+  padding: 0 16px 14px;
+  border-top: 1px solid var(--window-border);
+}
+
+.job-details ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.job-details li {
+  padding: 6px 0;
+  font-size: 13px;
+  color: var(--text-light);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.5;
+}
+
+.job-details li::before {
+  content: '>';
+  color: var(--accent);
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 600;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.job-details a {
+  color: var(--accent2);
+  font-size: 12px;
+}
+
+.detail-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+  margin-left: 16px;
+}
+
+.detail-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(137,180,250,0.08);
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  color: var(--accent);
+  border: 1px solid rgba(137,180,250,0.15);
+  transition: background 0.15s;
+}
+.detail-links a:hover { background: rgba(137,180,250,0.15); }
+
+/* Browser window for project */
+.browser-window {
+  background: var(--surface0);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--window-border);
+}
+
+.browser-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--window-frame);
+  border-bottom: 1px solid var(--window-border);
+}
+
+.browser-dots {
+  display: flex; gap: 5px;
+}
+.browser-dots span {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+
+.browser-url {
+  flex: 1;
+  background: var(--window-content-bg);
+  border: 1px solid var(--window-border);
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--overlay0);
+}
+
+.browser-body {
+  padding: 20px;
+}
+
+.project-card {
+  margin-bottom: 16px;
+}
+
+.project-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-light);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.project-card .year-badge {
+  font-size: 11px;
+  background: var(--accent);
+  color: var(--text-dark);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.project-card p {
+  color: var(--text-light);
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.tech-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.tech-tag {
+  font-size: 11px;
+  padding: 3px 10px;
+  background: rgba(137,180,250,0.1);
+  border: 1px solid rgba(137,180,250,0.2);
+  border-radius: 4px;
+  color: var(--accent);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.project-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, var(--accent), var(--mauve));
+  color: var(--text-dark);
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  text-decoration: none !important;
+  border-bottom: none !important;
+  transition: filter 0.2s, transform 0.1s;
+}
+
+.project-link-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+/* System Properties for Skills */
+.system-props {}
+
+.skills-category {
+  margin-bottom: 20px;
+}
+
+.skills-category h3 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.skills-category h3::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--surface1);
+}
+
+.skill-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.skill-name {
+  width: 160px;
+  font-size: 13px;
+  color: var(--text-light);
+  flex-shrink: 0;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.skill-bar-bg {
+  flex: 1;
+  height: 8px;
+  background: var(--surface0);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.skill-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1s ease;
+  width: 0;
+}
+
+.skill-bar-fill.animated { /* JS sets width */ }
+
+.soft-skill-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
+}
+
+.soft-skill-tag {
+  background: var(--surface0);
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--window-border);
+}
+
+.soft-skill-tag .ss-icon { font-size: 16px; }
+
+/* Education / Certificate viewer */
+.cert-viewer {}
+
+.edu-main {
+  background: var(--surface0);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid var(--window-border);
+  border-left: 4px solid var(--accent);
+}
+
+.edu-main h3 { font-size: 16px; font-weight: 700; color: var(--text-light); }
+.edu-main .edu-institution { color: var(--accent); font-size: 14px; margin-top: 4px; }
+.edu-main .edu-years { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--overlay0); margin-top: 4px; }
+.edu-main p { margin-top: 10px; font-size: 13px; color: var(--text-light); }
+
+.certs-label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cert-card {
+  background: var(--surface0);
+  border: 1px solid var(--window-border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: background 0.15s;
+}
+
+.cert-card:hover { background: rgba(137,180,250,0.05); }
+
+.cert-info h4 { font-size: 14px; font-weight: 600; color: var(--text-light); }
+.cert-info .cert-issuer { font-size: 12px; color: var(--accent); margin-top: 2px; }
+.cert-info .cert-year { font-size: 11px; color: var(--overlay0); font-family: 'IBM Plex Mono', monospace; margin-top: 2px; }
+
+.cert-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background: rgba(137,180,250,0.1);
+  border: 1px solid rgba(137,180,250,0.2);
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--accent) !important;
+  text-decoration: none !important;
+  border-bottom: none !important;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.cert-link:hover { background: rgba(137,180,250,0.2); }
+
+/* Contact / Email compose */
+.email-compose {}
+
+.compose-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+.contact-field {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--surface0);
+  border: 1px solid var(--window-border);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  transition: border-color 0.2s;
+}
+
+.contact-field:hover { border-color: var(--accent); }
+
+.contact-field .field-icon {
+  font-size: 20px;
+  width: 28px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.contact-field .field-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--overlay0);
+}
+
+.contact-field .field-value {
+  font-size: 14px;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.contact-field .field-value a {
+  color: var(--accent) !important;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  #desktop-icons {
+    flex-direction: row;
+    flex-wrap: wrap;
+    top: 8px; left: 8px; right: 8px;
+  }
+
+  .desktop-icon { width: 70px; }
+  .desktop-icon .icon-img { width: 36px; height: 36px; font-size: 22px; }
+  .desktop-icon .icon-label { font-size: 10px; }
+
+  .os-window {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: calc(100vh - 44px) !important;
+    min-width: unset !important;
+    min-height: unset !important;
+    border-radius: 0 !important;
+  }
+
+  .window-titlebar { cursor: default; }
+
+  .about-dialog .sys-info { grid-template-columns: 1fr; }
+  .soft-skill-grid { grid-template-columns: 1fr; }
+  .skill-name { width: 110px; font-size: 11px; }
+
+  .cert-card { flex-direction: column; align-items: flex-start; }
+
+  #start-menu { width: calc(100vw - 12px); }
+}
+
+@media (max-width: 480px) {
+  .job-header { flex-wrap: wrap; }
+  .job-header .job-date { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<!-- Desktop -->
+<div id="desktop">
+  <div id="desktop-icons">
+    <div class="desktop-icon" ondblclick="openWindow('sobre-mi')" onclick="selectIcon(this)">
+      <div class="icon-img">👤</div>
+      <div class="icon-label">Sobre Mi</div>
+    </div>
+    <div class="desktop-icon" ondblclick="openWindow('experiencia')" onclick="selectIcon(this)">
+      <div class="icon-img">💼</div>
+      <div class="icon-label">Experiencia</div>
+    </div>
+    <div class="desktop-icon" ondblclick="openWindow('proyecto')" onclick="selectIcon(this)">
+      <div class="icon-img">🌐</div>
+      <div class="icon-label">Proyecto</div>
+    </div>
+    <div class="desktop-icon" ondblclick="openWindow('habilidades')" onclick="selectIcon(this)">
+      <div class="icon-img">⚙️</div>
+      <div class="icon-label">Habilidades</div>
+    </div>
+    <div class="desktop-icon" ondblclick="openWindow('educacion')" onclick="selectIcon(this)">
+      <div class="icon-img">🎓</div>
+      <div class="icon-label">Educacion</div>
+    </div>
+    <div class="desktop-icon" ondblclick="openWindow('contacto')" onclick="selectIcon(this)">
+      <div class="icon-img">📧</div>
+      <div class="icon-label">Contacto</div>
+    </div>
+  </div>
+
+  <!-- Window: Sobre Mi -->
+  <div class="os-window" id="win-sobre-mi" data-win="sobre-mi" style="width:500px;height:520px;top:60px;left:280px;">
+    <div class="window-titlebar" onmousedown="startDrag(event,'win-sobre-mi')">
+      <div class="titlebar-buttons">
+        <button class="titlebar-btn btn-close" onclick="closeWindow('sobre-mi')" title="Cerrar"></button>
+        <button class="titlebar-btn btn-minimize" onclick="minimizeWindow('sobre-mi')" title="Minimizar"></button>
+        <button class="titlebar-btn btn-maximize" onclick="maximizeWindow('sobre-mi')" title="Maximizar"></button>
+      </div>
+      <span class="titlebar-icon">👤</span>
+      <span class="titlebar-title">Sobre Mi — Acerca de</span>
+    </div>
+    <div class="window-content" onmousedown="bringToFront('win-sobre-mi')">
+      <div class="about-dialog">
+        <div class="profile-section">
+          <div class="profile-icon">👨‍💻</div>
+          <h2>Diego Santibanez Oyarce</h2>
+          <div class="title-role">Cientifico de datos</div>
+        </div>
+        <div class="bio">
+          Egresado de Ingenieria Civil en Ciencia de datos en Agosto 2025, apasionado por la tecnologia y con un gran interes en el uso de la inteligencia artificial como herramienta para la resolucion de problemas del mundo real. Mi formacion academica me proporciono una solida comprension de algoritmos de aprendizaje automatico, analisis y visualizacion de datos. Me gusta proponerme desafios donde pueda poner en practica mis conocimientos y donde ademas pueda aprender cosas nuevas.
+        </div>
+        <div class="sys-info">
+          <div class="sys-info-item">
+            <div class="label">Titulo</div>
+            <div class="value">Ing. Civil en Ciencia de Datos</div>
+          </div>
+          <div class="sys-info-item">
+            <div class="label">Universidad</div>
+            <div class="value">UTEM</div>
+          </div>
+          <div class="sys-info-item">
+            <div class="label">Ubicacion</div>
+            <div class="value">Chile</div>
+          </div>
+          <div class="sys-info-item">
+            <div class="label">Enfoque</div>
+            <div class="value">IA & Machine Learning</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Window: Experiencia -->
+  <div class="os-window" id="win-experiencia" data-win="experiencia" style="width:620px;height:480px;top:100px;left:180px;">
+    <div class="window-titlebar" onmousedown="startDrag(event,'win-experiencia')">
+      <div class="titlebar-buttons">
+        <button class="titlebar-btn btn-close" onclick="closeWindow('experiencia')" title="Cerrar"></button>
+        <button class="titlebar-btn btn-minimize" onclick="minimizeWindow('experiencia')" title="Minimizar"></button>
+        <button class="titlebar-btn btn-maximize" onclick="maximizeWindow('experiencia')" title="Maximizar"></button>
+      </div>
+      <span class="titlebar-icon">💼</span>
+      <span class="titlebar-title">Experiencia — Explorador de archivos</span>
+    </div>
+    <div class="window-content" onmousedown="bringToFront('win-experiencia')">
+      <div class="file-manager">
+
+        <!-- Job 1 -->
+        <div class="job-entry">
+          <div class="job-header" onclick="this.parentElement.classList.toggle('expanded')">
+            <span class="folder-icon">📂</span>
+            <div class="job-info">
+              <div class="job-title">Asistente de investigacion</div>
+              <div class="job-company">Universidad Tecnologica Metropolitana (UTEM)</div>
+            </div>
+            <span class="job-date">Dic 2023 – Sep 2025</span>
+          </div>
+          <div class="job-details">
+            <ul>
+              <li>
+                <span>Presentacion poster en "1ras Jornadas de Ciencia de Datos y Salud Publica" — Universidad de Chile (Ene 2024)</span>
+              </li>
+            </ul>
+            <div class="detail-links">
+              <a href="https://drive.google.com/file/d/124VDD5x6pBidyC1Wx4ZLehAQixdjZ9dS/view?usp=sharing" target="_blank">📄 Certificado</a>
+              <a href="https://drive.google.com/file/d/1gRjnIt9xa5CYPhbgGFTKR1o5WV3RB8H6/view?usp=drive_link" target="_blank">📊 Poster</a>
+            </div>
+
+            <ul>
+              <li>
+                <span>Flash Talk (5 min) y poster en Carla2024 (Sep 2024)</span>
+              </li>
+            </ul>
+            <div class="detail-links">
+              <a href="https://drive.google.com/file/d/1jHc_2fZiakh2G9t8EkiB7Z3l0iuWBJ7n/view?usp=sharing" target="_blank">📄 Certificado</a>
+              <a href="https://drive.google.com/file/d/1jfS4S75dwoBnUMZ3xeQOFfBzX6HP5gpc/view?usp=drive_link" target="_blank">📊 Poster</a>
+            </div>
+
+            <ul>
+              <li>
+                <span>Presentacion poster en "III Congreso Vive la Investigacion 2024" (Oct 2024)</span>
+              </li>
+            </ul>
+            <div class="detail-links">
+              <a href="https://drive.google.com/file/d/1unqW5oOxe5wl84-vmq4Y8AhXmD1sJJL_/view?usp=sharing" target="_blank">📄 Certificado</a>
+              <a href="https://drive.google.com/file/d/1OEKXi8gl7Z9bGySQ8esoomkDJLPiBLCE/view?usp=drive_link" target="_blank">📊 Poster</a>
+            </div>
+
+            <ul>
+              <li>
+                <span>Poster en "XIV Congreso Argentino de Bioinformatica y Biologia Computacional" (Nov 2024)</span>
+              </li>
+            </ul>
+            <div class="detail-links">
+              <a href="https://drive.google.com/file/d/1br_Vv35RmHxvyPScFlhDCJxucFz0ckii/view?usp=sharing" target="_blank">📄 Certificado</a>
+              <a href="https://drive.google.com/file/d/1wLUe3ssEY_XcOgoTbVJj0B5C7plK-G9n/view?usp=drive_link" target="_blank">📊 Poster</a>
+            </div>
+
+            <ul>
+              <li>
+                <span>Flash Talk (15 min) en "III Reunion Anual de la Sociedad Chilena de Bioinformatica" (Nov 2024). Invitacion a publicar en revista "Bioinformatics Advances (Oxford University Press)".</span>
+              </li>
+            </ul>
+            <div class="detail-links">
+              <a href="https://drive.google.com/file/d/1-dZ_CdZlYkd58OlGr3v92n8pLshnurje/view?usp=sharing" target="_blank">📄 Certificado</a>
+            </div>
+
+            <ul>
+              <li>
+                <span>Poster en Carla2025 (Sep 2025). Obtencion premio al mejor poster.</span>
+              </li>
+            </ul>
+            <div class="detail-links">
+              <a href="https://drive.google.com/file/d/10tcRQonSWMgKQ8FciWOsCobzQAlWCPr9/view?usp=sharing" target="_blank">📄 Certificado</a>
+              <a href="https://drive.google.com/file/d/1M_MhsoB8BCUO5LITTVvQw0Hi9l7RU4Vj/view?usp=sharing" target="_blank">🏆 Premio</a>
+              <a href="https://drive.google.com/file/d/14Fc9u_zCtxiKG7RKW3W85Rv6X4OJy5HP/view?usp=drive_link" target="_blank">📊 Poster</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Job 2 -->
+        <div class="job-entry">
+          <div class="job-header" onclick="this.parentElement.classList.toggle('expanded')">
+            <span class="folder-icon">📂</span>
+            <div class="job-info">
+              <div class="job-title">Tecnico para analisis de datos avanzado</div>
+              <div class="job-company">UTEM</div>
+            </div>
+            <span class="job-date">Feb 2025 – Sep 2025</span>
+          </div>
+          <div class="job-details">
+            <ul>
+              <li><span>Implementacion de web scrapping con Python (Selenium y BeautifulSoup) para la extraccion automatizada de datos</span></li>
+              <li><span>Creacion de dashboard interactivos utilizando Plotly y Streamlit para visualizar avances del proyecto</span></li>
+              <li><span>Diseno y gestion de bases de datos en MariaDB y PostgreSQL para el almacenamiento de datos estructurados</span></li>
+              <li><span>Aplicacion de procesamiento de lenguaje natural para analisis y filtrado de datos</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Job 3 -->
+        <div class="job-entry">
+          <div class="job-header" onclick="this.parentElement.classList.toggle('expanded')">
+            <span class="folder-icon">📂</span>
+            <div class="job-info">
+              <div class="job-title">Ayudante de Catedra — Visualizacion de Datos</div>
+              <div class="job-company">UTEM</div>
+            </div>
+            <span class="job-date">Mar 2025 – Jul 2025</span>
+          </div>
+          <div class="job-details">
+            <ul>
+              <li><span>Ensenanza y mentoria a estudiantes en tecnicas de visualizacion de datos</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Job 4 -->
+        <div class="job-entry">
+          <div class="job-header" onclick="this.parentElement.classList.toggle('expanded')">
+            <span class="folder-icon">📂</span>
+            <div class="job-info">
+              <div class="job-title">Practicante Profesional</div>
+              <div class="job-company">Contraloria General de la Republica</div>
+            </div>
+            <span class="job-date">Ago 2024 – Ene 2025</span>
+          </div>
+          <div class="job-details">
+            <ul>
+              <li><span>Analisis de datos utilizando Impala y Oracle</span></li>
+              <li><span>Desarrollo de consultas SQL y automatizacion de procesos mediante codigos de Python</span></li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Window: Proyecto -->
+  <div class="os-window" id="win-proyecto" data-win="proyecto" style="width:540px;height:400px;top:140px;left:400px;">
+    <div class="window-titlebar" onmousedown="startDrag(event,'win-proyecto')">
+      <div class="titlebar-buttons">
+        <button class="titlebar-btn btn-close" onclick="closeWindow('proyecto')" title="Cerrar"></button>
+        <button class="titlebar-btn btn-minimize" onclick="minimizeWindow('proyecto')" title="Minimizar"></button>
+        <button class="titlebar-btn btn-maximize" onclick="maximizeWindow('proyecto')" title="Maximizar"></button>
+      </div>
+      <span class="titlebar-icon">🌐</span>
+      <span class="titlebar-title">Proyecto — Navegador</span>
+    </div>
+    <div class="window-content" onmousedown="bringToFront('win-proyecto')" style="padding:0;">
+      <div class="browser-window">
+        <div class="browser-bar">
+          <div class="browser-dots">
+            <span style="background:var(--red)"></span>
+            <span style="background:var(--yellow)"></span>
+            <span style="background:var(--green)"></span>
+          </div>
+          <div class="browser-url">🔒 dashboarddatalake-fiut-utem.streamlit.app</div>
+        </div>
+        <div class="browser-body">
+          <div class="project-card">
+            <h3>Dashboard de avance de proyecto <span class="year-badge">2025</span></h3>
+            <p>Dashboard interactivo desarrollado con Streamlit para visualizar el avance y estado de los datos utilizados en el proyecto.</p>
+            <div class="tech-stack">
+              <span class="tech-tag">Python</span>
+              <span class="tech-tag">Streamlit</span>
+              <span class="tech-tag">Pandas</span>
+              <span class="tech-tag">Plotly</span>
+              <span class="tech-tag">DuckDB</span>
+              <span class="tech-tag">Folium</span>
+            </div>
+            <a href="https://dashboarddatalake-fiut-utem.streamlit.app/" target="_blank" class="project-link-btn">🔗 Ver proyecto en vivo</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Window: Habilidades -->
+  <div class="os-window minimized" id="win-habilidades" data-win="habilidades" style="width:540px;height:500px;top:80px;left:320px;">
+    <div class="window-titlebar" onmousedown="startDrag(event,'win-habilidades')">
+      <div class="titlebar-buttons">
+        <button class="titlebar-btn btn-close" onclick="closeWindow('habilidades')" title="Cerrar"></button>
+        <button class="titlebar-btn btn-minimize" onclick="minimizeWindow('habilidades')" title="Minimizar"></button>
+        <button class="titlebar-btn btn-maximize" onclick="maximizeWindow('habilidades')" title="Maximizar"></button>
+      </div>
+      <span class="titlebar-icon">⚙️</span>
+      <span class="titlebar-title">Habilidades — Propiedades del sistema</span>
+    </div>
+    <div class="window-content" onmousedown="bringToFront('win-habilidades')">
+      <div class="system-props">
+
+        <div class="skills-category">
+          <h3>💻 Hard Skills</h3>
+
+          <div class="skill-item"><span class="skill-name">Python</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="95%" style="background:linear-gradient(90deg,var(--accent),var(--mauve))"></div></div></div>
+          <div class="skill-item"><span class="skill-name">SQL</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="88%" style="background:linear-gradient(90deg,var(--accent),var(--mauve))"></div></div></div>
+          <div class="skill-item"><span class="skill-name">TensorFlow</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="75%" style="background:linear-gradient(90deg,var(--accent),var(--mauve))"></div></div></div>
+          <div class="skill-item"><span class="skill-name">scikit-learn</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="85%" style="background:linear-gradient(90deg,var(--accent),var(--mauve))"></div></div></div>
+          <div class="skill-item"><span class="skill-name">Pandas</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="92%" style="background:linear-gradient(90deg,var(--accent),var(--mauve))"></div></div></div>
+          <div class="skill-item"><span class="skill-name">Jupyter Notebooks</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="90%" style="background:linear-gradient(90deg,var(--accent),var(--mauve))"></div></div></div>
+          <div class="skill-item"><span class="skill-name">Visualizacion</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="88%" style="background:linear-gradient(90deg,var(--accent),var(--mauve))"></div></div></div>
+          <div class="skill-item"><span class="skill-name">Plotly</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="85%" style="background:linear-gradient(90deg,var(--accent),var(--mauve))"></div></div></div>
+          <div class="skill-item"><span class="skill-name">Streamlit</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="90%" style="background:linear-gradient(90deg,var(--accent),var(--mauve))"></div></div></div>
+          <div class="skill-item"><span class="skill-name">Web Scraping</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="80%" style="background:linear-gradient(90deg,var(--accent),var(--mauve))"></div></div></div>
+          <div class="skill-item"><span class="skill-name">PostgreSQL</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="82%" style="background:linear-gradient(90deg,var(--accent),var(--mauve))"></div></div></div>
+          <div class="skill-item"><span class="skill-name">MariaDB</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="78%" style="background:linear-gradient(90deg,var(--accent),var(--mauve))"></div></div></div>
+          <div class="skill-item"><span class="skill-name">SpaCy</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="72%" style="background:linear-gradient(90deg,var(--accent),var(--mauve))"></div></div></div>
+        </div>
+
+        <div class="skills-category">
+          <h3>🧠 Soft Skills</h3>
+          <div class="soft-skill-grid">
+            <div class="soft-skill-tag"><span class="ss-icon">🧩</span> Resolucion de Problemas</div>
+            <div class="soft-skill-tag"><span class="ss-icon">🔍</span> Pensamiento Critico</div>
+            <div class="soft-skill-tag"><span class="ss-icon">🔄</span> Adaptabilidad</div>
+            <div class="soft-skill-tag"><span class="ss-icon">🤝</span> Mentoria</div>
+            <div class="soft-skill-tag"><span class="ss-icon">💡</span> Curiosidad intelectual</div>
+            <div class="soft-skill-tag"><span class="ss-icon">✅</span> Responsabilidad</div>
+            <div class="soft-skill-tag"><span class="ss-icon">🧪</span> Mentalidad de experimentacion</div>
+            <div class="soft-skill-tag"><span class="ss-icon">📊</span> Mentalidad analitica</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Window: Educacion -->
+  <div class="os-window minimized" id="win-educacion" data-win="educacion" style="width:520px;height:480px;top:90px;left:260px;">
+    <div class="window-titlebar" onmousedown="startDrag(event,'win-educacion')">
+      <div class="titlebar-buttons">
+        <button class="titlebar-btn btn-close" onclick="closeWindow('educacion')" title="Cerrar"></button>
+        <button class="titlebar-btn btn-minimize" onclick="minimizeWindow('educacion')" title="Minimizar"></button>
+        <button class="titlebar-btn btn-maximize" onclick="maximizeWindow('educacion')" title="Maximizar"></button>
+      </div>
+      <span class="titlebar-icon">🎓</span>
+      <span class="titlebar-title">Educacion — Visor de certificados</span>
+    </div>
+    <div class="window-content" onmousedown="bringToFront('win-educacion')">
+      <div class="cert-viewer">
+
+        <div class="edu-main">
+          <h3>🎓 Ingeniero Civil en Ciencia de Datos</h3>
+          <div class="edu-institution">Universidad Tecnologica Metropolitana (UTEM)</div>
+          <div class="edu-years">2020 — 2025</div>
+          <p>Formacion integral en algoritmos de aprendizaje automatico, analisis y visualizacion de datos, con enfoque en aplicaciones de inteligencia artificial para problemas del mundo real.</p>
+        </div>
+
+        <div class="certs-label">📜 Certificaciones</div>
+
+        <div class="cert-card">
+          <div class="cert-info">
+            <h4>Power BI</h4>
+            <div class="cert-issuer">Santander X</div>
+            <div class="cert-year">2025</div>
+          </div>
+          <a href="https://drive.google.com/file/d/1IOp4gjfLcW8XhqbiwwOd9dzlz8l60P5q/view?usp=drive_link" target="_blank" class="cert-link">📄 Ver</a>
+        </div>
+
+        <div class="cert-card">
+          <div class="cert-info">
+            <h4>Ingles B2 Upper Intermediate</h4>
+            <div class="cert-issuer">Certificacion Internacional</div>
+            <div class="cert-year">2025</div>
+          </div>
+          <a href="https://drive.google.com/file/d/1KT12-fKSs20wCu_AO6c6nEHYi5_v0mK1/view?usp=sharing" target="_blank" class="cert-link">📄 Ver</a>
+        </div>
+
+        <div class="cert-card">
+          <div class="cert-info">
+            <h4>AWS Data Center Technician</h4>
+            <div class="cert-issuer">Amazon Web Services</div>
+            <div class="cert-year">2024</div>
+          </div>
+          <a href="https://drive.google.com/file/d/1pYCaTdbJQAmruxvoknp92QbIys4Bt7Ws/view?usp=sharing" target="_blank" class="cert-link">📄 Ver</a>
+        </div>
+
+        <div class="cert-card">
+          <div class="cert-info">
+            <h4>Introduccion a la Ciencia de Datos</h4>
+            <div class="cert-issuer">Santander Open Academy</div>
+            <div class="cert-year">2025</div>
+          </div>
+          <a href="https://drive.google.com/file/d/1vmeQuzoZEwUTC0Pz7Xl_rlobqXcreX5w/view?usp=sharing" target="_blank" class="cert-link">📄 Ver</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Window: Contacto -->
+  <div class="os-window minimized" id="win-contacto" data-win="contacto" style="width:460px;height:380px;top:120px;left:350px;">
+    <div class="window-titlebar" onmousedown="startDrag(event,'win-contacto')">
+      <div class="titlebar-buttons">
+        <button class="titlebar-btn btn-close" onclick="closeWindow('contacto')" title="Cerrar"></button>
+        <button class="titlebar-btn btn-minimize" onclick="minimizeWindow('contacto')" title="Minimizar"></button>
+        <button class="titlebar-btn btn-maximize" onclick="maximizeWindow('contacto')" title="Maximizar"></button>
+      </div>
+      <span class="titlebar-icon">📧</span>
+      <span class="titlebar-title">Contacto — Libreta de direcciones</span>
+    </div>
+    <div class="window-content" onmousedown="bringToFront('win-contacto')">
+      <div class="email-compose">
+        <div class="compose-header">📇 Informacion de contacto</div>
+
+        <div class="contact-field">
+          <span class="field-icon">📧</span>
+          <div>
+            <div class="field-label">Email</div>
+            <div class="field-value"><a href="mailto:dsantibanezo@utem.cl" target="_blank">dsantibanezo@utem.cl</a></div>
+          </div>
+        </div>
+
+        <div class="contact-field">
+          <span class="field-icon">💼</span>
+          <div>
+            <div class="field-label">LinkedIn</div>
+            <div class="field-value"><a href="https://www.linkedin.com/in/diego-santibanez-oyarce/" target="_blank">diego-santibanez-oyarce</a></div>
+          </div>
+        </div>
+
+        <div class="contact-field">
+          <span class="field-icon">🐙</span>
+          <div>
+            <div class="field-label">GitHub</div>
+            <div class="field-value"><a href="https://github.com/daso42" target="_blank">daso42</a></div>
+          </div>
+        </div>
+
+        <div class="contact-field">
+          <span class="field-icon">📱</span>
+          <div>
+            <div class="field-label">Telefono</div>
+            <div class="field-value">+56 9 8434 1477</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /desktop -->
+
+<!-- Taskbar -->
+<div id="taskbar">
+  <button id="start-btn" onclick="toggleStartMenu(event)">
+    <span class="start-icon">🚀</span> Inicio
+  </button>
+  <div id="taskbar-windows"></div>
+  <div id="taskbar-tray">
+    <span class="tray-icon">🔊</span>
+    <span class="tray-icon">📶</span>
+    <span id="clock"></span>
+  </div>
+</div>
+
+<!-- Start Menu -->
+<div id="start-menu">
+  <div class="start-menu-header">
+    <div class="avatar">👨‍💻</div>
+    <div class="user-info">
+      <h3>Diego Santibanez Oyarce</h3>
+      <p>Cientifico de datos</p>
+    </div>
+  </div>
+  <div class="start-menu-items">
+    <div class="start-menu-item" onclick="openWindow('sobre-mi');closeStartMenu()">
+      <span class="item-icon">👤</span> Sobre Mi
+    </div>
+    <div class="start-menu-item" onclick="openWindow('experiencia');closeStartMenu()">
+      <span class="item-icon">💼</span> Experiencia
+    </div>
+    <div class="start-menu-item" onclick="openWindow('proyecto');closeStartMenu()">
+      <span class="item-icon">🌐</span> Proyecto
+    </div>
+    <div class="start-menu-item" onclick="openWindow('habilidades');closeStartMenu()">
+      <span class="item-icon">⚙️</span> Habilidades
+    </div>
+    <div class="start-menu-item" onclick="openWindow('educacion');closeStartMenu()">
+      <span class="item-icon">🎓</span> Educacion
+    </div>
+    <div class="start-menu-item" onclick="openWindow('contacto');closeStartMenu()">
+      <span class="item-icon">📧</span> Contacto
+    </div>
+    <div class="start-menu-divider"></div>
+    <div class="start-menu-item" onclick="closeAllWindows();closeStartMenu()">
+      <span class="item-icon">🗑️</span> Cerrar todas las ventanas
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // ── State ──
+  let zCounter = 100;
+  let activeWin = null;
+  let dragState = null;
+  const openWindows = new Set();
+
+  const winMeta = {
+    'sobre-mi':    { icon: '👤', title: 'Sobre Mi' },
+    'experiencia': { icon: '💼', title: 'Experiencia' },
+    'proyecto':    { icon: '🌐', title: 'Proyecto' },
+    'habilidades': { icon: '⚙️', title: 'Habilidades' },
+    'educacion':   { icon: '🎓', title: 'Educacion' },
+    'contacto':    { icon: '📧', title: 'Contacto' }
+  };
+
+  // ── Window Management ──
+  window.openWindow = function(id) {
+    const el = document.getElementById('win-' + id);
+    if (!el) return;
+    el.classList.remove('minimized');
+    openWindows.add(id);
+    bringToFront('win-' + id);
+    updateTaskbar();
+    animateSkillBars(el);
+  };
+
+  window.closeWindow = function(id) {
+    const el = document.getElementById('win-' + id);
+    if (!el) return;
+    el.classList.add('minimized');
+    el.classList.remove('maximized-win');
+    openWindows.delete(id);
+    updateTaskbar();
+  };
+
+  window.minimizeWindow = function(id) {
+    const el = document.getElementById('win-' + id);
+    if (!el) return;
+    el.classList.add('minimized');
+    updateTaskbar();
+  };
+
+  window.maximizeWindow = function(id) {
+    const el = document.getElementById('win-' + id);
+    if (!el) return;
+    if (el.classList.contains('maximized-win')) {
+      el.classList.remove('maximized-win');
+      el.style.width = el.dataset.prevW || '500px';
+      el.style.height = el.dataset.prevH || '400px';
+      el.style.top = el.dataset.prevT || '60px';
+      el.style.left = el.dataset.prevL || '100px';
+    } else {
+      el.dataset.prevW = el.style.width;
+      el.dataset.prevH = el.style.height;
+      el.dataset.prevT = el.style.top;
+      el.dataset.prevL = el.style.left;
+      el.classList.add('maximized-win');
+      el.style.width = '100%';
+      el.style.height = 'calc(100vh - 44px)';
+      el.style.top = '0';
+      el.style.left = '0';
+    }
+  };
+
+  window.bringToFront = function(elId) {
+    const el = document.getElementById(elId);
+    if (!el) return;
+    zCounter++;
+    el.style.zIndex = zCounter;
+    // mark active
+    document.querySelectorAll('.os-window').forEach(w => w.classList.remove('active-window'));
+    el.classList.add('active-window');
+    activeWin = el.dataset.win;
+    updateTaskbar();
+  };
+
+  window.closeAllWindows = function() {
+    Object.keys(winMeta).forEach(id => closeWindow(id));
+  };
+
+  // ── Taskbar ──
+  function updateTaskbar() {
+    const container = document.getElementById('taskbar-windows');
+    container.innerHTML = '';
+    // Show all windows that have been opened (in openWindows set) OR are not minimized
+    const shownIds = new Set(openWindows);
+    document.querySelectorAll('.os-window').forEach(w => {
+      if (!w.classList.contains('minimized')) shownIds.add(w.dataset.win);
+    });
+
+    shownIds.forEach(id => {
+      const meta = winMeta[id];
+      if (!meta) return;
+      const el = document.getElementById('win-' + id);
+      const isMinimized = el && el.classList.contains('minimized');
+      const isActive = id === activeWin && !isMinimized;
+
+      const btn = document.createElement('button');
+      btn.className = 'taskbar-item' + (isActive ? ' active' : '') + (isMinimized ? ' minimized-item' : '');
+      btn.innerHTML = meta.icon + ' ' + meta.title;
+      btn.onclick = function() {
+        if (isMinimized) {
+          openWindow(id);
+        } else if (isActive) {
+          minimizeWindow(id);
+        } else {
+          bringToFront('win-' + id);
+        }
+      };
+      container.appendChild(btn);
+    });
+  }
+
+  // ── Dragging ──
+  window.startDrag = function(e, winId) {
+    if (e.target.closest('.titlebar-btn')) return;
+    const el = document.getElementById(winId);
+    if (!el || el.classList.contains('maximized-win')) return;
+    bringToFront(winId);
+
+    const rect = el.getBoundingClientRect();
+    dragState = {
+      el: el,
+      offsetX: e.clientX - rect.left,
+      offsetY: e.clientY - rect.top
+    };
+
+    e.preventDefault();
+  };
+
+  document.addEventListener('mousemove', function(e) {
+    if (!dragState) return;
+    const x = e.clientX - dragState.offsetX;
+    const y = e.clientY - dragState.offsetY;
+    dragState.el.style.left = Math.max(0, x) + 'px';
+    dragState.el.style.top = Math.max(0, Math.min(y, window.innerHeight - 82)) + 'px';
+  });
+
+  document.addEventListener('mouseup', function() {
+    dragState = null;
+  });
+
+  // Touch drag support
+  document.addEventListener('touchstart', function(e) {
+    const titlebar = e.target.closest('.window-titlebar');
+    if (!titlebar || e.target.closest('.titlebar-btn')) return;
+    const win = titlebar.closest('.os-window');
+    if (!win || win.classList.contains('maximized-win')) return;
+
+    const touch = e.touches[0];
+    const rect = win.getBoundingClientRect();
+    dragState = {
+      el: win,
+      offsetX: touch.clientX - rect.left,
+      offsetY: touch.clientY - rect.top
+    };
+    bringToFront(win.id);
+  }, {passive: true});
+
+  document.addEventListener('touchmove', function(e) {
+    if (!dragState) return;
+    const touch = e.touches[0];
+    const x = touch.clientX - dragState.offsetX;
+    const y = touch.clientY - dragState.offsetY;
+    dragState.el.style.left = Math.max(0, x) + 'px';
+    dragState.el.style.top = Math.max(0, Math.min(y, window.innerHeight - 82)) + 'px';
+    e.preventDefault();
+  }, {passive: false});
+
+  document.addEventListener('touchend', function() {
+    dragState = null;
+  });
+
+  // ── Desktop icon select ──
+  window.selectIcon = function(el) {
+    document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
+    el.classList.add('selected');
+  };
+
+  // Click desktop to deselect
+  document.getElementById('desktop').addEventListener('click', function(e) {
+    if (e.target === this || e.target.id === 'desktop') {
+      document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
+    }
+  });
+
+  // ── Start Menu ──
+  window.toggleStartMenu = function(e) {
+    e.stopPropagation();
+    document.getElementById('start-menu').classList.toggle('open');
+  };
+
+  window.closeStartMenu = function() {
+    document.getElementById('start-menu').classList.remove('open');
+  };
+
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('#start-menu') && !e.target.closest('#start-btn')) {
+      closeStartMenu();
+    }
+  });
+
+  // ── Clock ──
+  function updateClock() {
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2, '0');
+    const m = String(now.getMinutes()).padStart(2, '0');
+    document.getElementById('clock').textContent = h + ':' + m;
+  }
+  updateClock();
+  setInterval(updateClock, 10000);
+
+  // ── Skill bar animation ──
+  function animateSkillBars(winEl) {
+    const bars = winEl.querySelectorAll('.skill-bar-fill');
+    bars.forEach(function(bar) {
+      bar.style.width = '0';
+      setTimeout(function() {
+        bar.style.width = bar.dataset.width;
+      }, 100);
+    });
+  }
+
+  // ── Init: open 3 windows staggered ──
+  function init() {
+    // Mark initial open windows
+    ['experiencia', 'proyecto', 'sobre-mi'].forEach(function(id, i) {
+      const el = document.getElementById('win-' + id);
+      if (el) {
+        el.classList.remove('minimized');
+        openWindows.add(id);
+        zCounter++;
+        el.style.zIndex = zCounter;
+      }
+    });
+    // Sobre Mi on top and active
+    bringToFront('win-sobre-mi');
+    updateTaskbar();
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>

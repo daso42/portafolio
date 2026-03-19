@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diego Santibanez Oyarce — Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: #f8f7f4;
+            color: #1a1a1a;
+            line-height: 1.85;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ── NAV ── */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(248, 247, 244, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .top-bar-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 40px;
+        }
+
+        .magazine-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .issue-number {
+            font-family: 'Lato', sans-serif;
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #888;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-family: 'Lato', sans-serif;
+            font-size: 11px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: #1a1a1a;
+            position: relative;
+            padding-bottom: 2px;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #c8a96e;
+            transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* ── HERO ── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 160px 40px 100px;
+            position: relative;
+        }
+
+        .hero-kicker {
+            font-family: 'Lato', sans-serif;
+            font-size: 12px;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: #c8a96e;
+            margin-bottom: 40px;
+        }
+
+        .hero-name {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(60px, 10vw, 130px);
+            font-weight: 900;
+            line-height: 1.0;
+            letter-spacing: -2px;
+            margin-bottom: 30px;
+            color: #1a1a1a;
+        }
+
+        .hero-name span {
+            display: block;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(24px, 3vw, 40px);
+            font-weight: 400;
+            font-style: italic;
+            color: #888;
+            margin-bottom: 50px;
+        }
+
+        .hero-line {
+            width: 60px;
+            height: 1px;
+            background: #c8a96e;
+            margin: 0 auto 30px;
+        }
+
+        .hero-scroll {
+            font-family: 'Lato', sans-serif;
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #aaa;
+            position: absolute;
+            bottom: 50px;
+            animation: fadeInUp 1s ease 1.5s both;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── SECTION UTILITIES ── */
+        .section-contained {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 100px 40px;
+        }
+
+        .section-wide {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 100px 40px;
+        }
+
+        .section-full-bleed {
+            width: 100%;
+            padding: 100px 40px;
+        }
+
+        .section-label {
+            font-family: 'Lato', sans-serif;
+            font-size: 11px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: #c8a96e;
+            margin-bottom: 16px;
+        }
+
+        .section-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(42px, 6vw, 80px);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -1px;
+            margin-bottom: 50px;
+        }
+
+        .section-heading-sm {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(32px, 4vw, 56px);
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 40px;
+        }
+
+        .decorative-line {
+            width: 50px;
+            height: 1px;
+            background: #c8a96e;
+            margin-bottom: 40px;
+        }
+
+        /* ── BIO / FEATURE ARTICLE ── */
+        .bio-section {
+            background: #f8f7f4;
+        }
+
+        .bio-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: start;
+        }
+
+        .bio-left .section-label {
+            margin-bottom: 20px;
+        }
+
+        .bio-image-block {
+            width: 100%;
+            aspect-ratio: 3/4;
+            background: linear-gradient(145deg, #e8e4dc 0%, #d4cfc5 50%, #c8a96e 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bio-image-block::after {
+            content: 'DSO';
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            font-family: 'Playfair Display', serif;
+            font-size: 80px;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.25);
+            line-height: 1;
+        }
+
+        .bio-text {
+            font-family: 'Lato', sans-serif;
+            font-size: 17px;
+            line-height: 1.9;
+            color: #444;
+        }
+
+        .bio-text::first-letter {
+            font-family: 'Playfair Display', serif;
+            font-size: 72px;
+            font-weight: 700;
+            float: left;
+            line-height: 0.8;
+            margin-right: 12px;
+            margin-top: 8px;
+            color: #1a1a1a;
+        }
+
+        /* ── PULL QUOTE ── */
+        .pull-quote-section {
+            background: #e8e4dc;
+            padding: 80px 40px;
+            text-align: center;
+        }
+
+        .pull-quote {
+            max-width: 900px;
+            margin: 0 auto;
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(26px, 3.5vw, 42px);
+            font-style: italic;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #1a1a1a;
+        }
+
+        .pull-quote::before {
+            content: '\201C';
+            display: block;
+            font-size: 80px;
+            color: #c8a96e;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .pull-quote-attr {
+            margin-top: 30px;
+            font-family: 'Lato', sans-serif;
+            font-size: 12px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #888;
+        }
+
+        /* ── EXPERIENCE ── */
+        .exp-section {
+            background: #f8f7f4;
+        }
+
+        .exp-grid {
+            display: grid;
+            gap: 0;
+        }
+
+        .exp-item {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 60px;
+            padding: 60px 0;
+            border-top: 1px solid #ddd;
+            align-items: start;
+        }
+
+        .exp-item:last-child {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .exp-meta {
+            position: sticky;
+            top: 100px;
+        }
+
+        .exp-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 64px;
+            font-weight: 300;
+            color: #e8e4dc;
+            line-height: 1;
+            margin-bottom: 16px;
+        }
+
+        .exp-date {
+            font-family: 'Lato', sans-serif;
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        .exp-org {
+            font-family: 'Lato', sans-serif;
+            font-size: 13px;
+            letter-spacing: 1px;
+            color: #c8a96e;
+        }
+
+        .exp-role {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(28px, 3vw, 44px);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 28px;
+        }
+
+        .exp-details {
+            list-style: none;
+            padding: 0;
+        }
+
+        .exp-details li {
+            padding: 10px 0;
+            font-family: 'Lato', sans-serif;
+            font-size: 15px;
+            line-height: 1.8;
+            color: #555;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .exp-details li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 20px;
+            width: 6px;
+            height: 6px;
+            background: #c8a96e;
+            border-radius: 50%;
+        }
+
+        .exp-details a {
+            color: #1a1a1a;
+            text-decoration: none;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 1px;
+        }
+
+        .exp-details a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #c8a96e;
+            transition: width 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .exp-details a:hover::after {
+            width: 100%;
+        }
+
+        /* ── SKILLS ── */
+        .skills-section {
+            background: #1a1a1a;
+            color: #f8f7f4;
+        }
+
+        .skills-section .section-label {
+            color: #c8a96e;
+        }
+
+        .skills-section .section-heading {
+            color: #f8f7f4;
+        }
+
+        .skills-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+        }
+
+        .skills-category-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 600;
+            font-style: italic;
+            margin-bottom: 36px;
+            color: #f8f7f4;
+        }
+
+        .skills-list {
+            list-style: none;
+            columns: 2;
+            column-gap: 40px;
+        }
+
+        .skills-list li {
+            font-family: 'Lato', sans-serif;
+            font-size: 15px;
+            line-height: 1.8;
+            color: #bbb;
+            padding: 8px 0;
+            padding-left: 18px;
+            position: relative;
+            break-inside: avoid;
+        }
+
+        .skills-list li::before {
+            content: '\2022';
+            position: absolute;
+            left: 0;
+            color: #c8a96e;
+            font-size: 18px;
+        }
+
+        /* ── PROJECT ── */
+        .project-section {
+            background: #2c5f2d;
+            color: #f8f7f4;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-section::before {
+            content: 'PROYECTO';
+            position: absolute;
+            top: -20px;
+            right: -30px;
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(100px, 15vw, 220px);
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.04);
+            letter-spacing: 10px;
+            pointer-events: none;
+        }
+
+        .project-section .section-label {
+            color: rgba(200, 169, 110, 0.8);
+        }
+
+        .project-inner {
+            max-width: 900px;
+        }
+
+        .project-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(36px, 5vw, 64px);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 16px;
+        }
+
+        .project-year {
+            font-family: 'Lato', sans-serif;
+            font-size: 13px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(248, 247, 244, 0.5);
+            margin-bottom: 30px;
+        }
+
+        .project-desc {
+            font-family: 'Lato', sans-serif;
+            font-size: 18px;
+            line-height: 1.9;
+            color: rgba(248, 247, 244, 0.85);
+            margin-bottom: 40px;
+            max-width: 700px;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+
+        .project-tech span {
+            font-family: 'Lato', sans-serif;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 8px 20px;
+            border: 1px solid rgba(248, 247, 244, 0.25);
+            color: rgba(248, 247, 244, 0.75);
+            transition: all 0.3s ease;
+        }
+
+        .project-tech span:hover {
+            border-color: #c8a96e;
+            color: #c8a96e;
+        }
+
+        .project-link {
+            display: inline-block;
+            font-family: 'Lato', sans-serif;
+            font-size: 13px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #f8f7f4;
+            text-decoration: none;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #c8a96e;
+            transition: border-color 0.3s ease, color 0.3s ease;
+        }
+
+        .project-link:hover {
+            color: #c8a96e;
+        }
+
+        /* ── EDUCATION ── */
+        .edu-section {
+            background: #f8f7f4;
+            text-align: center;
+        }
+
+        .edu-line {
+            width: 40px;
+            height: 1px;
+            background: #c8a96e;
+            margin: 0 auto 40px;
+        }
+
+        .edu-degree {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(30px, 4vw, 52px);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .edu-school {
+            font-family: 'Lato', sans-serif;
+            font-size: 14px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 10px;
+        }
+
+        .edu-year {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-style: italic;
+            color: #c8a96e;
+        }
+
+        .edu-line-bottom {
+            width: 40px;
+            height: 1px;
+            background: #c8a96e;
+            margin: 50px auto 0;
+        }
+
+        /* ── CERTIFICATES ── */
+        .cert-section {
+            background: #e8e4dc;
+        }
+
+        .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+        }
+
+        .cert-card {
+            background: #f8f7f4;
+            padding: 40px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .cert-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+        }
+
+        .cert-year {
+            font-family: 'Lato', sans-serif;
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #c8a96e;
+            margin-bottom: 12px;
+        }
+
+        .cert-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .cert-issuer {
+            font-family: 'Lato', sans-serif;
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 20px;
+        }
+
+        .cert-link {
+            font-family: 'Lato', sans-serif;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #1a1a1a;
+            text-decoration: none;
+            position: relative;
+            padding-bottom: 2px;
+        }
+
+        .cert-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #c8a96e;
+            transition: width 0.35s ease;
+        }
+
+        .cert-link:hover::after {
+            width: 100%;
+        }
+
+        /* ── COLOPHON / CONTACT ── */
+        .colophon {
+            background: #1a1a1a;
+            color: #f8f7f4;
+            padding: 80px 40px 50px;
+        }
+
+        .colophon-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .colophon-top {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 60px;
+            padding-bottom: 60px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 40px;
+        }
+
+        .colophon-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .colophon-subtext {
+            font-family: 'Lato', sans-serif;
+            font-size: 14px;
+            color: #888;
+            line-height: 1.8;
+        }
+
+        .colophon-label {
+            font-family: 'Lato', sans-serif;
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #c8a96e;
+            margin-bottom: 20px;
+        }
+
+        .colophon-links {
+            list-style: none;
+        }
+
+        .colophon-links li {
+            margin-bottom: 14px;
+        }
+
+        .colophon-links a {
+            font-family: 'Lato', sans-serif;
+            font-size: 15px;
+            color: #ccc;
+            text-decoration: none;
+            position: relative;
+            padding-bottom: 2px;
+            transition: color 0.3s ease;
+        }
+
+        .colophon-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #c8a96e;
+            transition: width 0.35s ease;
+        }
+
+        .colophon-links a:hover {
+            color: #f8f7f4;
+        }
+
+        .colophon-links a:hover::after {
+            width: 100%;
+        }
+
+        .colophon-contact-item {
+            font-family: 'Lato', sans-serif;
+            font-size: 15px;
+            color: #888;
+            margin-bottom: 10px;
+        }
+
+        .colophon-contact-item strong {
+            color: #ccc;
+            font-weight: 400;
+        }
+
+        .colophon-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .colophon-copyright {
+            font-family: 'Lato', sans-serif;
+            font-size: 12px;
+            letter-spacing: 2px;
+            color: #555;
+        }
+
+        .colophon-made {
+            font-family: 'Playfair Display', serif;
+            font-size: 14px;
+            font-style: italic;
+            color: #555;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            .bio-layout {
+                grid-template-columns: 1fr;
+                gap: 50px;
+            }
+
+            .bio-image-block {
+                aspect-ratio: 16/9;
+            }
+
+            .exp-item {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .exp-meta {
+                position: static;
+            }
+
+            .exp-number {
+                font-size: 42px;
+                margin-bottom: 8px;
+            }
+
+            .skills-layout {
+                grid-template-columns: 1fr;
+                gap: 50px;
+            }
+
+            .colophon-top {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .top-bar-inner {
+                padding: 14px 20px;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .nav-links {
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+
+            .nav-links a {
+                font-size: 10px;
+            }
+
+            .issue-number {
+                display: none;
+            }
+
+            .hero {
+                padding: 140px 24px 80px;
+            }
+
+            .section-contained,
+            .section-wide,
+            .section-full-bleed {
+                padding: 70px 24px;
+            }
+
+            .cert-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .skills-list {
+                columns: 1;
+            }
+
+            .colophon {
+                padding: 60px 24px 40px;
+            }
+
+            .colophon-bottom {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .magazine-name {
+                font-size: 16px;
+                letter-spacing: 2px;
+            }
+
+            .hero-name {
+                letter-spacing: -1px;
+            }
+
+            .exp-role {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ─── NAVIGATION ─── -->
+    <nav class="top-bar">
+        <div class="top-bar-inner">
+            <div class="magazine-name">DSO</div>
+            <ul class="nav-links">
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#sobre-mi">Sobre mi</a></li>
+                <li><a href="#experiencia">Experiencia</a></li>
+                <li><a href="#habilidades">Habilidades</a></li>
+                <li><a href="#proyecto">Proyecto</a></li>
+                <li><a href="#educacion">Educacion</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+            <div class="issue-number">No. 01 — 2026</div>
+        </div>
+    </nav>
+
+    <!-- ─── HERO ─── -->
+    <section class="hero" id="inicio">
+        <div class="hero-kicker">Portfolio &mdash; Ciencia de Datos</div>
+        <h1 class="hero-name">
+            <span>Diego</span>
+            <span>Santibanez</span>
+            <span>Oyarce</span>
+        </h1>
+        <div class="hero-line"></div>
+        <p class="hero-title">Cientifico de Datos</p>
+        <div class="hero-scroll">Desplazar hacia abajo</div>
+    </section>
+
+    <!-- ─── BIO / FEATURE ARTICLE ─── -->
+    <section class="bio-section" id="sobre-mi">
+        <div class="section-wide">
+            <div class="bio-layout">
+                <div class="bio-left">
+                    <div class="bio-image-block"></div>
+                </div>
+                <div class="bio-right">
+                    <div class="section-label">Sobre Mi</div>
+                    <h2 class="section-heading-sm">El perfil<br>de un cientifico<br>de datos</h2>
+                    <div class="decorative-line"></div>
+                    <p class="bio-text">Egresado de Ingenieria Civil en Ciencia de datos en Agosto 2025, apasionado por la tecnologia y con un gran interes en el uso de la inteligencia artificial como herramienta para la resolucion de problemas del mundo real. Mi formacion academica me proporciono una solida comprension de algoritmos de aprendizaje automatico, analisis y visualizacion de datos. Me gusta proponerme desafios donde pueda poner en practica mis conocimientos y donde ademas pueda aprender cosas nuevas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── PULL QUOTE ─── -->
+    <section class="pull-quote-section">
+        <blockquote class="pull-quote">
+            Me gusta proponerme desafios donde pueda poner en practica mis conocimientos y donde ademas pueda aprender cosas nuevas.
+        </blockquote>
+        <p class="pull-quote-attr">Diego Santibanez Oyarce</p>
+    </section>
+
+    <!-- ─── EXPERIENCE ─── -->
+    <section class="exp-section" id="experiencia">
+        <div class="section-wide">
+            <div class="section-label">Trayectoria Profesional</div>
+            <h2 class="section-heading">Experiencia</h2>
+
+            <div class="exp-grid">
+
+                <!-- EXP 1 -->
+                <div class="exp-item">
+                    <div class="exp-meta">
+                        <div class="exp-number">01</div>
+                        <div class="exp-date">Dic 2023 — Sep 2025</div>
+                        <div class="exp-org">Universidad Tecnologica Metropolitana (UTEM)</div>
+                    </div>
+                    <div class="exp-content">
+                        <h3 class="exp-role">Asistente de Investigacion</h3>
+                        <ul class="exp-details">
+                            <li>Presentacion poster en "1ras Jornadas de Ciencia de Datos y Salud Publica" (U. de Chile, Ene 2024) &mdash; <a href="https://drive.google.com/file/d/124VDD5x6pBidyC1Wx4ZLehAQixdjZ9dS/view?usp=sharing" target="_blank">Certificado</a> · <a href="https://drive.google.com/file/d/1gRjnIt9xa5CYPhbgGFTKR1o5WV3RB8H6/view?usp=drive_link" target="_blank">Poster</a></li>
+                            <li>Flash Talk y poster en Carla2024 (Sep 2024) &mdash; <a href="https://drive.google.com/file/d/1jHc_2fZiakh2G9t8EkiB7Z3l0iuWBJ7n/view?usp=sharing" target="_blank">Certificado</a> · <a href="https://drive.google.com/file/d/1jfS4S75dwoBnUMZ3xeQOFfBzX6HP5gpc/view?usp=drive_link" target="_blank">Poster</a></li>
+                            <li>Poster en "III Congreso Vive la Investigacion 2024" (Oct 2024) &mdash; <a href="https://drive.google.com/file/d/1unqW5oOxe5wl84-vmq4Y8AhXmD1sJJL_/view?usp=sharing" target="_blank">Certificado</a> · <a href="https://drive.google.com/file/d/1OEKXi8gl7Z9bGySQ8esoomkDJLPiBLCE/view?usp=drive_link" target="_blank">Poster</a></li>
+                            <li>Poster en "XIV Congreso Argentino de Bioinformatica" (Nov 2024) &mdash; <a href="https://drive.google.com/file/d/1br_Vv35RmHxvyPScFlhDCJxucFz0ckii/view?usp=sharing" target="_blank">Certificado</a> · <a href="https://drive.google.com/file/d/1wLUe3ssEY_XcOgoTbVJj0B5C7plK-G9n/view?usp=drive_link" target="_blank">Poster</a></li>
+                            <li>Flash Talk en "III Reunion Sociedad Chilena de Bioinformatica" (Nov 2024). Invitacion a publicar en "Bioinformatics Advances (Oxford University Press)" &mdash; <a href="https://drive.google.com/file/d/1-dZ_CdZlYkd58OlGr3v92n8pLshnurje/view?usp=sharing" target="_blank">Certificado</a></li>
+                            <li>Poster en Carla2025 (Sep 2025). Premio al mejor poster &mdash; <a href="https://drive.google.com/file/d/10tcRQonSWMgKQ8FciWOsCobzQAlWCPr9/view?usp=sharing" target="_blank">Certificado</a> · <a href="https://drive.google.com/file/d/1M_MhsoB8BCUO5LITTVvQw0Hi9l7RU4Vj/view?usp=sharing" target="_blank">Premio</a> · <a href="https://drive.google.com/file/d/14Fc9u_zCtxiKG7RKW3W85Rv6X4OJy5HP/view?usp=drive_link" target="_blank">Poster</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- EXP 2 -->
+                <div class="exp-item">
+                    <div class="exp-meta">
+                        <div class="exp-number">02</div>
+                        <div class="exp-date">Feb 2025 — Sep 2025</div>
+                        <div class="exp-org">Universidad Tecnologica Metropolitana (UTEM)</div>
+                    </div>
+                    <div class="exp-content">
+                        <h3 class="exp-role">Tecnico para Analisis de Datos Avanzado</h3>
+                        <ul class="exp-details">
+                            <li>Web scrapping con Python (Selenium y BeautifulSoup)</li>
+                            <li>Dashboard interactivos con Plotly y Streamlit</li>
+                            <li>Bases de datos en MariaDB y PostgreSQL</li>
+                            <li>Procesamiento de lenguaje natural para analisis de datos</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- EXP 3 -->
+                <div class="exp-item">
+                    <div class="exp-meta">
+                        <div class="exp-number">03</div>
+                        <div class="exp-date">Mar 2025 — Jul 2025</div>
+                        <div class="exp-org">Universidad Tecnologica Metropolitana (UTEM)</div>
+                    </div>
+                    <div class="exp-content">
+                        <h3 class="exp-role">Ayudante de Catedra &mdash; Visualizacion de Datos</h3>
+                        <ul class="exp-details">
+                            <li>Ensenanza y mentoria a estudiantes en tecnicas de visualizacion de datos</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- EXP 4 -->
+                <div class="exp-item">
+                    <div class="exp-meta">
+                        <div class="exp-number">04</div>
+                        <div class="exp-date">Ago 2024 — Ene 2025</div>
+                        <div class="exp-org">Contraloria General de la Republica</div>
+                    </div>
+                    <div class="exp-content">
+                        <h3 class="exp-role">Practicante Profesional</h3>
+                        <ul class="exp-details">
+                            <li>Analisis de datos con Impala y Oracle</li>
+                            <li>Consultas SQL y automatizacion con Python</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── SKILLS ─── -->
+    <section class="skills-section section-full-bleed" id="habilidades">
+        <div style="max-width: 1100px; margin: 0 auto;">
+            <div class="section-label">Competencias</div>
+            <h2 class="section-heading">Habilidades</h2>
+
+            <div class="skills-layout">
+                <div>
+                    <h3 class="skills-category-title">Hard Skills</h3>
+                    <ul class="skills-list">
+                        <li>Python</li>
+                        <li>SQL</li>
+                        <li>TensorFlow</li>
+                        <li>scikit-learn</li>
+                        <li>Pandas</li>
+                        <li>Jupyter Notebooks</li>
+                        <li>Visualizacion de datos</li>
+                        <li>Plotly</li>
+                        <li>Streamlit</li>
+                        <li>Web Scraping</li>
+                        <li>PostgreSQL</li>
+                        <li>MariaDB</li>
+                        <li>SpaCy</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="skills-category-title">Soft Skills</h3>
+                    <ul class="skills-list">
+                        <li>Resolucion de Problemas</li>
+                        <li>Pensamiento Critico</li>
+                        <li>Adaptabilidad</li>
+                        <li>Mentoria</li>
+                        <li>Curiosidad intelectual</li>
+                        <li>Responsabilidad</li>
+                        <li>Mentalidad de experimentacion</li>
+                        <li>Mentalidad analitica</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── PROJECT ─── -->
+    <section class="project-section section-full-bleed" id="proyecto">
+        <div style="max-width: 1100px; margin: 0 auto; position: relative; z-index: 1;">
+            <div class="section-label">Proyecto Destacado</div>
+            <div class="project-inner">
+                <h2 class="project-title">Dashboard de Avance de Proyecto</h2>
+                <div class="project-year">2025</div>
+                <p class="project-desc">Dashboard interactivo con Streamlit para el seguimiento y visualizacion del avance de proyectos, integrando multiples fuentes de datos y representaciones graficas.</p>
+                <div class="project-tech">
+                    <span>Python</span>
+                    <span>Streamlit</span>
+                    <span>Pandas</span>
+                    <span>Plotly</span>
+                    <span>DuckDB</span>
+                    <span>Folium</span>
+                </div>
+                <a href="https://dashboarddatalake-fiut-utem.streamlit.app/" target="_blank" class="project-link">Ver proyecto en vivo &rarr;</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── EDUCATION ─── -->
+    <section class="edu-section" id="educacion">
+        <div class="section-contained" style="text-align: center;">
+            <div class="section-label">Formacion Academica</div>
+            <div class="edu-line"></div>
+            <h2 class="edu-degree">Ingeniero Civil en<br>Ciencia de Datos</h2>
+            <p class="edu-school">Universidad Tecnologica Metropolitana</p>
+            <p class="edu-year">2020 &mdash; 2025</p>
+            <div class="edu-line-bottom"></div>
+        </div>
+    </section>
+
+    <!-- ─── CERTIFICATES ─── -->
+    <section class="cert-section">
+        <div class="section-wide">
+            <div class="section-label">Credenciales</div>
+            <h2 class="section-heading-sm">Certificados</h2>
+
+            <div class="cert-grid">
+                <div class="cert-card">
+                    <div class="cert-year">2025</div>
+                    <h3 class="cert-name">Power BI</h3>
+                    <p class="cert-issuer">Santander X</p>
+                    <a href="https://drive.google.com/file/d/1IOp4gjfLcW8XhqbiwwOd9dzlz8l60P5q/view?usp=drive_link" target="_blank" class="cert-link">Ver certificado</a>
+                </div>
+                <div class="cert-card">
+                    <div class="cert-year">2025</div>
+                    <h3 class="cert-name">Ingles B2 Upper Intermediate</h3>
+                    <p class="cert-issuer">Certificacion Internacional</p>
+                    <a href="https://drive.google.com/file/d/1KT12-fKSs20wCu_AO6c6nEHYi5_v0mK1/view?usp=sharing" target="_blank" class="cert-link">Ver certificado</a>
+                </div>
+                <div class="cert-card">
+                    <div class="cert-year">2024</div>
+                    <h3 class="cert-name">AWS Data Center Technician</h3>
+                    <p class="cert-issuer">Amazon Web Services</p>
+                    <a href="https://drive.google.com/file/d/1pYCaTdbJQAmruxvoknp92QbIys4Bt7Ws/view?usp=sharing" target="_blank" class="cert-link">Ver certificado</a>
+                </div>
+                <div class="cert-card">
+                    <div class="cert-year">2025</div>
+                    <h3 class="cert-name">Introduccion a la Ciencia de Datos</h3>
+                    <p class="cert-issuer">Santander Open Academy</p>
+                    <a href="https://drive.google.com/file/d/1vmeQuzoZEwUTC0Pz7Xl_rlobqXcreX5w/view?usp=sharing" target="_blank" class="cert-link">Ver certificado</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── COLOPHON / CONTACT ─── -->
+    <footer class="colophon" id="contacto">
+        <div class="colophon-inner">
+            <div class="colophon-top">
+                <div>
+                    <h2 class="colophon-heading">Hablemos.</h2>
+                    <p class="colophon-subtext">Estoy disponible para nuevas oportunidades, colaboraciones y proyectos interesantes en el area de ciencia de datos.</p>
+                </div>
+                <div>
+                    <div class="colophon-label">Contacto</div>
+                    <div class="colophon-contact-item"><strong>Email:</strong> <a href="mailto:dsantibanezo@utem.cl" target="_blank" style="color: #ccc; text-decoration: none;">dsantibanezo@utem.cl</a></div>
+                    <div class="colophon-contact-item"><strong>Telefono:</strong> +56 9 8434 1477</div>
+                </div>
+                <div>
+                    <div class="colophon-label">Redes</div>
+                    <ul class="colophon-links">
+                        <li><a href="https://www.linkedin.com/in/diego-santibanez-oyarce/" target="_blank">LinkedIn</a></li>
+                        <li><a href="https://github.com/daso42" target="_blank">GitHub</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="colophon-bottom">
+                <div class="colophon-copyright">&copy; 2026 Diego Santibanez Oyarce</div>
+                <div class="colophon-made">Edicion No. 01</div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

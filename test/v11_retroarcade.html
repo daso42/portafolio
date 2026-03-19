@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diego Santibanez Oyarce | Retro Arcade Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0d0d0d;
+            --red: #ff004d;
+            --green: #00e436;
+            --blue: #29adff;
+            --yellow: #ffec27;
+            --light: #fff1e8;
+            --dark-border: #1a1a2e;
+            --panel-bg: #111122;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--light);
+            font-family: 'VT323', monospace;
+            font-size: 20px;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* CRT Scanline Overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15) 0px,
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 3px
+            );
+        }
+
+        /* ====== NAVIGATION HUD ====== */
+        .hud-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: var(--bg);
+            border-bottom: 4px solid var(--red);
+            box-shadow: 0 4px 0 0 var(--yellow), 0 8px 0 0 var(--bg);
+            padding: 8px 0;
+        }
+
+        .hud-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            padding: 0 16px;
+            gap: 8px;
+        }
+
+        .hud-stats {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .hud-stat {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hud-stat .label {
+            color: var(--yellow);
+        }
+
+        .hud-stat .value {
+            color: var(--light);
+        }
+
+        .hp-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .hp-bar {
+            width: 80px;
+            height: 12px;
+            background: #333;
+            position: relative;
+            box-shadow:
+                -2px 0 0 0 var(--light),
+                2px 0 0 0 var(--light),
+                0 -2px 0 0 var(--light),
+                0 2px 0 0 var(--light);
+        }
+
+        .hp-fill {
+            height: 100%;
+            width: 85%;
+            background: var(--green);
+            image-rendering: pixelated;
+            animation: hpPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes hpPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .hud-nav-links {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .hud-nav-links a {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 9px;
+            color: var(--light);
+            text-decoration: none;
+            padding: 6px 10px;
+            background: var(--panel-bg);
+            border: none;
+            box-shadow:
+                2px 2px 0 0 var(--blue),
+                -2px -2px 0 0 rgba(255,255,255,0.1);
+            transition: all 0.1s;
+            cursor: pointer;
+        }
+
+        .hud-nav-links a:hover {
+            transform: translateY(2px);
+            box-shadow:
+                0px 0px 0 0 var(--blue);
+            color: var(--yellow);
+        }
+
+        /* ====== MAIN CONTENT ====== */
+        .main-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 100px 20px 60px;
+        }
+
+        /* ====== PIXEL BORDERS MIXIN ====== */
+        .pixel-box {
+            background: var(--panel-bg);
+            padding: 24px;
+            margin-bottom: 40px;
+            box-shadow:
+                4px 0 0 0 var(--blue),
+                -4px 0 0 0 var(--blue),
+                0 4px 0 0 var(--blue),
+                0 -4px 0 0 var(--blue),
+                8px 0 0 0 var(--red),
+                -8px 0 0 0 var(--red),
+                0 8px 0 0 var(--red),
+                0 -8px 0 0 var(--red);
+        }
+
+        .pixel-box-green {
+            box-shadow:
+                4px 0 0 0 var(--green),
+                -4px 0 0 0 var(--green),
+                0 4px 0 0 var(--green),
+                0 -4px 0 0 var(--green),
+                8px 0 0 0 var(--yellow),
+                -8px 0 0 0 var(--yellow),
+                0 8px 0 0 var(--yellow),
+                0 -8px 0 0 var(--yellow);
+        }
+
+        /* ====== STAGE HEADERS ====== */
+        .stage-header {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 32px;
+            padding: 16px;
+            position: relative;
+        }
+
+        .stage-header .stage-num {
+            color: var(--yellow);
+            display: block;
+            font-size: 12px;
+            margin-bottom: 8px;
+            letter-spacing: 4px;
+        }
+
+        .stage-header .stage-title {
+            color: var(--red);
+            text-shadow: 2px 2px 0 #7e0025;
+        }
+
+        /* Pixel divider */
+        .pixel-divider {
+            text-align: center;
+            margin: 48px 0;
+            font-size: 24px;
+            color: var(--blue);
+            letter-spacing: 8px;
+            user-select: none;
+        }
+
+        .pixel-divider::before {
+            content: '+ + + + + + + + + + + + +';
+        }
+
+        /* ====== HERO / START SCREEN ====== */
+        .hero {
+            text-align: center;
+            padding: 60px 20px 40px;
+            position: relative;
+        }
+
+        .hero-title-wrapper {
+            margin-bottom: 20px;
+        }
+
+        .hero-pretitle {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 11px;
+            color: var(--green);
+            letter-spacing: 3px;
+            margin-bottom: 16px;
+            animation: blink 1.2s step-end infinite;
+        }
+
+        .hero-name {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 28px;
+            color: var(--yellow);
+            text-shadow:
+                3px 3px 0 var(--red),
+                6px 6px 0 rgba(0,0,0,0.5);
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+
+        .hero-role {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            color: var(--blue);
+            letter-spacing: 2px;
+        }
+
+        .hero-bio {
+            font-family: 'VT323', monospace;
+            font-size: 22px;
+            color: var(--light);
+            max-width: 700px;
+            margin: 30px auto 0;
+            line-height: 1.6;
+            text-align: left;
+            padding: 20px;
+            background: rgba(17, 17, 34, 0.8);
+            box-shadow:
+                4px 0 0 0 var(--green),
+                -4px 0 0 0 var(--green),
+                0 4px 0 0 var(--green),
+                0 -4px 0 0 var(--green);
+        }
+
+        .hero-bio::before {
+            content: '> ';
+            color: var(--green);
+        }
+
+        /* Blinking animation */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Flashing border for bonus stage */
+        @keyframes flashBorder {
+            0%, 100% {
+                box-shadow:
+                    4px 0 0 0 var(--red),
+                    -4px 0 0 0 var(--red),
+                    0 4px 0 0 var(--red),
+                    0 -4px 0 0 var(--red),
+                    8px 0 0 0 var(--yellow),
+                    -8px 0 0 0 var(--yellow),
+                    0 8px 0 0 var(--yellow),
+                    0 -8px 0 0 var(--yellow);
+            }
+            25% {
+                box-shadow:
+                    4px 0 0 0 var(--yellow),
+                    -4px 0 0 0 var(--yellow),
+                    0 4px 0 0 var(--yellow),
+                    0 -4px 0 0 var(--yellow),
+                    8px 0 0 0 var(--green),
+                    -8px 0 0 0 var(--green),
+                    0 8px 0 0 var(--green),
+                    0 -8px 0 0 var(--green);
+            }
+            50% {
+                box-shadow:
+                    4px 0 0 0 var(--green),
+                    -4px 0 0 0 var(--green),
+                    0 4px 0 0 var(--green),
+                    0 -4px 0 0 var(--green),
+                    8px 0 0 0 var(--blue),
+                    -8px 0 0 0 var(--blue),
+                    0 8px 0 0 var(--blue),
+                    0 -8px 0 0 var(--blue);
+            }
+            75% {
+                box-shadow:
+                    4px 0 0 0 var(--blue),
+                    -4px 0 0 0 var(--blue),
+                    0 4px 0 0 var(--blue),
+                    0 -4px 0 0 var(--blue),
+                    8px 0 0 0 var(--red),
+                    -8px 0 0 0 var(--red),
+                    0 8px 0 0 var(--red),
+                    0 -8px 0 0 var(--red);
+            }
+        }
+
+        /* ====== EXPERIENCE - STAGE CLEARED CARDS ====== */
+        .stage-card {
+            background: var(--panel-bg);
+            padding: 24px;
+            margin-bottom: 32px;
+            box-shadow:
+                4px 0 0 0 var(--blue),
+                -4px 0 0 0 var(--blue),
+                0 4px 0 0 var(--blue),
+                0 -4px 0 0 var(--blue);
+            position: relative;
+        }
+
+        .stage-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px dashed var(--blue);
+        }
+
+        .stage-cleared-badge {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 9px;
+            color: var(--bg);
+            background: var(--green);
+            padding: 4px 10px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .stage-card-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 13px;
+            color: var(--yellow);
+            line-height: 1.6;
+        }
+
+        .stage-card-company {
+            font-family: 'VT323', monospace;
+            font-size: 22px;
+            color: var(--blue);
+        }
+
+        .stage-card-score {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            color: var(--red);
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .stage-card-score .score-label {
+            color: var(--yellow);
+            font-size: 8px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .stage-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .stage-card ul li {
+            padding: 4px 0 4px 20px;
+            position: relative;
+            font-size: 20px;
+            color: var(--light);
+        }
+
+        .stage-card ul li::before {
+            content: '\25B6';
+            position: absolute;
+            left: 0;
+            color: var(--green);
+            font-size: 12px;
+            top: 8px;
+        }
+
+        .stage-card ul ul li {
+            padding-left: 24px;
+            font-size: 18px;
+            color: #c0c0d0;
+        }
+
+        .stage-card ul ul li::before {
+            content: '\25AA';
+            color: var(--blue);
+            font-size: 10px;
+            top: 6px;
+        }
+
+        .stage-card a {
+            color: var(--blue);
+            text-decoration: none;
+            border-bottom: 1px dashed var(--blue);
+            transition: color 0.15s;
+        }
+
+        .stage-card a:hover {
+            color: var(--yellow);
+            border-bottom-color: var(--yellow);
+        }
+
+        .power-ups {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .power-up {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 8px;
+            color: var(--bg);
+            background: var(--blue);
+            padding: 4px 8px;
+        }
+
+        .power-up.power-up-green { background: var(--green); }
+        .power-up.power-up-yellow { background: var(--yellow); }
+        .power-up.power-up-red { background: var(--red); color: var(--light); }
+
+        /* ====== SKILLS - RPG STATS TABLE ====== */
+        .skills-section {
+            padding: 0;
+        }
+
+        .skills-table-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            color: var(--yellow);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .stat-row {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #222;
+            gap: 12px;
+        }
+
+        .stat-name {
+            font-family: 'VT323', monospace;
+            font-size: 20px;
+            color: var(--light);
+            min-width: 200px;
+            flex-shrink: 0;
+        }
+
+        .stat-bar {
+            flex: 1;
+            font-family: 'VT323', monospace;
+            font-size: 22px;
+            letter-spacing: 1px;
+            line-height: 1;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .stat-bar .filled {
+            color: var(--green);
+        }
+
+        .stat-bar .empty {
+            color: #333;
+        }
+
+        .stat-level {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 9px;
+            color: var(--yellow);
+            min-width: 40px;
+            text-align: right;
+        }
+
+        .soft-skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .soft-skill-item {
+            font-family: 'VT323', monospace;
+            font-size: 22px;
+            padding: 10px 14px;
+            background: rgba(41, 173, 255, 0.1);
+            box-shadow:
+                2px 0 0 0 var(--blue),
+                -2px 0 0 0 var(--blue),
+                0 2px 0 0 var(--blue),
+                0 -2px 0 0 var(--blue);
+            text-align: center;
+            color: var(--blue);
+        }
+
+        /* ====== PROJECTS - BONUS STAGE ====== */
+        .bonus-stage {
+            background: var(--panel-bg);
+            padding: 28px;
+            margin-bottom: 32px;
+            animation: flashBorder 2s linear infinite;
+            position: relative;
+        }
+
+        .bonus-badge {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 11px;
+            color: var(--yellow);
+            text-align: center;
+            margin-bottom: 16px;
+            animation: blink 0.8s step-end infinite;
+        }
+
+        .bonus-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            color: var(--light);
+            margin-bottom: 8px;
+        }
+
+        .bonus-year {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            color: var(--red);
+            margin-bottom: 14px;
+        }
+
+        .bonus-desc {
+            font-family: 'VT323', monospace;
+            font-size: 22px;
+            color: var(--light);
+            margin-bottom: 14px;
+            line-height: 1.5;
+        }
+
+        .bonus-link {
+            display: inline-block;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            color: var(--bg);
+            background: var(--green);
+            padding: 8px 16px;
+            text-decoration: none;
+            box-shadow: 3px 3px 0 0 rgba(0,0,0,0.4);
+            transition: all 0.1s;
+        }
+
+        .bonus-link:hover {
+            transform: translateY(2px);
+            box-shadow: 1px 1px 0 0 rgba(0,0,0,0.4);
+        }
+
+        /* ====== EDUCATION - CHARACTER SELECT ====== */
+        .character-select {
+            text-align: center;
+        }
+
+        .character-frame {
+            display: inline-block;
+            padding: 32px;
+            background: var(--panel-bg);
+            box-shadow:
+                4px 0 0 0 var(--yellow),
+                -4px 0 0 0 var(--yellow),
+                0 4px 0 0 var(--yellow),
+                0 -4px 0 0 var(--yellow),
+                8px 0 0 0 var(--green),
+                -8px 0 0 0 var(--green),
+                0 8px 0 0 var(--green),
+                0 -8px 0 0 var(--green);
+            margin-bottom: 32px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .char-pixel-avatar {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 16px;
+            background: var(--blue);
+            image-rendering: pixelated;
+            box-shadow:
+                4px 0 0 0 var(--light),
+                -4px 0 0 0 var(--light),
+                0 4px 0 0 var(--light),
+                0 -4px 0 0 var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: var(--bg);
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .char-class {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 13px;
+            color: var(--yellow);
+            margin-bottom: 8px;
+        }
+
+        .char-school {
+            font-family: 'VT323', monospace;
+            font-size: 24px;
+            color: var(--blue);
+            margin-bottom: 4px;
+        }
+
+        .char-period {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            color: var(--red);
+            margin-bottom: 14px;
+        }
+
+        .char-desc {
+            font-family: 'VT323', monospace;
+            font-size: 20px;
+            color: var(--light);
+            line-height: 1.5;
+            text-align: left;
+        }
+
+        /* Certificates */
+        .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .cert-card {
+            background: var(--panel-bg);
+            padding: 16px;
+            box-shadow:
+                3px 0 0 0 var(--green),
+                -3px 0 0 0 var(--green),
+                0 3px 0 0 var(--green),
+                0 -3px 0 0 var(--green);
+            transition: all 0.1s;
+        }
+
+        .cert-card:hover {
+            transform: translateY(2px);
+        }
+
+        .cert-card a {
+            text-decoration: none;
+            display: block;
+        }
+
+        .cert-name {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 9px;
+            color: var(--yellow);
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .cert-issuer {
+            font-family: 'VT323', monospace;
+            font-size: 20px;
+            color: var(--blue);
+        }
+
+        .cert-year {
+            font-family: 'VT323', monospace;
+            font-size: 18px;
+            color: var(--red);
+        }
+
+        /* ====== CONTACT - INSERT COIN ====== */
+        .insert-coin-section {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .insert-coin-text {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 20px;
+            color: var(--yellow);
+            animation: blink 1s step-end infinite;
+            margin-bottom: 40px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .contact-item {
+            padding: 20px;
+            background: var(--panel-bg);
+            box-shadow:
+                4px 0 0 0 var(--red),
+                -4px 0 0 0 var(--red),
+                0 4px 0 0 var(--red),
+                0 -4px 0 0 var(--red);
+            transition: all 0.15s;
+        }
+
+        .contact-item:hover {
+            transform: translateY(3px);
+            box-shadow:
+                2px 0 0 0 var(--yellow),
+                -2px 0 0 0 var(--yellow),
+                0 2px 0 0 var(--yellow),
+                0 -2px 0 0 var(--yellow);
+        }
+
+        .contact-item a {
+            text-decoration: none;
+            display: block;
+        }
+
+        .contact-label {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 9px;
+            color: var(--green);
+            margin-bottom: 8px;
+        }
+
+        .contact-value {
+            font-family: 'VT323', monospace;
+            font-size: 22px;
+            color: var(--light);
+            word-break: break-all;
+        }
+
+        /* ====== FOOTER ====== */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 8px;
+            color: #555;
+            line-height: 2;
+        }
+
+        .footer .game-over {
+            font-size: 16px;
+            color: var(--red);
+            margin-bottom: 12px;
+        }
+
+        /* ====== RESPONSIVE ====== */
+        @media (max-width: 768px) {
+            .hero-name {
+                font-size: 18px;
+            }
+            .hero-role {
+                font-size: 11px;
+            }
+            .hud-inner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .hud-stats {
+                gap: 12px;
+            }
+            .hud-nav-links {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            .hud-nav-links a {
+                font-size: 7px;
+                padding: 5px 7px;
+            }
+            .stage-header .stage-title {
+                font-size: 14px;
+            }
+            .stage-header {
+                font-size: 14px;
+            }
+            .stage-card-header {
+                flex-direction: column;
+            }
+            .stage-card-score {
+                text-align: left;
+            }
+            .stat-name {
+                min-width: 120px;
+                font-size: 17px;
+            }
+            .stat-bar {
+                font-size: 18px;
+            }
+            .pixel-box, .stage-card, .bonus-stage, .character-frame {
+                padding: 16px;
+            }
+            .soft-skills-grid {
+                grid-template-columns: 1fr;
+            }
+            .cert-grid {
+                grid-template-columns: 1fr;
+            }
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+            .bonus-title {
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-name {
+                font-size: 14px;
+            }
+            .hero-bio {
+                font-size: 19px;
+            }
+            .hud-stat {
+                font-size: 8px;
+            }
+            .hp-bar {
+                width: 50px;
+            }
+            .main-container {
+                padding: 120px 12px 40px;
+            }
+            .stat-name {
+                min-width: 90px;
+                font-size: 15px;
+            }
+            .stat-bar {
+                font-size: 15px;
+            }
+            .stage-card-title {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ====== HUD NAVIGATION ====== -->
+<nav class="hud-nav">
+    <div class="hud-inner">
+        <div class="hud-stats">
+            <div class="hud-stat">
+                <span class="label">SCORE</span>
+                <span class="value" style="color: var(--yellow);">+2 YRS EXP</span>
+            </div>
+            <div class="hud-stat">
+                <span class="label">LEVEL</span>
+                <span class="value" style="color: var(--green);">INGENIERO</span>
+            </div>
+            <div class="hud-stat hp-bar-container">
+                <span class="label">HP</span>
+                <div class="hp-bar"><div class="hp-fill"></div></div>
+            </div>
+        </div>
+        <div class="hud-nav-links">
+            <a href="#inicio">[START]</a>
+            <a href="#experiencia">[EXP]</a>
+            <a href="#proyectos">[BONUS]</a>
+            <a href="#habilidades">[STATS]</a>
+            <a href="#educacion">[SELECT]</a>
+            <a href="#contacto">[COIN]</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ====== MAIN CONTENT ====== -->
+<div class="main-container">
+
+    <!-- ====== HERO / START SCREEN ====== -->
+    <section id="inicio" class="hero">
+        <div class="hero-title-wrapper">
+            <div class="hero-pretitle">- PRESIONA START -</div>
+            <h1 class="hero-name">DIEGO SANTIBANEZ OYARCE</h1>
+            <div class="hero-role">CIENTIFICO DE DATOS</div>
+        </div>
+        <div class="hero-bio">
+            Egresado de Ingenieria Civil en Ciencia de datos en Agosto 2025, apasionado por la tecnologia y con un gran interes en el uso de la inteligencia artificial como herramienta para la resolucion de problemas del mundo real. Mi formacion academica me proporciono una solida comprension de algoritmos de aprendizaje automatico, analisis y visualizacion de datos. Me gusta proponerme desafios donde pueda poner en practica mis conocimientos y donde ademas pueda aprender cosas nuevas.
+        </div>
+    </section>
+
+    <div class="pixel-divider"></div>
+
+    <!-- ====== EXPERIENCE ====== -->
+    <section id="experiencia">
+        <div class="stage-header">
+            <span class="stage-num">- STAGE 1 -</span>
+            <span class="stage-title">EXPERIENCIA</span>
+        </div>
+
+        <!-- Job 1 -->
+        <div class="stage-card">
+            <div class="stage-card-header">
+                <div>
+                    <span class="stage-cleared-badge">STAGE CLEARED!</span>
+                    <div class="stage-card-title">Asistente de Investigacion</div>
+                    <div class="stage-card-company">Universidad Tecnologica Metropolitana (UTEM)</div>
+                </div>
+                <div class="stage-card-score">
+                    <span class="score-label">SCORE</span>
+                    DIC 2023 - SEP 2025
+                </div>
+            </div>
+            <ul>
+                <li>Presentacion poster en "1ras Jornadas de Ciencia de Datos y Salud Publica" de la Universidad de Chile en Enero de 2024
+                    <ul>
+                        <li><a href="https://drive.google.com/file/d/124VDD5x6pBidyC1Wx4ZLehAQixdjZ9dS/view?usp=sharing" target="_blank">Certificado de participacion</a></li>
+                        <li><a href="https://drive.google.com/file/d/1gRjnIt9xa5CYPhbgGFTKR1o5WV3RB8H6/view?usp=drive_link" target="_blank">Link poster</a></li>
+                    </ul>
+                </li>
+                <li>Flash Talk (5 minutos) y presentacion de poster en Carla2024 en Septiembre 2024
+                    <ul>
+                        <li><a href="https://drive.google.com/file/d/1jHc_2fZiakh2G9t8EkiB7Z3l0iuWBJ7n/view?usp=sharing" target="_blank">Certificado de participacion</a></li>
+                        <li><a href="https://drive.google.com/file/d/1jfS4S75dwoBnUMZ3xeQOFfBzX6HP5gpc/view?usp=drive_link" target="_blank">Link poster</a></li>
+                    </ul>
+                </li>
+                <li>Presentacion poster en "III Congreso Vive la Investigacion 2024" en Octubre 2024
+                    <ul>
+                        <li><a href="https://drive.google.com/file/d/1unqW5oOxe5wl84-vmq4Y8AhXmD1sJJL_/view?usp=sharing" target="_blank">Certificado de participacion</a></li>
+                        <li><a href="https://drive.google.com/file/d/1OEKXi8gl7Z9bGySQ8esoomkDJLPiBLCE/view?usp=drive_link" target="_blank">Link poster</a></li>
+                    </ul>
+                </li>
+                <li>Presentacion de poster en "XIV Congreso Argentino de Bioinformatica y Biologia Computacional" en Noviembre de 2024
+                    <ul>
+                        <li><a href="https://drive.google.com/file/d/1br_Vv35RmHxvyPScFlhDCJxucFz0ckii/view?usp=sharing" target="_blank">Certificado de participacion</a></li>
+                        <li><a href="https://drive.google.com/file/d/1wLUe3ssEY_XcOgoTbVJj0B5C7plK-G9n/view?usp=drive_link" target="_blank">Link poster</a></li>
+                    </ul>
+                </li>
+                <li>Flash Talk (15 minutos) en "III Reunion Anual de la Sociedad Chilena de Bioinformatica" en Noviembre de 2024. Invitacion a publicar un manuscrito en revista "Bioinformatics Advances (Oxford University Press)".
+                    <ul>
+                        <li><a href="https://drive.google.com/file/d/1-dZ_CdZlYkd58OlGr3v92n8pLshnurje/view?usp=sharing" target="_blank">Certificado de participacion</a></li>
+                    </ul>
+                </li>
+                <li>Presentacion de poster en Carla2025 en Septiembre 2025. Obtencion premio al mejor poster.
+                    <ul>
+                        <li><a href="https://drive.google.com/file/d/10tcRQonSWMgKQ8FciWOsCobzQAlWCPr9/view?usp=sharing" target="_blank">Certificado de participacion</a></li>
+                        <li><a href="https://drive.google.com/file/d/1M_MhsoB8BCUO5LITTVvQw0Hi9l7RU4Vj/view?usp=sharing" target="_blank">Premio al mejor poster</a></li>
+                        <li><a href="https://drive.google.com/file/d/14Fc9u_zCtxiKG7RKW3W85Rv6X4OJy5HP/view?usp=drive_link" target="_blank">Link poster</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <div class="power-ups">
+                <span class="power-up">INVESTIGACION</span>
+                <span class="power-up power-up-green">POSTERS</span>
+                <span class="power-up power-up-yellow">PUBLICACIONES</span>
+                <span class="power-up power-up-red">BIOINFORMATICA</span>
+            </div>
+        </div>
+
+        <!-- Job 2 -->
+        <div class="stage-card">
+            <div class="stage-card-header">
+                <div>
+                    <span class="stage-cleared-badge">STAGE CLEARED!</span>
+                    <div class="stage-card-title">Tecnico para Analisis de Datos Avanzado</div>
+                    <div class="stage-card-company">UTEM</div>
+                </div>
+                <div class="stage-card-score">
+                    <span class="score-label">SCORE</span>
+                    FEB 2025 - SEP 2025
+                </div>
+            </div>
+            <ul>
+                <li>Implementacion de web scrapping con Python (Selenium y BeautifulSoup) para la extraccion automatizada de datos</li>
+                <li>Creacion de dashboard interactivos utilizando Plotly y Streamlit para visualizar avances del proyecto</li>
+                <li>Diseno y gestion de bases de datos en MariaDB y PostgreSQL para el almacenamiento de datos estructurados</li>
+                <li>Aplicacion de procesamiento de lenguaje natural para analisis y filtrado de datos</li>
+            </ul>
+            <div class="power-ups">
+                <span class="power-up">PYTHON</span>
+                <span class="power-up power-up-green">WEB SCRAPING</span>
+                <span class="power-up power-up-yellow">SQL</span>
+                <span class="power-up power-up-red">NLP</span>
+            </div>
+        </div>
+
+        <!-- Job 3 -->
+        <div class="stage-card">
+            <div class="stage-card-header">
+                <div>
+                    <span class="stage-cleared-badge">STAGE CLEARED!</span>
+                    <div class="stage-card-title">Ayudante de Catedra - Visualizacion de Datos</div>
+                    <div class="stage-card-company">UTEM</div>
+                </div>
+                <div class="stage-card-score">
+                    <span class="score-label">SCORE</span>
+                    MAR 2025 - JUL 2025
+                </div>
+            </div>
+            <ul>
+                <li>Ensenanza y mentoria a estudiantes en tecnicas de visualizacion de datos</li>
+            </ul>
+            <div class="power-ups">
+                <span class="power-up">MENTORIA</span>
+                <span class="power-up power-up-green">VISUALIZACION</span>
+                <span class="power-up power-up-yellow">DOCENCIA</span>
+            </div>
+        </div>
+
+        <!-- Job 4 -->
+        <div class="stage-card">
+            <div class="stage-card-header">
+                <div>
+                    <span class="stage-cleared-badge">STAGE CLEARED!</span>
+                    <div class="stage-card-title">Practicante Profesional</div>
+                    <div class="stage-card-company">Contraloria General de la Republica</div>
+                </div>
+                <div class="stage-card-score">
+                    <span class="score-label">SCORE</span>
+                    AGO 2024 - ENE 2025
+                </div>
+            </div>
+            <ul>
+                <li>Analisis de datos utilizando Impala y Oracle</li>
+                <li>Desarrollo de consultas SQL y automatizacion de procesos mediante codigos de Python</li>
+            </ul>
+            <div class="power-ups">
+                <span class="power-up">SQL</span>
+                <span class="power-up power-up-green">PYTHON</span>
+                <span class="power-up power-up-yellow">IMPALA</span>
+                <span class="power-up power-up-red">ORACLE</span>
+            </div>
+        </div>
+    </section>
+
+    <div class="pixel-divider"></div>
+
+    <!-- ====== PROJECTS - BONUS STAGE ====== -->
+    <section id="proyectos">
+        <div class="stage-header">
+            <span class="stage-num">- STAGE 2 -</span>
+            <span class="stage-title">PROYECTOS</span>
+        </div>
+
+        <div class="bonus-stage">
+            <div class="bonus-badge">*** BONUS STAGE ***</div>
+            <div class="bonus-title">Dashboard de Avance de Proyecto</div>
+            <div class="bonus-year">2025</div>
+            <div class="bonus-desc">
+                Dashboard interactivo desarrollado con Streamlit para visualizar el avance y estado de los datos utilizados en el proyecto.
+            </div>
+            <div class="power-ups" style="margin-bottom: 18px;">
+                <span class="power-up">PYTHON</span>
+                <span class="power-up power-up-green">STREAMLIT</span>
+                <span class="power-up power-up-yellow">PANDAS</span>
+                <span class="power-up power-up-red">PLOTLY</span>
+                <span class="power-up">DUCKDB</span>
+                <span class="power-up power-up-green">FOLIUM</span>
+            </div>
+            <a href="https://dashboarddatalake-fiut-utem.streamlit.app/" target="_blank" class="bonus-link">[JUGAR DEMO]</a>
+        </div>
+    </section>
+
+    <div class="pixel-divider"></div>
+
+    <!-- ====== SKILLS - RPG STATS ====== -->
+    <section id="habilidades">
+        <div class="stage-header">
+            <span class="stage-num">- STAGE 3 -</span>
+            <span class="stage-title">HABILIDADES</span>
+        </div>
+
+        <div class="pixel-box">
+            <div class="skills-table-title">-- HARD SKILLS --</div>
+
+            <div class="stat-row">
+                <span class="stat-name">Python</span>
+                <span class="stat-bar"><span class="filled">████████████████</span><span class="empty">░░░░</span></span>
+                <span class="stat-level">LV 90</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-name">SQL</span>
+                <span class="stat-bar"><span class="filled">██████████████</span><span class="empty">░░░░░░</span></span>
+                <span class="stat-level">LV 85</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-name">TensorFlow</span>
+                <span class="stat-bar"><span class="filled">████████████</span><span class="empty">░░░░░░░░</span></span>
+                <span class="stat-level">LV 70</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-name">scikit-learn</span>
+                <span class="stat-bar"><span class="filled">██████████████</span><span class="empty">░░░░░░</span></span>
+                <span class="stat-level">LV 80</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-name">Pandas</span>
+                <span class="stat-bar"><span class="filled">████████████████</span><span class="empty">░░░░</span></span>
+                <span class="stat-level">LV 90</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-name">Jupyter</span>
+                <span class="stat-bar"><span class="filled">██████████████████</span><span class="empty">░░</span></span>
+                <span class="stat-level">LV 95</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-name">Visualizacion</span>
+                <span class="stat-bar"><span class="filled">██████████████████</span><span class="empty">░░</span></span>
+                <span class="stat-level">LV 92</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-name">Plotly</span>
+                <span class="stat-bar"><span class="filled">██████████████</span><span class="empty">░░░░░░</span></span>
+                <span class="stat-level">LV 85</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-name">Streamlit</span>
+                <span class="stat-bar"><span class="filled">██████████████████</span><span class="empty">░░</span></span>
+                <span class="stat-level">LV 92</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-name">Web Scraping</span>
+                <span class="stat-bar"><span class="filled">████████████████</span><span class="empty">░░░░</span></span>
+                <span class="stat-level">LV 88</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-name">PostgreSQL</span>
+                <span class="stat-bar"><span class="filled">████████████</span><span class="empty">░░░░░░░░</span></span>
+                <span class="stat-level">LV 75</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-name">MariaDB</span>
+                <span class="stat-bar"><span class="filled">████████████</span><span class="empty">░░░░░░░░</span></span>
+                <span class="stat-level">LV 72</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-name">SpaCy</span>
+                <span class="stat-bar"><span class="filled">██████████</span><span class="empty">░░░░░░░░░░</span></span>
+                <span class="stat-level">LV 65</span>
+            </div>
+        </div>
+
+        <div class="pixel-box pixel-box-green">
+            <div class="skills-table-title">-- SOFT SKILLS --</div>
+            <div class="soft-skills-grid">
+                <div class="soft-skill-item">Resolucion de Problemas</div>
+                <div class="soft-skill-item">Pensamiento Critico</div>
+                <div class="soft-skill-item">Adaptabilidad</div>
+                <div class="soft-skill-item">Mentoria</div>
+                <div class="soft-skill-item">Curiosidad Intelectual</div>
+                <div class="soft-skill-item">Responsabilidad</div>
+                <div class="soft-skill-item">Mentalidad de Experimentacion</div>
+                <div class="soft-skill-item">Mentalidad Analitica</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="pixel-divider"></div>
+
+    <!-- ====== EDUCATION - CHARACTER SELECT ====== -->
+    <section id="educacion">
+        <div class="stage-header">
+            <span class="stage-num">- STAGE 4 -</span>
+            <span class="stage-title">EDUCACION & CERTIFICADOS</span>
+        </div>
+
+        <div class="character-select">
+            <div class="character-frame">
+                <div class="char-pixel-avatar">D</div>
+                <div class="char-class">Ingeniero Civil en Ciencia de Datos</div>
+                <div class="char-school">Universidad Tecnologica Metropolitana</div>
+                <div class="char-period">2020 - 2025</div>
+                <div class="char-desc">
+                    Formacion integral en algoritmos de aprendizaje automatico, analisis y visualizacion de datos, con enfoque en aplicaciones de inteligencia artificial para problemas del mundo real.
+                </div>
+            </div>
+        </div>
+
+        <div class="skills-table-title" style="margin-top: 40px; margin-bottom: 20px;">-- CERTIFICADOS DESBLOQUEADOS --</div>
+
+        <div class="cert-grid">
+            <div class="cert-card">
+                <a href="https://drive.google.com/file/d/1IOp4gjfLcW8XhqbiwwOd9dzlz8l60P5q/view?usp=drive_link" target="_blank">
+                    <div class="cert-name">Power BI</div>
+                    <div class="cert-issuer">Santander X</div>
+                    <div class="cert-year">2025</div>
+                </a>
+            </div>
+            <div class="cert-card">
+                <a href="https://drive.google.com/file/d/1KT12-fKSs20wCu_AO6c6nEHYi5_v0mK1/view?usp=sharing" target="_blank">
+                    <div class="cert-name">Ingles B2 Upper Intermediate</div>
+                    <div class="cert-issuer">Certificacion Internacional</div>
+                    <div class="cert-year">2025</div>
+                </a>
+            </div>
+            <div class="cert-card">
+                <a href="https://drive.google.com/file/d/1pYCaTdbJQAmruxvoknp92QbIys4Bt7Ws/view?usp=sharing" target="_blank">
+                    <div class="cert-name">AWS Data Center Technician</div>
+                    <div class="cert-issuer">Amazon Web Services</div>
+                    <div class="cert-year">2024</div>
+                </a>
+            </div>
+            <div class="cert-card">
+                <a href="https://drive.google.com/file/d/1vmeQuzoZEwUTC0Pz7Xl_rlobqXcreX5w/view?usp=sharing" target="_blank">
+                    <div class="cert-name">Introduccion a la Ciencia de Datos</div>
+                    <div class="cert-issuer">Santander Open Academy</div>
+                    <div class="cert-year">2025</div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div class="pixel-divider"></div>
+
+    <!-- ====== CONTACT - INSERT COIN ====== -->
+    <section id="contacto" class="insert-coin-section">
+        <div class="stage-header">
+            <span class="stage-num">- STAGE 5 -</span>
+            <span class="stage-title">CONTACTO</span>
+        </div>
+
+        <div class="insert-coin-text">INSERT COIN TO CONTINUE</div>
+
+        <div class="contact-grid">
+            <div class="contact-item">
+                <a href="mailto:dsantibanezo@utem.cl" target="_blank">
+                    <div class="contact-label">EMAIL</div>
+                    <div class="contact-value">dsantibanezo@utem.cl</div>
+                </a>
+            </div>
+            <div class="contact-item">
+                <a href="https://www.linkedin.com/in/diego-santibanez-oyarce/" target="_blank">
+                    <div class="contact-label">LINKEDIN</div>
+                    <div class="contact-value">diego-santibanez-oyarce</div>
+                </a>
+            </div>
+            <div class="contact-item">
+                <a href="https://github.com/daso42" target="_blank">
+                    <div class="contact-label">GITHUB</div>
+                    <div class="contact-value">daso42</div>
+                </a>
+            </div>
+            <div class="contact-item">
+                <a href="tel:+56984341477" target="_blank">
+                    <div class="contact-label">TELEFONO</div>
+                    <div class="contact-value">+56 9 8434 1477</div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="footer">
+        <div class="game-over">GAME OVER</div>
+        <div>DIEGO SANTIBANEZ OYARCE &copy; 2025</div>
+        <div style="margin-top: 8px;">GRACIAS POR JUGAR</div>
+    </footer>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIEGO SANTIBANEZ OYARCE — CIENTIFICO DE DATOS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            border-radius: 0 !important;
+        }
+
+        ::selection {
+            background: #ffff00;
+            color: #000000;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Space Mono', monospace;
+            background: #ffffff;
+            color: #000000;
+            font-size: 14px;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        a {
+            color: #0000ff;
+            text-decoration: underline;
+        }
+
+        a:hover {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        /* NAV */
+        nav {
+            border-bottom: 3px solid #000000;
+            padding: 12px 20px;
+            position: sticky;
+            top: 0;
+            background: #ffffff;
+            z-index: 1000;
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 0;
+        }
+
+        nav .line-num {
+            font-size: 10px;
+            color: #ff0000;
+            margin-right: 8px;
+            user-select: none;
+        }
+
+        nav a {
+            color: #000000;
+            text-decoration: none;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+            background: #000000;
+            color: #ffffff;
+        }
+
+        nav .sep {
+            margin: 0 8px;
+            color: #000000;
+            user-select: none;
+        }
+
+        /* SECTIONS */
+        section {
+            border-bottom: 3px solid #000000;
+        }
+
+        .section-title {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 700;
+        }
+
+        .section-title::before {
+            content: "# ";
+            color: #ff0000;
+        }
+
+        /* HERO */
+        .hero {
+            padding: 60px 20px 40px 20px;
+            position: relative;
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero-name {
+            font-family: 'Instrument Serif', serif;
+            font-style: italic;
+            font-size: clamp(60px, 12vw, 140px);
+            line-height: 0.9;
+            letter-spacing: -3px;
+            margin-bottom: 20px;
+        }
+
+        .hero-title {
+            font-family: 'Space Mono', monospace;
+            font-size: clamp(14px, 2.5vw, 22px);
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            border-top: 3px solid #000000;
+            border-bottom: 3px solid #000000;
+            padding: 10px 0;
+            display: inline-block;
+            margin-bottom: 40px;
+        }
+
+        .hero-bio {
+            max-width: 640px;
+            font-size: 13px;
+            line-height: 1.7;
+            margin-left: auto;
+            border: 2px solid #000000;
+            padding: 20px;
+            position: relative;
+        }
+
+        .hero-bio::before {
+            content: "/* BIO */";
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            background: #ffffff;
+            padding: 0 6px;
+            font-size: 10px;
+            color: #ff0000;
+            text-transform: uppercase;
+        }
+
+        .hero-annotation {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: rotate(90deg) translateX(-50%);
+            transform-origin: right center;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #ff0000;
+            white-space: nowrap;
+        }
+
+        /* EXPERIENCE */
+        .experience {
+            padding: 40px 20px;
+        }
+
+        .experience .section-title {
+            margin-bottom: 30px;
+        }
+
+        .exp-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 3px solid #000000;
+            font-size: 12px;
+        }
+
+        .exp-table th {
+            background: #000000;
+            color: #ffffff;
+            text-align: left;
+            padding: 10px 12px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            border: 2px solid #000000;
+        }
+
+        .exp-table td {
+            padding: 12px;
+            border: 2px solid #000000;
+            vertical-align: top;
+        }
+
+        .exp-table tr:hover {
+            background: #ffff00;
+        }
+
+        .exp-table td.role {
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .exp-table td.period {
+            white-space: nowrap;
+            font-size: 11px;
+        }
+
+        .exp-details {
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        .exp-details li {
+            margin-bottom: 4px;
+            list-style: none;
+        }
+
+        .exp-details li::before {
+            content: "> ";
+            color: #ff0000;
+            font-weight: 700;
+        }
+
+        .exp-details a {
+            font-size: 10px;
+            word-break: break-all;
+        }
+
+        .exp-sub {
+            margin-left: 16px;
+            margin-top: 2px;
+        }
+
+        .exp-sub li::before {
+            content: "— ";
+            color: #0000ff;
+        }
+
+        /* PROJECTS */
+        .projects {
+            padding: 40px 20px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .projects .section-title {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .project-card {
+            border: 3px solid #000000;
+            padding: 30px;
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .project-card h3 {
+            font-family: 'Instrument Serif', serif;
+            font-style: italic;
+            font-size: clamp(28px, 5vw, 48px);
+            line-height: 1.1;
+            margin-bottom: 4px;
+        }
+
+        .project-year {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #ff0000;
+            margin-bottom: 16px;
+        }
+
+        .project-desc {
+            font-size: 12px;
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+
+        .project-tech {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 8px 0;
+            border-top: 2px solid #000000;
+            border-bottom: 2px solid #000000;
+            margin-bottom: 16px;
+        }
+
+        .project-tech::before {
+            content: "STACK: ";
+            color: #ff0000;
+            font-weight: 700;
+        }
+
+        .project-url {
+            font-size: 12px;
+            word-break: break-all;
+            font-weight: 700;
+        }
+
+        /* SKILLS */
+        .skills {
+            padding: 40px 20px;
+        }
+
+        .skills .section-title {
+            margin-bottom: 30px;
+        }
+
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .skills-block {
+            border: 3px solid #000000;
+            padding: 20px;
+            flex: 1;
+            min-width: 280px;
+            position: relative;
+        }
+
+        .skills-block-label {
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            background: #ffffff;
+            padding: 0 6px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+
+        .skills-marquee-wrapper {
+            overflow: hidden;
+            white-space: nowrap;
+            border-top: 2px solid #000000;
+            border-bottom: 2px solid #000000;
+            padding: 8px 0;
+            margin-top: 10px;
+        }
+
+        .skills-marquee {
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .skills-marquee span {
+            color: #ff0000;
+            margin: 0 4px;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .skills-static {
+            font-size: 13px;
+            line-height: 2;
+        }
+
+        .skills-static .skill-item {
+            display: inline;
+        }
+
+        .skills-static .skill-sep {
+            color: #ff0000;
+            margin: 0 2px;
+        }
+
+        /* EDUCATION */
+        .education {
+            padding: 40px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .education .section-title {
+            width: 100%;
+        }
+
+        .edu-col {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .edu-col h3 {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 16px;
+            border-bottom: 2px solid #000000;
+            padding-bottom: 6px;
+        }
+
+        .edu-col h3::before {
+            content: "* ";
+            color: #ff0000;
+        }
+
+        .edu-item {
+            font-size: 12px;
+            margin-bottom: 12px;
+            line-height: 1.6;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .edu-item::before {
+            content: "|-";
+            position: absolute;
+            left: 0;
+            color: #ff0000;
+            font-weight: 700;
+        }
+
+        .edu-item .edu-meta {
+            font-size: 10px;
+            color: #000000;
+            opacity: 0.6;
+        }
+
+        .edu-item a {
+            font-size: 10px;
+            word-break: break-all;
+        }
+
+        .edu-desc {
+            font-size: 11px;
+            line-height: 1.5;
+            margin-top: 4px;
+            opacity: 0.7;
+        }
+
+        /* CONTACT */
+        .contact {
+            padding: 60px 20px;
+            position: relative;
+        }
+
+        .contact .section-title {
+            margin-bottom: 40px;
+        }
+
+        .contact-email {
+            font-family: 'Instrument Serif', serif;
+            font-style: italic;
+            font-size: clamp(32px, 7vw, 80px);
+            line-height: 1.1;
+            margin-bottom: 30px;
+            word-break: break-all;
+        }
+
+        .contact-email a {
+            color: #000000;
+            text-decoration: none;
+            border-bottom: 4px solid #ff0000;
+        }
+
+        .contact-email a:hover {
+            background: #000000;
+            color: #ffffff;
+            border-bottom-color: #000000;
+        }
+
+        .contact-links {
+            border: 3px solid #000000;
+            padding: 20px;
+            max-width: 600px;
+            font-size: 12px;
+        }
+
+        .contact-link-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            align-items: baseline;
+        }
+
+        .contact-link-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .contact-link-label {
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 2px;
+            font-weight: 700;
+            min-width: 80px;
+            flex-shrink: 0;
+        }
+
+        .contact-link-label::after {
+            content: ":";
+        }
+
+        .contact-link-row a, .contact-link-value {
+            word-break: break-all;
+            font-size: 12px;
+        }
+
+        .contact-annotation {
+            position: absolute;
+            left: 20px;
+            bottom: 50%;
+            transform: rotate(-90deg) translateX(50%);
+            transform-origin: left center;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #ff0000;
+            white-space: nowrap;
+        }
+
+        /* FOOTER */
+        footer {
+            border-top: 3px solid #000000;
+            padding: 20px;
+            text-align: center;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        footer span {
+            color: #ff0000;
+        }
+
+        /* COUNTER MARGIN NUMBERS */
+        .margin-num {
+            position: absolute;
+            left: 4px;
+            font-size: 10px;
+            color: #ff0000;
+            opacity: 0.5;
+            user-select: none;
+            font-weight: 700;
+        }
+
+        /* MIX BLEND OVERLAY */
+        .blend-overlay {
+            position: absolute;
+            font-family: 'Instrument Serif', serif;
+            font-style: italic;
+            font-size: clamp(100px, 20vw, 250px);
+            color: #ff0000;
+            opacity: 0.06;
+            mix-blend-mode: multiply;
+            pointer-events: none;
+            user-select: none;
+            z-index: 0;
+            line-height: 1;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .hero-annotation,
+            .contact-annotation {
+                display: none;
+            }
+
+            .hero-bio {
+                margin-left: 0;
+            }
+
+            .exp-table, .exp-table thead, .exp-table tbody, .exp-table th, .exp-table td, .exp-table tr {
+                display: block;
+            }
+
+            .exp-table thead {
+                display: none;
+            }
+
+            .exp-table tr {
+                border: 3px solid #000000;
+                margin-bottom: 20px;
+            }
+
+            .exp-table td {
+                border: none;
+                border-bottom: 1px solid #000000;
+                padding: 8px 12px;
+                position: relative;
+                padding-left: 12px;
+            }
+
+            .exp-table td.role {
+                background: #000000;
+                color: #ffffff;
+                font-size: 13px;
+                white-space: normal;
+            }
+
+            .exp-table td.period {
+                background: #ffff00;
+                font-weight: 700;
+            }
+
+            nav {
+                padding: 10px 12px;
+            }
+
+            nav a {
+                font-size: 11px;
+            }
+
+            nav .sep {
+                margin: 0 4px;
+            }
+
+            .hero {
+                min-height: auto;
+                padding: 40px 16px 30px 16px;
+            }
+
+            .contact-links {
+                max-width: 100%;
+            }
+
+            .contact-link-row {
+                flex-direction: column;
+                gap: 2px;
+            }
+
+            .skills-container {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                font-size: 13px;
+            }
+
+            .hero-name {
+                letter-spacing: -1px;
+            }
+
+            .hero-title {
+                letter-spacing: 2px;
+            }
+
+            .project-card {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <span class="line-num">001</span>
+        <a href="#inicio">Inicio</a><span class="sep">/</span>
+        <a href="#experiencia">Experiencia</a><span class="sep">/</span>
+        <a href="#proyectos">Proyectos</a><span class="sep">/</span>
+        <a href="#habilidades">Habilidades</a><span class="sep">/</span>
+        <a href="#educacion">Educacion</a><span class="sep">/</span>
+        <a href="#contacto">Contacto</a>
+    </nav>
+
+    <!-- HERO / INICIO -->
+    <section class="hero" id="inicio">
+        <div class="blend-overlay" style="top: -30px; right: -20px;">DATA</div>
+        <span class="hero-annotation">PORTAFOLIO 2025 — CIENCIA DE DATOS</span>
+        <div>
+            <h1 class="hero-name">Diego<br>Santibanez<br>Oyarce</h1>
+            <p class="hero-title">Cientifico de datos</p>
+        </div>
+        <div class="hero-bio">
+            Egresado de Ingenieria Civil en Ciencia de datos en Agosto 2025, apasionado por la tecnologia y con un gran interes en el uso de la inteligencia artificial como herramienta para la resolucion de problemas del mundo real. Mi formacion academica me proporciono una solida comprension de algoritmos de aprendizaje automatico, analisis y visualizacion de datos. Me gusta proponerme desafios donde pueda poner en practica mis conocimientos y donde ademas pueda aprender cosas nuevas.
+        </div>
+    </section>
+
+    <!-- EXPERIENCIA -->
+    <section class="experience" id="experiencia">
+        <p class="section-title">Experiencia</p>
+        <table class="exp-table">
+            <thead>
+                <tr>
+                    <th>Cargo</th>
+                    <th>Organizacion</th>
+                    <th>Periodo</th>
+                    <th>Detalles</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="role">Asistente de investigacion</td>
+                    <td>Universidad Tecnologica Metropolitana (UTEM)</td>
+                    <td class="period">Dic 2023 — Sep 2025</td>
+                    <td>
+                        <ul class="exp-details">
+                            <li>Presentacion poster en "1ras Jornadas de Ciencia de Datos y Salud Publica" de la Universidad de Chile en Enero de 2024
+                                <ul class="exp-sub">
+                                    <li><a href="https://drive.google.com/file/d/124VDD5x6pBidyC1Wx4ZLehAQixdjZ9dS/view?usp=sharing" target="_blank">Certificado de participacion</a></li>
+                                    <li><a href="https://drive.google.com/file/d/1gRjnIt9xa5CYPhbgGFTKR1o5WV3RB8H6/view?usp=drive_link" target="_blank">Link poster</a></li>
+                                </ul>
+                            </li>
+                            <li>Flash Talk (5 min) y presentacion de poster en Carla2024 en Septiembre 2024
+                                <ul class="exp-sub">
+                                    <li><a href="https://drive.google.com/file/d/1jHc_2fZiakh2G9t8EkiB7Z3l0iuWBJ7n/view?usp=sharing" target="_blank">Certificado de participacion</a></li>
+                                    <li><a href="https://drive.google.com/file/d/1jfS4S75dwoBnUMZ3xeQOFfBzX6HP5gpc/view?usp=drive_link" target="_blank">Link poster</a></li>
+                                </ul>
+                            </li>
+                            <li>Presentacion poster en "III Congreso Vive la Investigacion 2024" en Octubre 2024
+                                <ul class="exp-sub">
+                                    <li><a href="https://drive.google.com/file/d/1unqW5oOxe5wl84-vmq4Y8AhXmD1sJJL_/view?usp=sharing" target="_blank">Certificado de participacion</a></li>
+                                    <li><a href="https://drive.google.com/file/d/1OEKXi8gl7Z9bGySQ8esoomkDJLPiBLCE/view?usp=drive_link" target="_blank">Link poster</a></li>
+                                </ul>
+                            </li>
+                            <li>Presentacion de poster en "XIV Congreso Argentino de Bioinformatica y Biologia Computacional" en Noviembre de 2024
+                                <ul class="exp-sub">
+                                    <li><a href="https://drive.google.com/file/d/1br_Vv35RmHxvyPScFlhDCJxucFz0ckii/view?usp=sharing" target="_blank">Certificado de participacion</a></li>
+                                    <li><a href="https://drive.google.com/file/d/1wLUe3ssEY_XcOgoTbVJj0B5C7plK-G9n/view?usp=drive_link" target="_blank">Link poster</a></li>
+                                </ul>
+                            </li>
+                            <li>Flash Talk (15 min) en "III Reunion Anual de la Sociedad Chilena de Bioinformatica" en Noviembre de 2024. Invitacion a publicar manuscrito en revista "Bioinformatics Advances (Oxford University Press)".
+                                <ul class="exp-sub">
+                                    <li><a href="https://drive.google.com/file/d/1-dZ_CdZlYkd58OlGr3v92n8pLshnurje/view?usp=sharing" target="_blank">Certificado de participacion</a></li>
+                                </ul>
+                            </li>
+                            <li>Presentacion de poster en Carla2025 en Septiembre 2025. Obtencion premio al mejor poster.
+                                <ul class="exp-sub">
+                                    <li><a href="https://drive.google.com/file/d/10tcRQonSWMgKQ8FciWOsCobzQAlWCPr9/view?usp=sharing" target="_blank">Certificado de participacion</a></li>
+                                    <li><a href="https://drive.google.com/file/d/1M_MhsoB8BCUO5LITTVvQw0Hi9l7RU4Vj/view?usp=sharing" target="_blank">Premio al mejor poster</a></li>
+                                    <li><a href="https://drive.google.com/file/d/14Fc9u_zCtxiKG7RKW3W85Rv6X4OJy5HP/view?usp=drive_link" target="_blank">Link poster</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="role">Tecnico para analisis de datos avanzado</td>
+                    <td>UTEM</td>
+                    <td class="period">Feb 2025 — Sep 2025</td>
+                    <td>
+                        <ul class="exp-details">
+                            <li>Implementacion de web scrapping con Python (Selenium y BeautifulSoup) para la extraccion automatizada de datos</li>
+                            <li>Creacion de dashboard interactivos utilizando Plotly y Streamlit para visualizar avances del proyecto</li>
+                            <li>Diseno y gestion de bases de datos en MariaDB y PostgreSQL para el almacenamiento de datos estructurados</li>
+                            <li>Aplicacion de procesamiento de lenguaje natural para analisis y filtrado de datos</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="role">Ayudante de Catedra — Visualizacion de Datos</td>
+                    <td>UTEM</td>
+                    <td class="period">Mar 2025 — Jul 2025</td>
+                    <td>
+                        <ul class="exp-details">
+                            <li>Ensenanza y mentoria a estudiantes en tecnicas de visualizacion de datos</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="role">Practicante Profesional</td>
+                    <td>Contraloria General de la Republica</td>
+                    <td class="period">Ago 2024 — Ene 2025</td>
+                    <td>
+                        <ul class="exp-details">
+                            <li>Analisis de datos utilizando Impala y Oracle</li>
+                            <li>Desarrollo de consultas SQL y automatizacion de procesos mediante codigos de Python</li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- PROYECTOS -->
+    <section class="projects" id="proyectos">
+        <p class="section-title">Proyectos</p>
+        <div class="project-card">
+            <h3>Dashboard de avance de proyecto</h3>
+            <p class="project-year">2025</p>
+            <p class="project-desc">Dashboard interactivo desarrollado con Streamlit para visualizar el avance y estado de los datos utilizados en el proyecto.</p>
+            <p class="project-tech">Python, Streamlit, Pandas, Plotly, DuckDB, Folium</p>
+            <p class="project-url"><a href="https://dashboarddatalake-fiut-utem.streamlit.app/" target="_blank">https://dashboarddatalake-fiut-utem.streamlit.app/</a></p>
+        </div>
+    </section>
+
+    <!-- HABILIDADES -->
+    <section class="skills" id="habilidades">
+        <p class="section-title">Habilidades</p>
+        <div class="skills-container">
+            <div class="skills-block">
+                <span class="skills-block-label">HARD SKILLS</span>
+                <div class="skills-marquee-wrapper">
+                    <div class="skills-marquee">
+                        Python <span>/</span> SQL <span>/</span> TensorFlow <span>/</span> scikit-learn <span>/</span> Pandas <span>/</span> Jupyter Notebooks <span>/</span> Visualizacion de datos <span>/</span> Plotly <span>/</span> Streamlit <span>/</span> Web Scraping <span>/</span> PostgreSQL <span>/</span> MariaDB <span>/</span> SpaCy <span>/</span>&nbsp;&nbsp;
+                        Python <span>/</span> SQL <span>/</span> TensorFlow <span>/</span> scikit-learn <span>/</span> Pandas <span>/</span> Jupyter Notebooks <span>/</span> Visualizacion de datos <span>/</span> Plotly <span>/</span> Streamlit <span>/</span> Web Scraping <span>/</span> PostgreSQL <span>/</span> MariaDB <span>/</span> SpaCy <span>/</span>&nbsp;&nbsp;
+                    </div>
+                </div>
+            </div>
+            <div class="skills-block">
+                <span class="skills-block-label">SOFT SKILLS</span>
+                <div class="skills-static" style="margin-top: 10px;">
+                    <span class="skill-item">Resolucion de Problemas</span><span class="skill-sep">,</span>
+                    <span class="skill-item">Pensamiento Critico</span><span class="skill-sep">,</span>
+                    <span class="skill-item">Adaptabilidad</span><span class="skill-sep">,</span>
+                    <span class="skill-item">Mentoria</span><span class="skill-sep">,</span>
+                    <span class="skill-item">Curiosidad intelectual</span><span class="skill-sep">,</span>
+                    <span class="skill-item">Responsabilidad</span><span class="skill-sep">,</span>
+                    <span class="skill-item">Mentalidad de experimentacion</span><span class="skill-sep">,</span>
+                    <span class="skill-item">Mentalidad analitica</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EDUCACION & CERTIFICADOS -->
+    <section class="education" id="educacion">
+        <p class="section-title">Educacion &amp; Certificados</p>
+
+        <div class="edu-col">
+            <h3>Formacion Academica</h3>
+            <div class="edu-item">
+                <strong>Ingeniero Civil en Ciencia de Datos</strong><br>
+                <span class="edu-meta">UTEM | 2020 — 2025</span>
+                <p class="edu-desc">Formacion integral en algoritmos de aprendizaje automatico, analisis y visualizacion de datos, con enfoque en aplicaciones de inteligencia artificial para problemas del mundo real.</p>
+            </div>
+        </div>
+
+        <div class="edu-col">
+            <h3>Certificados</h3>
+            <div class="edu-item">
+                <strong>Power BI</strong><br>
+                <span class="edu-meta">Santander X | 2025</span><br>
+                <a href="https://drive.google.com/file/d/1IOp4gjfLcW8XhqbiwwOd9dzlz8l60P5q/view?usp=drive_link" target="_blank">https://drive.google.com/file/d/1IOp4gjfLcW8XhqbiwwOd9dzlz8l60P5q/view</a>
+            </div>
+            <div class="edu-item">
+                <strong>Ingles B2 Upper Intermediate</strong><br>
+                <span class="edu-meta">Certificacion Internacional | 2025</span><br>
+                <a href="https://drive.google.com/file/d/1KT12-fKSs20wCu_AO6c6nEHYi5_v0mK1/view?usp=sharing" target="_blank">https://drive.google.com/file/d/1KT12-fKSs20wCu_AO6c6nEHYi5_v0mK1/view</a>
+            </div>
+            <div class="edu-item">
+                <strong>AWS Data Center Technician</strong><br>
+                <span class="edu-meta">Amazon Web Services | 2024</span><br>
+                <a href="https://drive.google.com/file/d/1pYCaTdbJQAmruxvoknp92QbIys4Bt7Ws/view?usp=sharing" target="_blank">https://drive.google.com/file/d/1pYCaTdbJQAmruxvoknp92QbIys4Bt7Ws/view</a>
+            </div>
+            <div class="edu-item">
+                <strong>Introduccion a la Ciencia de Datos</strong><br>
+                <span class="edu-meta">Santander Open Academy | 2025</span><br>
+                <a href="https://drive.google.com/file/d/1vmeQuzoZEwUTC0Pz7Xl_rlobqXcreX5w/view?usp=sharing" target="_blank">https://drive.google.com/file/d/1vmeQuzoZEwUTC0Pz7Xl_rlobqXcreX5w/view</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section class="contact" id="contacto">
+        <span class="contact-annotation">DISPONIBLE PARA TRABAJAR — 2025</span>
+        <p class="section-title">Contacto</p>
+        <div class="contact-email">
+            <a href="mailto:dsantibanezo@utem.cl" target="_blank">dsantibanezo@utem.cl</a>
+        </div>
+        <div class="contact-links">
+            <div class="contact-link-row">
+                <span class="contact-link-label">LinkedIn</span>
+                <a href="https://www.linkedin.com/in/diego-santibanez-oyarce/" target="_blank">https://www.linkedin.com/in/diego-santibanez-oyarce/</a>
+            </div>
+            <div class="contact-link-row">
+                <span class="contact-link-label">GitHub</span>
+                <a href="https://github.com/daso42" target="_blank">https://github.com/daso42</a>
+            </div>
+            <div class="contact-link-row">
+                <span class="contact-link-label">Telefono</span>
+                <span class="contact-link-value">+56 9 8434 1477</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <span>*</span> Diego Santibanez Oyarce <span>*</span> Cientifico de Datos <span>*</span> 2025 <span>*</span>
+    </footer>
+
+</body>
+</html>

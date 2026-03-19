@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diego Santibáñez Oyarce — Noir Dossier</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #1a1714;
+      --paper: #f5ecd7;
+      --paper-dark: #e8ddc5;
+      --ink: #2c241c;
+      --ink-light: #6b5e4f;
+      --red: #8b2500;
+      --typewriter: 'Special Elite', cursive;
+      --serif: 'Lora', serif;
+      --mono: 'IBM Plex Mono', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      background-image: radial-gradient(circle at 20% 30%, rgba(90,60,30,0.15) 0%, transparent 50%);
+      font-family: var(--serif);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 3rem 1.5rem;
+    }
+    .dossier { max-width: 850px; width: 100%; }
+    .folder-tab {
+      background: var(--paper-dark); width: 240px; padding: 0.75rem 1.5rem;
+      border-radius: 8px 8px 0 0; font-family: var(--typewriter);
+      font-size: 0.85rem; color: var(--ink); text-transform: uppercase; letter-spacing: 0.1em;
+    }
+    .page {
+      background: var(--paper); padding: 3rem 3.5rem; position: relative;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2), 2px 4px 0 var(--paper-dark), 4px 6px 0 #d9cfb8, 0 8px 20px rgba(0,0,0,0.3);
+      margin-bottom: 2.5rem;
+    }
+    .page::before {
+      content: ''; position: absolute; inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(0,0,0,0.03) 27px, rgba(0,0,0,0.03) 28px);
+      pointer-events: none;
+    }
+    .page.has-stain::after {
+      content: ''; position: absolute; width: 120px; height: 120px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(139,100,50,0.08) 30%, transparent 70%);
+      border: 2px solid rgba(139,100,50,0.06); top: 20px; right: 40px; pointer-events: none;
+    }
+    .stamp {
+      position: absolute; top: 25px; right: 30px; font-family: var(--typewriter);
+      font-size: 1.8rem; color: var(--red); opacity: 0.25; transform: rotate(-12deg);
+      text-transform: uppercase; letter-spacing: 0.15em; border: 3px solid var(--red);
+      padding: 0.25rem 1rem; pointer-events: none;
+    }
+    .subject-header { border-bottom: 2px solid var(--ink); padding-bottom: 1.5rem; margin-bottom: 2rem; }
+    .subject-label { font-family: var(--typewriter); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--ink-light); margin-bottom: 0.5rem; }
+    .subject-name { font-family: var(--typewriter); font-size: clamp(2rem,5vw,3rem); color: var(--ink); line-height: 1.2; }
+    .subject-title { font-family: var(--mono); font-size: 0.85rem; color: var(--red); margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 0.1em; }
+    .field-row { display: flex; gap: 1.5rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+    .field { flex: 1; min-width: 150px; }
+    .field-label { font-family: var(--typewriter); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--ink-light); margin-bottom: 0.15rem; }
+    .field-value { font-family: var(--typewriter); font-size: 0.9rem; color: var(--ink); border-bottom: 1px solid var(--ink-light); padding-bottom: 0.25rem; }
+    .bio-text { font-size: 1rem; color: var(--ink); line-height: 1.8; text-align: justify; margin: 2rem 0; font-style: italic; }
+    .section-heading {
+      font-family: var(--typewriter); font-size: 0.75rem; text-transform: uppercase;
+      letter-spacing: 0.2em; color: var(--ink); margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem; border-bottom: 1px dashed var(--ink-light);
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .section-heading::before { content: '▰'; color: var(--red); }
+    .timeline { position: relative; padding-left: 2rem; }
+    .timeline::before { content: ''; position: absolute; left: 5px; top: 0; bottom: 0; width: 1px; background: var(--ink-light); }
+    .timeline-item { position: relative; margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px dotted rgba(0,0,0,0.1); }
+    .timeline-item:last-child { border-bottom: none; margin-bottom: 0; }
+    .timeline-item::before {
+      content: ''; position: absolute; left: -2rem; top: 6px; width: 10px; height: 10px;
+      border: 2px solid var(--red); background: var(--paper); border-radius: 50%;
+    }
+    .timeline-date { font-family: var(--mono); font-size: 0.7rem; color: var(--ink-light); text-transform: uppercase; }
+    .timeline-role { font-family: var(--typewriter); font-size: 1.1rem; color: var(--ink); margin-bottom: 0.25rem; }
+    .timeline-org { font-family: var(--mono); font-size: 0.75rem; color: var(--red); margin-bottom: 0.75rem; text-transform: uppercase; }
+    .timeline-desc { font-size: 0.9rem; color: var(--ink-light); line-height: 1.7; }
+    .timeline-list { list-style: none; margin-top: 0.5rem; }
+    .timeline-list li { font-size: 0.82rem; color: var(--ink-light); padding: 0.25rem 0 0.25rem 1rem; position: relative; }
+    .timeline-list li::before { content: '—'; position: absolute; left: 0; color: var(--red); }
+    .evidence-card { border: 1px solid var(--ink-light); padding: 1.5rem; background: rgba(0,0,0,0.02); position: relative; margin-bottom: 2rem; }
+    .evidence-label { position: absolute; top: -8px; left: 12px; background: var(--paper); padding: 0 0.5rem; font-family: var(--typewriter); font-size: 0.6rem; text-transform: uppercase; color: var(--red); letter-spacing: 0.15em; }
+    .evidence-title { font-family: var(--typewriter); font-size: 1.1rem; color: var(--ink); margin-bottom: 0.75rem; }
+    .evidence-desc { font-size: 0.88rem; color: var(--ink-light); line-height: 1.7; margin-bottom: 1rem; }
+    .evidence-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .evidence-tag { font-family: var(--mono); font-size: 0.65rem; padding: 0.2rem 0.5rem; border: 1px solid var(--ink-light); color: var(--ink-light); text-transform: uppercase; }
+    .skills-matrix { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    @media (max-width: 600px) { .skills-matrix { grid-template-columns: 1fr; } .page { padding: 2rem 1.5rem; } }
+    .matrix-col-title { font-family: var(--typewriter); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--red); margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.1); }
+    .matrix-item { font-family: var(--typewriter); font-size: 0.85rem; color: var(--ink); padding: 0.4rem 0; border-bottom: 1px dotted rgba(0,0,0,0.08); }
+    .contact-block { text-align: center; padding: 2rem; border: 2px double var(--ink); margin-top: 2rem; }
+    .contact-block h3 { font-family: var(--typewriter); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--ink-light); margin-bottom: 1rem; }
+    .contact-email { font-family: var(--typewriter); font-size: 1.2rem; color: var(--ink); text-decoration: none; border-bottom: 2px solid var(--red); padding-bottom: 2px; }
+    .contact-email:hover { color: var(--red); }
+    .contact-links { margin-top: 1rem; }
+    .contact-links a { font-family: var(--mono); font-size: 0.75rem; color: var(--ink-light); text-decoration: none; text-transform: uppercase; }
+    .contact-links a:hover { color: var(--red); }
+    .page-footer { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid rgba(0,0,0,0.1); font-family: var(--mono); font-size: 0.65rem; color: var(--ink-light); text-align: right; text-transform: uppercase; }
+    .reveal { opacity: 0; transform: translateY(15px); animation: revealUp 0.8s ease forwards; }
+    .d1 { animation-delay: 0.15s; } .d2 { animation-delay: 0.3s; }
+    @keyframes revealUp { to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+<div class="dossier">
+  <div class="folder-tab">Expediente Personal</div>
+  <div class="page has-stain reveal">
+    <div class="stamp">Confidencial</div>
+    <div class="subject-header">
+      <div class="subject-label">Nombre del Sujeto</div>
+      <h1 class="subject-name">Diego Santibáñez Oyarce</h1>
+      <div class="subject-title">Científico de Datos</div>
+    </div>
+    <div class="field-row">
+      <div class="field"><div class="field-label">Profesión</div><div class="field-value">Ing. Civil en Ciencia de Datos</div></div>
+      <div class="field"><div class="field-label">Institución</div><div class="field-value">UTEM (2020—2025)</div></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><div class="field-label">Contacto</div><div class="field-value">dsantibanezo@utem.cl</div></div>
+      <div class="field"><div class="field-label">Ubicación</div><div class="field-value">Santiago, Chile</div></div>
+    </div>
+    <p class="bio-text">"Egresado de Ingeniería Civil en Ciencia de Datos, apasionado por la tecnología y con un gran interés en el uso de la inteligencia artificial como herramienta para la resolución de problemas del mundo real. Mi formación académica me proporcionó una sólida comprensión de algoritmos de aprendizaje automático, análisis y visualización de datos."</p>
+    <div class="field-row">
+      <div class="field"><div class="field-label">Experiencia</div><div class="field-value" style="font-size:1.2rem;font-weight:bold;">1+ Años</div></div>
+      <div class="field"><div class="field-label">Congresos</div><div class="field-value" style="font-size:1.2rem;font-weight:bold;">7 Presentaciones</div></div>
+      <div class="field"><div class="field-label">Certificados</div><div class="field-value" style="font-size:1.2rem;font-weight:bold;">4 Activos</div></div>
+    </div>
+    <div class="page-footer">Pág. 1 de 3 — Expediente #DS-2025</div>
+  </div>
+  <div class="page reveal d1">
+    <div class="section-heading">Historial de Actividades</div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-date">DIC 2023 — SEP 2025</div>
+        <div class="timeline-role">Asistente de Investigación</div>
+        <div class="timeline-org">UTEM</div>
+        <p class="timeline-desc">Presentaciones en congresos nacionales e internacionales:</p>
+        <ul class="timeline-list">
+          <li>1ras Jornadas Ciencia de Datos y Salud Pública — U. Chile, ene 2024</li>
+          <li>Carla2024 Flash Talk — sep 2024</li>
+          <li>III Congreso Vive la Investigación 2024</li>
+          <li>XIV Congreso Argentino Bioinformática — nov 2024</li>
+          <li>III Reunión Soc. Chilena de Bioinformática — Flash Talk 15min</li>
+          <li>Carla2025 — Mejor póster, sep 2025</li>
+        </ul>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">FEB 2025 — SEP 2025</div>
+        <div class="timeline-role">Técnico Análisis de Datos Avanzado</div>
+        <div class="timeline-org">UTEM</div>
+        <p class="timeline-desc">Web scraping con Python (Selenium, BeautifulSoup), dashboards interactivos con Plotly y Streamlit, administración de bases de datos MariaDB y PostgreSQL, NLP.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">MAR 2025 — JUL 2025</div>
+        <div class="timeline-role">Ayudante de Cátedra — Visualización de Datos</div>
+        <div class="timeline-org">UTEM</div>
+        <p class="timeline-desc">Enseñanza y mentoría a estudiantes en visualización de datos.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">AGO 2024 — ENE 2025</div>
+        <div class="timeline-role">Practicante Profesional</div>
+        <div class="timeline-org">Contraloría General de la República</div>
+        <p class="timeline-desc">Análisis de datos con Impala y Oracle, consultas SQL complejas, automatización con Python.</p>
+      </div>
+    </div>
+    <div class="page-footer">Pág. 2 de 3 — Expediente #DS-2025</div>
+  </div>
+  <div class="page reveal d2">
+    <div class="section-heading">Evidencia — Proyectos</div>
+    <div class="evidence-card">
+      <div class="evidence-label">Evidencia Nº1</div>
+      <div class="evidence-title">Dashboard de Avance de Proyecto</div>
+      <p class="evidence-desc">Dashboard interactivo para seguimiento y análisis de avance de proyectos con visualizaciones geográficas, tablas dinámicas y filtros en tiempo real.</p>
+      <div class="evidence-tags">
+        <span class="evidence-tag">Streamlit</span><span class="evidence-tag">Pandas</span><span class="evidence-tag">Plotly</span><span class="evidence-tag">DuckDB</span><span class="evidence-tag">Folium</span>
+      </div>
+    </div>
+    <div class="section-heading">Competencias Registradas</div>
+    <div class="skills-matrix">
+      <div>
+        <div class="matrix-col-title">Habilidades Técnicas</div>
+        <div class="matrix-item">Python</div><div class="matrix-item">SQL</div>
+        <div class="matrix-item">TensorFlow / scikit-learn</div><div class="matrix-item">Pandas / Jupyter</div>
+        <div class="matrix-item">Plotly / Streamlit</div><div class="matrix-item">Web Scraping</div>
+        <div class="matrix-item">PostgreSQL / MariaDB</div><div class="matrix-item">SpaCy (NLP)</div>
+      </div>
+      <div>
+        <div class="matrix-col-title">Habilidades Blandas</div>
+        <div class="matrix-item">Resolución de Problemas</div><div class="matrix-item">Pensamiento Crítico</div>
+        <div class="matrix-item">Adaptabilidad</div><div class="matrix-item">Mentoría</div>
+        <div class="matrix-item">Curiosidad Intelectual</div><div class="matrix-item">Responsabilidad</div>
+        <div class="matrix-item">Mentalidad Analítica</div>
+      </div>
+    </div>
+    <div style="margin-top:2rem;">
+      <div class="section-heading">Acreditaciones</div>
+      <div class="matrix-item">Power BI — Santander X, 2025</div>
+      <div class="matrix-item">Inglés B2 Upper Intermediate — 2025</div>
+      <div class="matrix-item">AWS Data Center Technician — 2024</div>
+      <div class="matrix-item">Intro. Ciencia de Datos — Santander Open Academy, 2025</div>
+    </div>
+    <div class="contact-block">
+      <h3>Para Contacto Directo</h3>
+      <a href="mailto:dsantibanezo@utem.cl" class="contact-email">dsantibanezo@utem.cl</a>
+      <div class="contact-links"><a href="https://linkedin.com/in/diego-santibanez-oyarce" target="_blank">[ LinkedIn ]</a></div>
+    </div>
+    <div class="page-footer">Pág. 3 de 3 — Fin del Expediente</div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio Viewer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #111;
+    --surface: #1a1a1a;
+    --border: #2a2a2a;
+    --text: #e5e5e5;
+    --text-dim: #888;
+    --accent: #0066ff;
+    --accent-hover: #3385ff;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ── Top bar ── */
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    min-height: 52px;
+  }
+
+  .topbar-title {
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    margin-right: 8px;
+  }
+
+  .topbar-sep {
+    width: 1px;
+    height: 24px;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+
+  /* ── Tabs (scrollable) ── */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+    flex: 1;
+    padding: 2px 0;
+  }
+
+  .tabs::-webkit-scrollbar { height: 4px; }
+  .tabs::-webkit-scrollbar-track { background: transparent; }
+  .tabs::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--text-dim);
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+  }
+
+  .tab:hover {
+    background: rgba(255,255,255,0.05);
+    color: var(--text);
+  }
+
+  .tab.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  .tab .tab-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    background: rgba(255,255,255,0.1);
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  .tab.active .tab-number {
+    background: rgba(255,255,255,0.25);
+  }
+
+  /* ── Nav arrows ── */
+  .nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+  }
+
+  .nav-btn:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  .nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    background: var(--surface);
+    border-color: var(--border);
+    color: var(--text-dim);
+  }
+
+  /* ── Info bar ── */
+  .infobar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 16px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    min-height: 32px;
+  }
+
+  .infobar-left {
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  .infobar-left strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .infobar-right {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .open-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-dim);
+    font-family: inherit;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .open-btn:hover {
+    background: rgba(255,255,255,0.05);
+    color: var(--text);
+    border-color: var(--text-dim);
+  }
+
+  /* ── Viewport sizes ── */
+  .viewport-btns {
+    display: flex;
+    gap: 2px;
+    background: var(--surface);
+    border-radius: 6px;
+    padding: 2px;
+  }
+
+  .vp-btn {
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: none;
+    background: transparent;
+    color: var(--text-dim);
+    font-family: inherit;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .vp-btn:hover { color: var(--text); }
+  .vp-btn.active { background: var(--border); color: var(--text); }
+
+  /* ── Iframe container ── */
+  .preview-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    background: #0a0a0a;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .preview-container.padded {
+    padding: 16px;
+    align-items: center;
+  }
+
+  .preview-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #fff;
+    transition: width 0.3s ease, max-width 0.3s ease, border-radius 0.3s ease;
+  }
+
+  .preview-container.padded .preview-frame {
+    border-radius: 12px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.5);
+    border: 1px solid var(--border);
+  }
+
+  /* ── Keyboard hint ── */
+  .kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 18px;
+    padding: 0 4px;
+    border-radius: 3px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    font-size: 10px;
+    font-family: inherit;
+    color: var(--text-dim);
+    line-height: 1;
+  }
+
+  .shortcuts {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  .shortcuts span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  @media (max-width: 768px) {
+    .topbar { padding: 8px 10px; gap: 8px; }
+    .topbar-title, .topbar-sep, .shortcuts { display: none; }
+    .tab { padding: 5px 10px; font-size: 11.5px; }
+    .infobar { padding: 4px 10px; }
+    .viewport-btns { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-title">Portfolio Viewer</div>
+  <div class="topbar-sep"></div>
+  <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" title="Anterior (←)">&#8592;</button>
+  <div class="tabs" id="tabsContainer"></div>
+  <button class="nav-btn" id="nextBtn" onclick="navigate(1)" title="Siguiente (→)">&#8594;</button>
+  <div class="topbar-sep"></div>
+  <div class="shortcuts">
+    <span><span class="kbd">&#8592;</span><span class="kbd">&#8594;</span> navegar</span>
+    <span><span class="kbd">F</span> fullscreen</span>
+  </div>
+</div>
+
+<div class="infobar">
+  <div class="infobar-left" id="infoText"></div>
+  <div class="infobar-right">
+    <div class="viewport-btns">
+      <button class="vp-btn active" data-width="100%" data-padded="false" onclick="setViewport(this)">Desktop</button>
+      <button class="vp-btn" data-width="768px" data-padded="true" onclick="setViewport(this)">Tablet</button>
+      <button class="vp-btn" data-width="375px" data-padded="true" onclick="setViewport(this)">Mobile</button>
+    </div>
+    <button class="open-btn" onclick="openInTab()" title="Abrir en nueva pestaña">Abrir &#8599;</button>
+  </div>
+</div>
+
+<div class="preview-container" id="previewContainer">
+  <iframe class="preview-frame" id="previewFrame"></iframe>
+</div>
+
+<script>
+const variants = [
+  { file: 'v1_easehealth.html',  num: 1,  name: 'EaseHealth',   desc: 'Dark warm theme, organic shapes' },
+  { file: 'v2_polar.html',       num: 2,  name: 'Polar',        desc: 'Cream/beige, elegant neutrals' },
+  { file: 'v3_craftco.html',     num: 3,  name: 'CraftCo',      desc: 'Editorial serif, warm tones' },
+  { file: 'v4_creative.html',    num: 4,  name: 'Creative',     desc: 'Bold creative, dynamic layout' },
+  { file: 'v5_expand.html',      num: 5,  name: 'Expand',       desc: 'Grid-based, modern cards' },
+  { file: 'v6_terminal.html',    num: 6,  name: 'Terminal',      desc: 'Hacker console, phosphor green' },
+  { file: 'v7_blueprint.html',   num: 7,  name: 'Blueprint',     desc: 'Engineering drawing, navy grid' },
+  { file: 'v8_neonglass.html',   num: 8,  name: 'Neon Glass',    desc: 'Glassmorphism, neon glow' },
+  { file: 'v9_newspaper.html',   num: 9,  name: 'Newspaper',     desc: 'Broadsheet editorial, multi-column' },
+  { file: 'v10_bento.html',      num: 10, name: 'Bento',         desc: 'Dashboard grid, Apple-style' },
+  { file: 'v11_retroarcade.html', num: 11, name: 'Retro Arcade',  desc: 'Pixel art, 8-bit, arcade HUD' },
+  { file: 'v12_zen.html',        num: 12, name: 'Zen',           desc: 'Japanese minimalism, whitespace' },
+  { file: 'v13_brutalist.html',  num: 13, name: 'Brutalist',     desc: 'Raw anti-design, harsh borders' },
+  { file: 'v14_scrapbook.html',  num: 14, name: 'Scrapbook',     desc: 'Handmade collage, washi tape' },
+  { file: 'v15_os.html',         num: 15, name: 'OS Desktop',    desc: 'Fake OS, draggable windows' },
+  { file: 'v16_cosmos.html',     num: 16, name: 'Cosmos',        desc: 'Deep space, star field, orbits' },
+  { file: 'v17_magazine.html',   num: 17, name: 'Magazine',      desc: 'Luxury editorial, dramatic type' },
+  { file: 'v18_synthwave.html',  num: 18, name: 'Synthwave',     desc: '80s retrowave, sunset grid, chrome' },
+  { file: 'v19_botanical.html',  num: 19, name: 'Botanical',     desc: 'Nature, SVG leaves, herbarium' },
+  { file: 'v20_notebook.html',   num: 20, name: 'Notebook',      desc: 'University notebook, ruled paper' },
+  { file: 'v21_manga.html',      num: 21, name: 'Manga',         desc: 'Comic panels, halftone, speed lines' },
+  { file: 'v22_museum.html',     num: 22, name: 'Museum',        desc: 'Art gallery, frames, spotlight' },
+  { file: 'v23_recipe.html',     num: 23, name: 'Recipe',        desc: 'Cookbook — skills=ingredients, exp=steps' },
+  { file: 'v24_dataviz.html',    num: 24, name: 'DataViz',       desc: 'Dashboard — Gantt, bars, radar SVG' },
+  { file: 'v25_aurora.html',     num: 25, name: 'Aurora',        desc: 'Northern lights, animated, arctic glass' },
+];
+
+let currentIndex = 0;
+const tabsContainer = document.getElementById('tabsContainer');
+const previewFrame = document.getElementById('previewFrame');
+const previewContainer = document.getElementById('previewContainer');
+const infoText = document.getElementById('infoText');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+
+// Build tabs
+variants.forEach((v, i) => {
+  const tab = document.createElement('button');
+  tab.className = 'tab';
+  tab.innerHTML = `<span class="tab-number">${v.num}</span>${v.name}`;
+  tab.onclick = () => loadVariant(i);
+  tabsContainer.appendChild(tab);
+});
+
+function loadVariant(index) {
+  currentIndex = index;
+  const v = variants[index];
+
+  // Update iframe
+  previewFrame.src = v.file;
+
+  // Update tabs
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', i === index);
+  });
+
+  // Scroll active tab into view
+  const activeTab = tabsContainer.children[index];
+  activeTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+
+  // Update info
+  infoText.innerHTML = `<strong>v${v.num} — ${v.name}</strong> &nbsp;&middot;&nbsp; ${v.desc} &nbsp;&middot;&nbsp; ${v.file}`;
+
+  // Update nav buttons
+  prevBtn.disabled = index === 0;
+  nextBtn.disabled = index === variants.length - 1;
+}
+
+function navigate(dir) {
+  const next = currentIndex + dir;
+  if (next >= 0 && next < variants.length) loadVariant(next);
+}
+
+function openInTab() {
+  window.open(variants[currentIndex].file, '_blank');
+}
+
+function setViewport(btn) {
+  document.querySelectorAll('.vp-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const w = btn.dataset.width;
+  const padded = btn.dataset.padded === 'true';
+
+  previewFrame.style.maxWidth = w;
+  previewFrame.style.width = w === '100%' ? '100%' : w;
+  previewContainer.classList.toggle('padded', padded);
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowLeft') { e.preventDefault(); navigate(-1); }
+  if (e.key === 'ArrowRight') { e.preventDefault(); navigate(1); }
+  if (e.key === 'f' || e.key === 'F') {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    e.preventDefault();
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      document.documentElement.requestFullscreen();
+    }
+  }
+});
+
+// Load first variant
+loadVariant(0);
+</script>
+</body>
+</html>

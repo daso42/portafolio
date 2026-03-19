@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diego Santibanez Oyarce — Portafolio Profesional</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Roboto+Condensed:wght@400;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --newsprint: #faf9f6;
+      --ink:       #1a1a1a;
+      --red:       #c41e1e;
+      --pullbg:    #f0efe9;
+      --rule:      #1a1a1a;
+      --mid:       #555555;
+      --light:     #888888;
+      --border:    #cccccc;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--newsprint);
+      color: var(--ink);
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 16px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== BACK-TO-TOP BUTTON ===== */
+    #back-top {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 999;
+      background: var(--ink);
+      color: var(--newsprint);
+      font-family: 'Roboto Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: none;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+      line-height: 1.2;
+      text-align: center;
+    }
+    #back-top:hover { background: var(--red); }
+    #back-top span { display: block; font-size: 15px; margin-bottom: 2px; }
+
+    /* ===== WRAPPER ===== */
+    .page {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ===== MASTHEAD ===== */
+    .masthead {
+      text-align: center;
+      padding: 32px 0 20px;
+      border-bottom: 4px double var(--ink);
+    }
+
+    .masthead-kicker {
+      font-family: 'Roboto Condensed', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 10px;
+    }
+
+    .masthead-name {
+      font-family: 'Libre Baskerville', Georgia, serif;
+      font-size: clamp(38px, 7vw, 82px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.0;
+      color: var(--ink);
+      text-transform: uppercase;
+    }
+
+    .masthead-name em {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--red);
+    }
+
+    .masthead-rule {
+      width: 100%;
+      border: none;
+      border-top: 1px solid var(--ink);
+      margin: 10px 0 6px;
+    }
+
+    .masthead-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Roboto Condensed', sans-serif;
+      font-size: 11.5px;
+      letter-spacing: 0.08em;
+      color: var(--mid);
+    }
+
+    .masthead-meta-center {
+      font-style: italic;
+      font-size: 13px;
+      color: var(--ink);
+      font-family: 'Source Serif 4', serif;
+    }
+
+    .masthead-subtitle {
+      margin-top: 12px;
+      font-family: 'Roboto Condensed', sans-serif;
+      font-size: 14px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--mid);
+    }
+
+    /* ===== SECTION HEADER ===== */
+    .section-header {
+      margin: 52px 0 20px;
+      text-align: center;
+    }
+
+    .section-header hr.top {
+      border: none;
+      border-top: 3px solid var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .section-header hr.bottom {
+      border: none;
+      border-top: 1px solid var(--ink);
+      margin-top: 4px;
+    }
+
+    .section-header h2 {
+      font-family: 'Roboto Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--ink);
+      padding: 5px 0 3px;
+    }
+
+    /* ===== THICK SEPARATOR ===== */
+    .section-divider {
+      border: none;
+      border-top: 6px solid var(--ink);
+      margin: 56px 0 0;
+    }
+
+    /* ===== BIO / FEATURE ARTICLE ===== */
+    .bio-section {
+      margin-top: 36px;
+    }
+
+    .bio-headline {
+      font-family: 'Libre Baskerville', Georgia, serif;
+      font-size: clamp(26px, 4vw, 44px);
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--ink);
+      border-top: 3px solid var(--red);
+      padding-top: 14px;
+      margin-bottom: 6px;
+    }
+
+    .bio-deck {
+      font-family: 'Source Serif 4', serif;
+      font-size: 17px;
+      font-style: italic;
+      color: var(--mid);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 14px;
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+
+    .bio-byline {
+      font-family: 'Roboto Condensed', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 18px;
+    }
+
+    .bio-byline strong {
+      color: var(--ink);
+    }
+
+    .bio-body {
+      font-family: 'Source Serif 4', serif;
+      font-size: 16px;
+      line-height: 1.75;
+      text-align: justify;
+      hyphens: auto;
+    }
+
+    .bio-body::first-letter {
+      font-family: 'Libre Baskerville', Georgia, serif;
+      font-size: 5.4em;
+      font-weight: 700;
+      float: left;
+      line-height: 0.75;
+      padding-right: 10px;
+      padding-top: 6px;
+      color: var(--red);
+    }
+
+    /* ===== PULL QUOTE ===== */
+    .pull-quote {
+      background: var(--pullbg);
+      border-top: 3px solid var(--ink);
+      border-bottom: 3px solid var(--ink);
+      padding: 20px 28px;
+      margin: 32px 0;
+      text-align: center;
+    }
+
+    .pull-quote p {
+      font-family: 'Libre Baskerville', Georgia, serif;
+      font-size: clamp(16px, 2.2vw, 22px);
+      font-style: italic;
+      line-height: 1.4;
+      color: var(--ink);
+    }
+
+    .pull-quote cite {
+      display: block;
+      font-family: 'Roboto Condensed', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-top: 10px;
+      font-style: normal;
+    }
+
+    /* ===== EXPERIENCE — ARTICLES GRID ===== */
+    .exp-grid {
+      column-count: 3;
+      column-gap: 32px;
+      column-rule: 1px solid var(--border);
+      margin-top: 10px;
+    }
+
+    .exp-article {
+      break-inside: avoid;
+      margin-bottom: 36px;
+    }
+
+    .exp-article-label {
+      font-family: 'Roboto Condensed', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 6px;
+    }
+
+    .exp-article h3 {
+      font-family: 'Libre Baskerville', Georgia, serif;
+      font-size: clamp(15px, 1.8vw, 19px);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .exp-article-meta {
+      font-family: 'Roboto Condensed', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--mid);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+    }
+
+    .exp-article-meta span {
+      color: var(--red);
+    }
+
+    .exp-article ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .exp-article ul li {
+      font-family: 'Source Serif 4', serif;
+      font-size: 14px;
+      line-height: 1.6;
+      padding: 5px 0 5px 16px;
+      position: relative;
+      border-bottom: 1px dotted var(--border);
+    }
+
+    .exp-article ul li:last-child { border-bottom: none; }
+
+    .exp-article ul li::before {
+      content: "—";
+      position: absolute;
+      left: 0;
+      color: var(--red);
+      font-weight: 700;
+    }
+
+    .exp-article ul li a {
+      font-family: 'Roboto Condensed', sans-serif;
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--red);
+      text-decoration: none;
+      border-bottom: 1px solid var(--red);
+    }
+
+    .exp-article ul li a:hover {
+      color: var(--ink);
+      border-bottom-color: var(--ink);
+    }
+
+    /* Award highlight */
+    .award-note {
+      display: inline-block;
+      background: var(--red);
+      color: white;
+      font-family: 'Roboto Condensed', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      margin-right: 4px;
+    }
+
+    /* ===== PROJECTS ===== */
+    .project-feature {
+      break-inside: avoid;
+      border-top: 3px solid var(--ink);
+      padding-top: 16px;
+      margin-bottom: 32px;
+    }
+
+    .project-feature-label {
+      font-family: 'Roboto Condensed', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 6px;
+    }
+
+    .project-feature h3 {
+      font-family: 'Libre Baskerville', Georgia, serif;
+      font-size: clamp(18px, 2.4vw, 26px);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 6px;
+    }
+
+    .project-feature-year {
+      font-family: 'Roboto Condensed', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 12px;
+    }
+
+    .project-feature p {
+      font-size: 15px;
+      line-height: 1.7;
+      text-align: justify;
+      margin-bottom: 12px;
+    }
+
+    .tech-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .tech-tag {
+      font-family: 'Roboto Condensed', sans-serif;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: 1px solid var(--ink);
+      padding: 2px 8px;
+      color: var(--ink);
+    }
+
+    .project-link {
+      display: inline-block;
+      font-family: 'Roboto Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--newsprint);
+      background: var(--ink);
+      padding: 6px 14px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .project-link:hover { background: var(--red); }
+
+    /* ===== CLASSIFIEDS — SKILLS ===== */
+    .classifieds-grid {
+      column-count: 3;
+      column-gap: 24px;
+      column-rule: 1px solid var(--border);
+      margin-top: 10px;
+    }
+
+    .classified-box {
+      break-inside: avoid;
+      border: 1px solid var(--ink);
+      padding: 10px 12px;
+      margin-bottom: 16px;
+      background: white;
+    }
+
+    .classified-box h4 {
+      font-family: 'Roboto Condensed', sans-serif;
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--red);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 5px;
+      margin-bottom: 8px;
+    }
+
+    .classified-box ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .classified-box ul li {
+      font-family: 'Source Serif 4', serif;
+      font-size: 13.5px;
+      line-height: 1.55;
+      padding: 2px 0;
+      border-bottom: 1px dotted var(--border);
+    }
+
+    .classified-box ul li:last-child { border-bottom: none; }
+
+    .classified-box ul li::before {
+      content: "· ";
+      color: var(--red);
+      font-weight: 700;
+    }
+
+    .classifieds-banner {
+      text-align: center;
+      background: var(--ink);
+      color: var(--newsprint);
+      font-family: 'Libre Baskerville', serif;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 7px 0;
+      margin-bottom: 18px;
+    }
+
+    /* ===== EDUCATION ===== */
+    .edu-grid {
+      column-count: 2;
+      column-gap: 32px;
+      column-rule: 1px solid var(--border);
+    }
+
+    .edu-item {
+      break-inside: avoid;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px dotted var(--border);
+    }
+
+    .edu-item:last-child { border-bottom: none; }
+
+    .edu-item-label {
+      font-family: 'Roboto Condensed', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 4px;
+    }
+
+    .edu-item h3 {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .edu-item-meta {
+      font-family: 'Roboto Condensed', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 8px;
+    }
+
+    .edu-item p {
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    /* ===== CERTIFICATES ===== */
+    .cert-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'Source Serif 4', serif;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .cert-table thead tr {
+      border-top: 3px solid var(--ink);
+      border-bottom: 1px solid var(--ink);
+    }
+
+    .cert-table thead th {
+      font-family: 'Roboto Condensed', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink);
+      padding: 8px 10px;
+      text-align: left;
+    }
+
+    .cert-table tbody tr {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cert-table tbody tr:hover { background: var(--pullbg); }
+
+    .cert-table tbody td {
+      padding: 9px 10px;
+      vertical-align: top;
+      line-height: 1.5;
+    }
+
+    .cert-table tbody td:first-child {
+      font-weight: 600;
+    }
+
+    .cert-table tbody td a {
+      font-family: 'Roboto Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--red);
+      text-decoration: none;
+      border-bottom: 1px solid var(--red);
+    }
+
+    .cert-table tbody td a:hover {
+      color: var(--ink);
+      border-bottom-color: var(--ink);
+    }
+
+    .cert-table tfoot tr {
+      border-top: 2px solid var(--ink);
+    }
+
+    /* ===== CONTACT ===== */
+    .contact-section {
+      background: var(--ink);
+      color: var(--newsprint);
+      padding: 40px 48px;
+      margin-top: 10px;
+    }
+
+    .contact-section .contact-header {
+      font-family: 'Libre Baskerville', serif;
+      font-size: clamp(20px, 3vw, 32px);
+      font-weight: 700;
+      font-style: italic;
+      margin-bottom: 6px;
+    }
+
+    .contact-section .contact-sub {
+      font-family: 'Roboto Condensed', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 28px;
+      border-bottom: 1px solid #444;
+      padding-bottom: 14px;
+    }
+
+    .contact-items {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .contact-item {
+      border-top: 1px solid #555;
+      padding-top: 12px;
+    }
+
+    .contact-item-label {
+      font-family: 'Roboto Condensed', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 6px;
+    }
+
+    .contact-item a,
+    .contact-item span {
+      font-family: 'Source Serif 4', serif;
+      font-size: 14.5px;
+      color: var(--newsprint);
+      text-decoration: none;
+    }
+
+    .contact-item a:hover { color: #e0e0e0; text-decoration: underline; }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      text-align: center;
+      padding: 24px 0 10px;
+      font-family: 'Roboto Condensed', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: var(--light);
+      border-top: 1px solid var(--border);
+      margin-top: 48px;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      .exp-grid { column-count: 2; }
+      .classifieds-grid { column-count: 2; }
+      .edu-grid { column-count: 2; }
+    }
+
+    @media (max-width: 580px) {
+      .page { padding: 0 16px 60px; }
+      .exp-grid { column-count: 1; }
+      .classifieds-grid { column-count: 1; }
+      .edu-grid { column-count: 1; }
+      .masthead-meta { flex-direction: column; gap: 4px; text-align: center; }
+      .contact-section { padding: 28px 20px; }
+      #back-top { bottom: 16px; right: 16px; }
+    }
+
+    /* ===== UTILITY ===== */
+    .red { color: var(--red); }
+    .mono { font-family: 'Roboto Condensed', sans-serif; letter-spacing: 0.05em; }
+  </style>
+</head>
+<body>
+
+<button id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <span>▲</span>Volver<br>arriba
+</button>
+
+<div class="page">
+
+  <!-- ===== MASTHEAD ===== -->
+  <header class="masthead">
+    <p class="masthead-kicker">Portafolio Profesional &bull; Edici&oacute;n Digital</p>
+    <h1 class="masthead-name">Diego <em>&amp;</em> Santibanez</h1>
+    <hr class="masthead-rule" />
+    <div class="masthead-meta">
+      <span>Santiago, Chile</span>
+      <span class="masthead-meta-center">Ciencia de Datos &bull; Inteligencia Artificial &bull; Ingenier&iacute;a</span>
+      <span>Marzo 2026</span>
+    </div>
+    <p class="masthead-subtitle">Cient&iacute;fico de Datos — Egresado UTEM 2025</p>
+  </header>
+
+  <!-- ===== BIO ===== -->
+  <section class="bio-section" id="bio">
+    <div class="section-header">
+      <hr class="top" />
+      <h2>Perfil Profesional</h2>
+      <hr class="bottom" />
+    </div>
+
+    <h2 class="bio-headline">Un Ingeniero Formado en los M&aacute;rgenes de la Ciencia y la Tecnolog&iacute;a</h2>
+    <p class="bio-deck">De los algoritmos de aprendizaje autom&aacute;tico a los escenarios del mundo real: la historia de una formaci&oacute;n construida sobre curiosidad, rigor y experimentaci&oacute;n constante.</p>
+    <p class="bio-byline">POR <strong>DIEGO SANTIBANEZ OYARCE</strong> &bull; INGENIERO CIVIL EN CIENCIA DE DATOS &bull; UTEM, 2025</p>
+
+    <p class="bio-body">Egresado de Ingeniería Civil en Ciencia de datos en Agosto 2025, apasionado por la tecnología y con un gran interés en el uso de la inteligencia artificial como herramienta para la resolución de problemas del mundo real. Mi formación académica me proporcionó una sólida comprensión de algoritmos de aprendizaje automático, análisis y visualización de datos. Me gusta proponerme desafíos donde pueda poner en práctica mis conocimientos y donde además pueda aprender cosas nuevas.</p>
+
+    <div class="pull-quote">
+      <p>&ldquo;Me gusta proponerme desaf&iacute;os donde pueda poner en pr&aacute;ctica mis conocimientos y donde adem&aacute;s pueda aprender cosas nuevas.&rdquo;</p>
+      <cite>— Diego Santibanez Oyarce, Cient&iacute;fico de Datos</cite>
+    </div>
+  </section>
+
+  <!-- ===== EXPERIENCE ===== -->
+  <hr class="section-divider" />
+  <section id="experiencia">
+    <div class="section-header">
+      <hr class="top" />
+      <h2>Experiencia Profesional</h2>
+      <hr class="bottom" />
+    </div>
+
+    <div class="exp-grid">
+
+      <!-- Article 1 -->
+      <article class="exp-article">
+        <p class="exp-article-label">Investigaci&oacute;n Acad&eacute;mica</p>
+        <h3>Asistente de Investigaci&oacute;n</h3>
+        <p class="exp-article-meta">UTEM &bull; <span>Dic 2023 &mdash; Sep 2025</span></p>
+        <ul>
+          <li>Presentaci&oacute;n poster en &ldquo;1ras Jornadas de Ciencia de Datos y Salud P&uacute;blica&rdquo; de la Universidad de Chile, enero 2024.
+            <br><a href="https://drive.google.com/file/d/124VDD5x6pBidyC1Wx4ZLehAQixdjZ9dS/view?usp=sharing" target="_blank">Certificado</a>
+            &nbsp;<a href="https://drive.google.com/file/d/1gRjnIt9xa5CYPhbgGFTKR1o5WV3RB8H6/view?usp=drive_link" target="_blank">Ver Poster</a>
+          </li>
+          <li>Flash Talk (5 min) y poster en CARLA 2024, septiembre 2024.
+            <br><a href="https://drive.google.com/file/d/1jHc_2fZiakh2G9t8EkiB7Z3l0iuWBJ7n/view?usp=sharing" target="_blank">Certificado</a>
+            &nbsp;<a href="https://drive.google.com/file/d/1jfS4S75dwoBnUMZ3xeQOFfBzX6HP5gpc/view?usp=drive_link" target="_blank">Ver Poster</a>
+          </li>
+          <li>Poster en &ldquo;III Congreso Vive la Investigaci&oacute;n 2024&rdquo;, octubre 2024.
+            <br><a href="https://drive.google.com/file/d/1unqW5oOxe5wl84-vmq4Y8AhXmD1sJJL_/view?usp=sharing" target="_blank">Certificado</a>
+            &nbsp;<a href="https://drive.google.com/file/d/1OEKXi8gl7Z9bGySQ8esoomkDJLPiBLCE/view?usp=drive_link" target="_blank">Ver Poster</a>
+          </li>
+          <li>Poster en &ldquo;XIV Congreso Argentino de Bioinform&aacute;tica y Biolog&iacute;a Computacional&rdquo;, noviembre 2024.
+            <br><a href="https://drive.google.com/file/d/1br_Vv35RmHxvyPScFlhDCJxucFz0ckii/view?usp=sharing" target="_blank">Certificado</a>
+            &nbsp;<a href="https://drive.google.com/file/d/1wLUe3ssEY_XcOgoTbVJj0B5C7plK-G9n/view?usp=drive_link" target="_blank">Ver Poster</a>
+          </li>
+          <li>Flash Talk (15 min) en &ldquo;III Reuni&oacute;n Anual de la Sociedad Chilena de Bioinform&aacute;tica&rdquo;, noviembre 2024. Invitaci&oacute;n a publicar manuscrito en <em>Bioinformatics Advances</em> (Oxford University Press).
+            <br><a href="https://drive.google.com/file/d/1-dZ_CdZlYkd58OlGr3v92n8pLshnurje/view?usp=sharing" target="_blank">Certificado</a>
+          </li>
+          <li>
+            <span class="award-note">&#9733; Premio</span>Poster en CARLA 2025, septiembre 2025. Obtenci&oacute;n <strong>premio al mejor poster</strong>.
+            <br><a href="https://drive.google.com/file/d/10tcRQonSWMgKQ8FciWOsCobzQAlWCPr9/view?usp=sharing" target="_blank">Certificado</a>
+            &nbsp;<a href="https://drive.google.com/file/d/1M_MhsoB8BCUO5LITTVvQw0Hi9l7RU4Vj/view?usp=sharing" target="_blank">Premio</a>
+            &nbsp;<a href="https://drive.google.com/file/d/14Fc9u_zCtxiKG7RKW3W85Rv6X4OJy5HP/view?usp=drive_link" target="_blank">Ver Poster</a>
+          </li>
+        </ul>
+      </article>
+
+      <!-- Article 2 -->
+      <article class="exp-article">
+        <p class="exp-article-label">Desarrollo de Datos</p>
+        <h3>T&eacute;cnico para An&aacute;lisis de Datos Avanzado</h3>
+        <p class="exp-article-meta">UTEM &bull; <span>Feb 2025 &mdash; Sep 2025</span></p>
+        <ul>
+          <li>Implementaci&oacute;n de web scraping con Python (Selenium y BeautifulSoup) para la extracci&oacute;n automatizada de datos.</li>
+          <li>Creaci&oacute;n de dashboards interactivos utilizando Plotly y Streamlit para visualizar avances del proyecto.</li>
+          <li>Dise&ntilde;o y gesti&oacute;n de bases de datos en MariaDB y PostgreSQL para el almacenamiento de datos estructurados.</li>
+          <li>Aplicaci&oacute;n de procesamiento de lenguaje natural para an&aacute;lisis y filtrado de datos.</li>
+        </ul>
+
+        <p class="exp-article-label" style="margin-top:24px;">Docencia Universitaria</p>
+        <h3>Ayudante de C&aacute;tedra — Visualizaci&oacute;n de Datos</h3>
+        <p class="exp-article-meta">UTEM &bull; <span>Mar 2025 &mdash; Jul 2025</span></p>
+        <ul>
+          <li>Ense&ntilde;anza y mentor&iacute;a a estudiantes en t&eacute;cnicas de visualizaci&oacute;n de datos.</li>
+        </ul>
+      </article>
+
+      <!-- Article 3 -->
+      <article class="exp-article">
+        <p class="exp-article-label">Sector P&uacute;blico</p>
+        <h3>Practicante Profesional</h3>
+        <p class="exp-article-meta">Contralor&iacute;a General de la Rep&uacute;blica &bull; <span>Ago 2024 &mdash; Ene 2025</span></p>
+        <ul>
+          <li>An&aacute;lisis de datos utilizando Impala y Oracle en entornos de producci&oacute;n institucional.</li>
+          <li>Desarrollo de consultas SQL y automatizaci&oacute;n de procesos mediante c&oacute;digos de Python.</li>
+        </ul>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ===== PROJECTS ===== -->
+  <hr class="section-divider" />
+  <section id="proyectos">
+    <div class="section-header">
+      <hr class="top" />
+      <h2>Proyectos Destacados</h2>
+      <hr class="bottom" />
+    </div>
+
+    <article class="project-feature">
+      <p class="project-feature-label">Dashboard Interactivo &bull; 2025</p>
+      <h3>Dashboard de Avance de Proyecto</h3>
+      <p class="project-feature-year">A&ntilde;o: 2025</p>
+      <p>Dashboard interactivo desarrollado con Streamlit para visualizar el avance y estado de los datos utilizados en el proyecto. Integra m&uacute;ltiples fuentes de informaci&oacute;n y permite explorar el progreso en tiempo real a trav&eacute;s de visualizaciones din&aacute;micas construidas con Plotly y DuckDB, incluyendo representaciones geogr&aacute;ficas con Folium.</p>
+      <div class="tech-tags">
+        <span class="tech-tag">Python</span>
+        <span class="tech-tag">Streamlit</span>
+        <span class="tech-tag">Pandas</span>
+        <span class="tech-tag">Plotly</span>
+        <span class="tech-tag">DuckDB</span>
+        <span class="tech-tag">Folium</span>
+      </div>
+      <a class="project-link" href="https://dashboarddatalake-fiut-utem.streamlit.app/" target="_blank">Ver Proyecto &rarr;</a>
+    </article>
+
+  </section>
+
+  <!-- ===== SKILLS — CLASSIFIEDS ===== -->
+  <hr class="section-divider" />
+  <section id="habilidades">
+    <div class="section-header">
+      <hr class="top" />
+      <h2>Habilidades</h2>
+      <hr class="bottom" />
+    </div>
+
+    <div class="classifieds-banner">&#x2702; Secci&oacute;n Clasificados &mdash; Habilidades Profesionales &#x2702;</div>
+
+    <div class="classifieds-grid">
+
+      <div class="classified-box">
+        <h4>Lenguajes &amp; Datos</h4>
+        <ul>
+          <li>Python</li>
+          <li>SQL</li>
+          <li>Pandas</li>
+          <li>Jupyter Notebooks</li>
+        </ul>
+      </div>
+
+      <div class="classified-box">
+        <h4>Machine Learning</h4>
+        <ul>
+          <li>TensorFlow</li>
+          <li>scikit-learn</li>
+          <li>SpaCy (NLP)</li>
+          <li>Web Scraping</li>
+        </ul>
+      </div>
+
+      <div class="classified-box">
+        <h4>Visualizaci&oacute;n</h4>
+        <ul>
+          <li>Plotly</li>
+          <li>Streamlit</li>
+          <li>Visualizaci&oacute;n de datos</li>
+          <li>Folium</li>
+        </ul>
+      </div>
+
+      <div class="classified-box">
+        <h4>Bases de Datos</h4>
+        <ul>
+          <li>PostgreSQL</li>
+          <li>MariaDB</li>
+          <li>DuckDB</li>
+          <li>Oracle / Impala</li>
+        </ul>
+      </div>
+
+      <div class="classified-box">
+        <h4>Habilidades Blandas</h4>
+        <ul>
+          <li>Resoluci&oacute;n de Problemas</li>
+          <li>Pensamiento Cr&iacute;tico</li>
+          <li>Adaptabilidad</li>
+          <li>Mentor&iacute;a</li>
+          <li>Curiosidad intelectual</li>
+        </ul>
+      </div>
+
+      <div class="classified-box">
+        <h4>Actitud Profesional</h4>
+        <ul>
+          <li>Responsabilidad</li>
+          <li>Mentalidad anal&iacute;tica</li>
+          <li>Mentalidad de experimentaci&oacute;n</li>
+          <li>Trabajo colaborativo</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== EDUCATION ===== -->
+  <hr class="section-divider" />
+  <section id="educacion">
+    <div class="section-header">
+      <hr class="top" />
+      <h2>Educaci&oacute;n &amp; Certificados</h2>
+      <hr class="bottom" />
+    </div>
+
+    <div class="edu-grid">
+
+      <div class="edu-item">
+        <p class="edu-item-label">Titulaci&oacute;n Universitaria</p>
+        <h3>Ingeniero Civil en Ciencia de Datos</h3>
+        <p class="edu-item-meta">UTEM &bull; 2020 &mdash; 2025</p>
+        <p>Formaci&oacute;n integral en algoritmos de aprendizaje autom&aacute;tico, an&aacute;lisis y visualizaci&oacute;n de datos, con enfoque en aplicaciones de inteligencia artificial para problemas del mundo real.</p>
+      </div>
+
+      <div class="edu-item">
+        <p class="edu-item-label">Certificaciones</p>
+        <h3>Formaci&oacute;n Complementaria</h3>
+        <p class="edu-item-meta">2024 &mdash; 2025</p>
+        <p>Certificaciones en herramientas de an&aacute;lisis, infraestructura cloud e idiomas que complementan la formaci&oacute;n de base, reforzando un perfil t&eacute;cnico vers&aacute;til y actualizado.</p>
+      </div>
+
+    </div>
+
+    <!-- Certificates Table -->
+    <div class="section-header" style="margin-top:36px;">
+      <hr class="top" />
+      <h2>Registro de Certificados</h2>
+      <hr class="bottom" />
+    </div>
+
+    <table class="cert-table">
+      <thead>
+        <tr>
+          <th>Certificado</th>
+          <th>Entidad</th>
+          <th>A&ntilde;o</th>
+          <th>Verificar</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Power BI</td>
+          <td>Santander X</td>
+          <td>2025</td>
+          <td><a href="https://drive.google.com/file/d/1IOp4gjfLcW8XhqbiwwOd9dzlz8l60P5q/view?usp=drive_link" target="_blank">Ver Certificado</a></td>
+        </tr>
+        <tr>
+          <td>Ingl&eacute;s B2 Upper Intermediate</td>
+          <td>Certificaci&oacute;n Internacional</td>
+          <td>2025</td>
+          <td><a href="https://drive.google.com/file/d/1KT12-fKSs20wCu_AO6c6nEHYi5_v0mK1/view?usp=sharing" target="_blank">Ver Certificado</a></td>
+        </tr>
+        <tr>
+          <td>AWS Data Center Technician</td>
+          <td>Amazon Web Services</td>
+          <td>2024</td>
+          <td><a href="https://drive.google.com/file/d/1pYCaTdbJQAmruxvoknp92QbIys4Bt7Ws/view?usp=sharing" target="_blank">Ver Certificado</a></td>
+        </tr>
+        <tr>
+          <td>Introducci&oacute;n a la Ciencia de Datos</td>
+          <td>Santander Open Academy</td>
+          <td>2025</td>
+          <td><a href="https://drive.google.com/file/d/1vmeQuzoZEwUTC0Pz7Xl_rlobqXcreX5w/view?usp=sharing" target="_blank">Ver Certificado</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <hr class="section-divider" />
+  <section id="contacto">
+    <div class="section-header">
+      <hr class="top" />
+      <h2>Contacto</h2>
+      <hr class="bottom" />
+    </div>
+
+    <div class="contact-section">
+      <p class="contact-header">Conectemos.</p>
+      <p class="contact-sub">Disponible para oportunidades profesionales, colaboraciones e investigaci&oacute;n aplicada</p>
+
+      <div class="contact-items">
+        <div class="contact-item">
+          <p class="contact-item-label">Correo Electr&oacute;nico</p>
+          <a href="mailto:dsantibanezo@utem.cl" target="_blank">dsantibanezo@utem.cl</a>
+        </div>
+        <div class="contact-item">
+          <p class="contact-item-label">LinkedIn</p>
+          <a href="https://www.linkedin.com/in/diego-santibanez-oyarce/" target="_blank">diego-santibanez-oyarce</a>
+        </div>
+        <div class="contact-item">
+          <p class="contact-item-label">GitHub</p>
+          <a href="https://github.com/daso42" target="_blank">github.com/daso42</a>
+        </div>
+        <div class="contact-item">
+          <p class="contact-item-label">Tel&eacute;fono</p>
+          <span>+56 9 8434 1477</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <p>PORTAFOLIO PROFESIONAL &bull; DIEGO SANTIBANEZ OYARCE &bull; CIENT&Iacute;FICO DE DATOS &bull; SANTIAGO, CHILE &bull; &copy; 2026</p>
+    <p style="margin-top:6px;">"All the data that's fit to analyze."</p>
+  </footer>
+
+</div><!-- .page -->
+
+</body>
+</html>

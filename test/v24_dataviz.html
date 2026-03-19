@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diego Santibanez | Data Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===================== RESET & BASE ===================== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #0f1117;
+  --card-bg:   #1e2130;
+  --card-bg2:  #252a3a;
+  --border:    #2d3348;
+  --text:      #e2e8f0;
+  --text-dim:  #8892a4;
+  --text-mute: #4a5568;
+  --blue:      #3b82f6;
+  --green:     #10b981;
+  --amber:     #f59e0b;
+  --red:       #ef4444;
+  --purple:    #8b5cf6;
+  --blue-dim:  rgba(59,130,246,0.15);
+  --green-dim: rgba(16,185,129,0.15);
+  --amber-dim: rgba(245,158,11,0.15);
+  --red-dim:   rgba(239,68,68,0.15);
+  --purple-dim:rgba(139,92,246,0.15);
+  --grid-line: rgba(255,255,255,0.04);
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-ui:   'Inter', sans-serif;
+  --radius:    8px;
+  --radius-lg: 12px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ===================== SCROLLBAR ===================== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-mute); }
+
+/* ===================== TOPBAR ===================== */
+#topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(15,17,23,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 52px;
+  gap: 1rem;
+}
+
+.topbar-brand {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--blue);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+.topbar-brand span { color: var(--text-dim); font-weight: 400; }
+
+.topbar-nav {
+  display: flex;
+  gap: 0;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.topbar-nav a {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-dim);
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius);
+  transition: color 0.2s, background 0.2s;
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.topbar-nav a:hover { color: var(--text); background: var(--card-bg); }
+.topbar-nav a.active { color: var(--blue); background: var(--blue-dim); }
+
+.topbar-status {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-mute);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ===================== MAIN LAYOUT ===================== */
+.dashboard {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 4rem;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1rem;
+}
+
+/* ===================== CARD BASE ===================== */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg, var(--grid-line) 0px, var(--grid-line) 1px, transparent 1px, transparent 60px
+  ), repeating-linear-gradient(
+    0deg, var(--grid-line) 0px, var(--grid-line) 1px, transparent 1px, transparent 40px
+  );
+  pointer-events: none;
+  border-radius: var(--radius-lg);
+}
+
+.card:hover {
+  border-color: rgba(59,130,246,0.35);
+  box-shadow: 0 0 20px rgba(59,130,246,0.08), 0 4px 24px rgba(0,0,0,0.3);
+}
+
+.card-inner { position: relative; z-index: 1; }
+
+.card-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card-label::before {
+  content: '//';
+  color: var(--blue);
+  font-weight: 700;
+}
+
+/* ===================== GRID PLACEMENT ===================== */
+.col-12 { grid-column: span 12; }
+.col-9  { grid-column: span 9; }
+.col-8  { grid-column: span 8; }
+.col-6  { grid-column: span 6; }
+.col-5  { grid-column: span 5; }
+.col-4  { grid-column: span 4; }
+.col-3  { grid-column: span 3; }
+
+@media (max-width: 1100px) {
+  .col-9, .col-8 { grid-column: span 12; }
+  .col-5, .col-6 { grid-column: span 12; }
+  .col-4, .col-3 { grid-column: span 6; }
+}
+
+@media (max-width: 700px) {
+  .dashboard { grid-template-columns: 1fr; gap: 0.75rem; padding: 0.75rem 0.75rem 3rem; }
+  .col-12,.col-9,.col-8,.col-6,.col-5,.col-4,.col-3 { grid-column: span 1; }
+  .topbar-nav { display: none; }
+}
+
+/* ===================== SECTION ANCHOR ===================== */
+.section-anchor { scroll-margin-top: 70px; }
+
+/* ===================== HERO / KPI ROW ===================== */
+#hero-row {
+  grid-column: span 12;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 1100px) {
+  #hero-row { grid-template-columns: 1fr 1fr; }
+  #hero-name-card { grid-column: span 2; }
+}
+
+@media (max-width: 600px) {
+  #hero-row { grid-template-columns: 1fr 1fr; }
+  #hero-name-card { grid-column: span 2; }
+}
+
+.hero-name-card {
+  background: linear-gradient(135deg, #1e2130 0%, #252a3a 100%);
+  border: 1px solid rgba(59,130,246,0.3);
+}
+
+.hero-name-card:hover { border-color: rgba(59,130,246,0.6); }
+
+.hero-title {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.25;
+  margin-bottom: 0.3rem;
+  letter-spacing: -0.01em;
+}
+
+.hero-subtitle {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--blue);
+  margin-bottom: 0.6rem;
+  letter-spacing: 0.03em;
+}
+
+.hero-descriptor {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  line-height: 1.5;
+}
+
+.kpi-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100px;
+}
+
+.kpi-number {
+  font-family: var(--font-mono);
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+  letter-spacing: -0.03em;
+}
+
+.kpi-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.kpi-sublabel {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-mute);
+  margin-top: 0.2rem;
+}
+
+.kpi-blue  .kpi-number { color: var(--blue); }
+.kpi-green .kpi-number { color: var(--green); }
+.kpi-amber .kpi-number { color: var(--amber); }
+.kpi-purple .kpi-number { color: var(--purple); }
+
+.kpi-blue  { border-top: 2px solid var(--blue); }
+.kpi-green { border-top: 2px solid var(--green); }
+.kpi-amber { border-top: 2px solid var(--amber); }
+.kpi-purple { border-top: 2px solid var(--purple); }
+
+/* ===================== BAR CHART (SKILLS) ===================== */
+.bar-chart-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 160px 1fr 40px;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+@media (max-width: 600px) {
+  .bar-row { grid-template-columns: 110px 1fr 36px; }
+}
+
+.bar-skill-name {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bar-track {
+  height: 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.bar-track::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg, transparent 0px, transparent 9.5%, rgba(255,255,255,0.03) 9.5%, rgba(255,255,255,0.03) 10%
+  );
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  width: 0;
+  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 2px;
+  height: 100%;
+  background: rgba(255,255,255,0.4);
+  border-radius: 0 2px 2px 0;
+}
+
+.bar-pct {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-align: right;
+}
+
+/* bar color variants */
+.bar-blue  { background: linear-gradient(90deg, rgba(59,130,246,0.6), var(--blue)); }
+.bar-green { background: linear-gradient(90deg, rgba(16,185,129,0.6), var(--green)); }
+.bar-amber { background: linear-gradient(90deg, rgba(245,158,11,0.6), var(--amber)); }
+.bar-purple{ background: linear-gradient(90deg, rgba(139,92,246,0.6), var(--purple)); }
+.bar-red   { background: linear-gradient(90deg, rgba(239,68,68,0.6), var(--red)); }
+
+/* ===================== GANTT CHART ===================== */
+.gantt-wrap {
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.gantt-svg-area {
+  min-width: 560px;
+  width: 100%;
+}
+
+/* SVG styles */
+.gantt-axis-line { stroke: var(--border); stroke-width: 1; }
+.gantt-tick      { stroke: var(--border); stroke-width: 1; }
+.gantt-label     { font-family: 'JetBrains Mono', monospace; font-size: 10px; fill: #4a5568; }
+.gantt-job-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; fill: #e2e8f0; }
+.gantt-bar       { rx: 4; ry: 4; cursor: pointer; }
+.gantt-bar:hover { filter: brightness(1.25); }
+
+.gantt-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin-top: 1rem;
+}
+
+.gantt-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-dim);
+}
+
+.gantt-legend-dot {
+  width: 10px; height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* Gantt tooltip */
+.gantt-tooltip-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.gantt-tooltip-row:last-child { border-bottom: none; }
+
+.gantt-tooltip-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  flex: 0 0 140px;
+}
+
+.gantt-tooltip-info {
+  font-size: 11px;
+  color: var(--text);
+}
+
+/* ===================== RADAR / SPIDER CHART ===================== */
+.radar-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+.radar-labels text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  fill: #8892a4;
+  dominant-baseline: middle;
+}
+
+.radar-grid { fill: none; stroke: var(--border); stroke-width: 1; }
+.radar-grid-2 { fill: none; stroke: var(--border); stroke-width: 0.5; opacity: 0.5; }
+.radar-poly {
+  fill: rgba(59,130,246,0.18);
+  stroke: var(--blue);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+.radar-poly-outer {
+  fill: none;
+  stroke: rgba(139,92,246,0.3);
+  stroke-width: 1;
+  stroke-linejoin: round;
+  stroke-dasharray: 4 2;
+}
+.radar-dot {
+  fill: var(--blue);
+  stroke: var(--bg);
+  stroke-width: 1.5;
+}
+.radar-axis { stroke: var(--border); stroke-width: 1; }
+
+/* ===================== DONUT CHART ===================== */
+.donut-wrap {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.donut-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 120px;
+}
+
+.donut-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-dim);
+}
+
+.donut-legend-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.donut-legend-pct {
+  margin-left: auto;
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* ===================== EDUCATION TIMELINE ===================== */
+.edu-timeline {
+  padding-left: 0.5rem;
+}
+
+.edu-svg-timeline {
+  width: 100%;
+  overflow: visible;
+}
+
+/* ===================== PROJECT CARD ===================== */
+.project-card-inner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  align-items: start;
+}
+
+@media (max-width: 600px) {
+  .project-card-inner { grid-template-columns: 1fr; }
+}
+
+.project-title {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.3rem;
+}
+
+.project-year {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--amber);
+  margin-bottom: 0.6rem;
+}
+
+.project-desc {
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+}
+
+.tech-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.tech-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+.tech-tag-blue   { color: var(--blue);   border-color: rgba(59,130,246,0.35);  background: var(--blue-dim); }
+.tech-tag-green  { color: var(--green);  border-color: rgba(16,185,129,0.35);  background: var(--green-dim); }
+.tech-tag-amber  { color: var(--amber);  border-color: rgba(245,158,11,0.35);  background: var(--amber-dim); }
+.tech-tag-purple { color: var(--purple); border-color: rgba(139,92,246,0.35);  background: var(--purple-dim); }
+
+.project-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--blue);
+  border: 1px solid rgba(59,130,246,0.4);
+  background: var(--blue-dim);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  transition: background 0.2s, border-color 0.2s;
+  white-space: nowrap;
+}
+
+.project-link-btn:hover {
+  background: rgba(59,130,246,0.25);
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+/* ===================== CERT CARDS ===================== */
+.cert-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+@media (max-width: 600px) {
+  .cert-grid { grid-template-columns: 1fr; }
+}
+
+.cert-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.85rem 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+
+.cert-card:hover {
+  border-color: rgba(245,158,11,0.4);
+  box-shadow: 0 0 12px rgba(245,158,11,0.06);
+}
+
+.cert-card-type {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.3rem;
+}
+
+.cert-card-name {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.2rem;
+}
+
+.cert-card-inst {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 0.4rem;
+}
+
+.cert-card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cert-card-year {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-mute);
+}
+
+.cert-card-link {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--amber);
+  border: 1px solid rgba(245,158,11,0.3);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.cert-card-link:hover { background: var(--amber-dim); }
+
+/* ===================== CONTACT CARD ===================== */
+.contact-kv {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.contact-row {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.contact-row:last-child { border-bottom: none; }
+
+.contact-key {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.contact-val {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.contact-val a { color: var(--blue); transition: color 0.2s; }
+.contact-val a:hover { color: var(--text); }
+.contact-val.v-green a { color: var(--green); }
+.contact-val.v-green a:hover { color: var(--text); }
+.contact-val.v-purple a { color: var(--purple); }
+.contact-val.v-purple a:hover { color: var(--text); }
+.contact-val.v-amber { color: var(--amber); }
+
+/* ===================== EXPERIENCE DETAIL LIST ===================== */
+.exp-detail-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.exp-item {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--blue);
+  border-radius: var(--radius);
+  padding: 0.85rem 1rem;
+  transition: border-left-color 0.2s;
+}
+
+.exp-item:nth-child(2) { border-left-color: var(--green); }
+.exp-item:nth-child(3) { border-left-color: var(--purple); }
+.exp-item:nth-child(4) { border-left-color: var(--amber); }
+
+.exp-item:hover { border-color: rgba(59,130,246,0.4); }
+
+.exp-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-bottom: 0.3rem;
+}
+
+.exp-item-title {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.exp-item-date {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-mute);
+  white-space: nowrap;
+}
+
+.exp-item-org {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-bottom: 0.5rem;
+}
+
+.exp-item-bullets {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.exp-bullet {
+  font-size: 11px;
+  color: var(--text-dim);
+  line-height: 1.5;
+  display: flex;
+  gap: 0.4rem;
+}
+
+.exp-bullet::before {
+  content: '▸';
+  color: var(--blue);
+  flex-shrink: 0;
+  font-size: 9px;
+  margin-top: 2px;
+}
+
+.exp-pubs {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.pub-link {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  border: 1px solid;
+}
+
+.pub-link-blue   { color: var(--blue); border-color: rgba(59,130,246,0.3); background: var(--blue-dim); }
+.pub-link-green  { color: var(--green); border-color: rgba(16,185,129,0.3); background: var(--green-dim); }
+.pub-link-amber  { color: var(--amber); border-color: rgba(245,158,11,0.3); background: var(--amber-dim); }
+.pub-link-purple { color: var(--purple); border-color: rgba(139,92,246,0.3); background: var(--purple-dim); }
+.pub-link-red    { color: var(--red); border-color: rgba(239,68,68,0.3); background: var(--red-dim); }
+
+.pub-link:hover { filter: brightness(1.3); }
+
+/* ===================== SCATTER DECORATION ===================== */
+.scatter-deco {
+  position: absolute;
+  top: 0; right: 0;
+  width: 110px; height: 80px;
+  pointer-events: none;
+  opacity: 0.25;
+}
+
+/* ===================== ANIMATIONS ===================== */
+@keyframes fillBar {
+  from { width: 0; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+  animation: fadeInUp 0.45s ease both;
+}
+
+.card:nth-child(1)  { animation-delay: 0.03s; }
+.card:nth-child(2)  { animation-delay: 0.07s; }
+.card:nth-child(3)  { animation-delay: 0.11s; }
+.card:nth-child(4)  { animation-delay: 0.15s; }
+.card:nth-child(5)  { animation-delay: 0.19s; }
+.card:nth-child(6)  { animation-delay: 0.23s; }
+.card:nth-child(7)  { animation-delay: 0.27s; }
+.card:nth-child(8)  { animation-delay: 0.31s; }
+.card:nth-child(9)  { animation-delay: 0.35s; }
+.card:nth-child(10) { animation-delay: 0.39s; }
+.card:nth-child(11) { animation-delay: 0.43s; }
+
+/* ===================== FOOTER ===================== */
+.dash-footer {
+  grid-column: span 12;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-mute);
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+  letter-spacing: 0.05em;
+}
+</style>
+</head>
+<body>
+
+<!-- ===================== TOPBAR ===================== -->
+<header id="topbar">
+  <div class="topbar-brand">diego_santibanez<span>.ds</span></div>
+  <nav class="topbar-nav">
+    <a href="#kpi"       class="active">KPIs</a>
+    <a href="#skills">Competencias</a>
+    <a href="#gantt">Trayectoria</a>
+    <a href="#soft">Soft Skills</a>
+    <a href="#proyecto">Proyecto</a>
+    <a href="#educacion">Educacion</a>
+    <a href="#certs">Certificados</a>
+    <a href="#contacto">Contacto</a>
+  </nav>
+  <div class="topbar-status">
+    <div class="status-dot"></div>
+    <span id="ts"></span>
+  </div>
+</header>
+
+<!-- ===================== DASHBOARD ===================== -->
+<main class="dashboard">
+
+  <!-- ===== ROW 1: KPI HERO ===== -->
+  <div id="kpi" class="section-anchor" style="grid-column:span 12; display:grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap:1rem;">
+
+    <!-- Name card -->
+    <div class="card hero-name-card" style="position:relative; overflow:hidden;">
+      <!-- Scatter decoration SVG -->
+      <svg class="scatter-deco" viewBox="0 0 110 80" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="15"  cy="20" r="2" fill="#3b82f6"/>
+        <circle cx="35"  cy="8"  r="1.5" fill="#10b981"/>
+        <circle cx="55"  cy="30" r="2.5" fill="#8b5cf6"/>
+        <circle cx="75"  cy="12" r="1.5" fill="#f59e0b"/>
+        <circle cx="90"  cy="45" r="2"   fill="#3b82f6"/>
+        <circle cx="100" cy="22" r="1"   fill="#ef4444"/>
+        <circle cx="42"  cy="55" r="1.5" fill="#10b981"/>
+        <circle cx="68"  cy="60" r="2"   fill="#3b82f6"/>
+        <circle cx="20"  cy="65" r="1"   fill="#8b5cf6"/>
+        <circle cx="85"  cy="70" r="1.5" fill="#f59e0b"/>
+        <line x1="15" y1="20" x2="35" y2="8"   stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+        <line x1="35" y1="8"  x2="55" y2="30"  stroke="#10b981" stroke-width="0.5" opacity="0.4"/>
+        <line x1="55" y1="30" x2="75" y2="12"  stroke="#8b5cf6" stroke-width="0.5" opacity="0.4"/>
+        <line x1="75" y1="12" x2="90" y2="45"  stroke="#f59e0b" stroke-width="0.5" opacity="0.4"/>
+        <line x1="90" y1="45" x2="100" y2="22" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+      </svg>
+      <div class="card-inner">
+        <div class="card-label">Identificacion del analista</div>
+        <div class="hero-title">Diego Santibanez<br>Oyarce</div>
+        <div class="hero-subtitle">Cientifico de Datos</div>
+        <div class="hero-descriptor">Egresado Ing. Civil Ciencia de Datos<br>UTEM &mdash; Agosto 2025</div>
+      </div>
+    </div>
+
+    <!-- KPI: Años experiencia -->
+    <div class="card kpi-card kpi-blue">
+      <div class="card-inner">
+        <div class="card-label">Experiencia</div>
+        <div class="kpi-number">2+</div>
+        <div class="kpi-label">anos activos</div>
+        <div class="kpi-sublabel">desde 2023-12</div>
+      </div>
+    </div>
+
+    <!-- KPI: Proyectos -->
+    <div class="card kpi-card kpi-green">
+      <div class="card-inner">
+        <div class="card-label">Proyectos</div>
+        <div class="kpi-number">1</div>
+        <div class="kpi-label">desplegado</div>
+        <div class="kpi-sublabel">Streamlit Cloud</div>
+      </div>
+    </div>
+
+    <!-- KPI: Habilidades -->
+    <div class="card kpi-card kpi-amber">
+      <div class="card-inner">
+        <div class="card-label">Habilidades</div>
+        <div class="kpi-number">21</div>
+        <div class="kpi-label">competencias</div>
+        <div class="kpi-sublabel">13 hard / 8 soft</div>
+      </div>
+    </div>
+
+    <!-- KPI: Certificados -->
+    <div class="card kpi-card kpi-purple">
+      <div class="card-inner">
+        <div class="card-label">Certificados</div>
+        <div class="kpi-number">4</div>
+        <div class="kpi-label">verificados</div>
+        <div class="kpi-sublabel">2024&ndash;2025</div>
+      </div>
+    </div>
+
+  </div><!-- /kpi row -->
+
+  <!-- ===== ROW 2: SKILLS BAR CHART + DONUT ===== -->
+  <div id="skills" class="card col-8 section-anchor">
+    <div class="card-inner">
+      <div class="card-label">Competencias tecnicas &mdash; nivel de dominio (%)</div>
+      <div class="bar-chart-container" id="barChart">
+        <!-- Python -->
+        <div class="bar-row">
+          <div class="bar-skill-name">Python</div>
+          <div class="bar-track"><div class="bar-fill bar-blue" data-pct="95"></div></div>
+          <div class="bar-pct">95%</div>
+        </div>
+        <!-- Pandas -->
+        <div class="bar-row">
+          <div class="bar-skill-name">Pandas</div>
+          <div class="bar-track"><div class="bar-fill bar-blue" data-pct="92"></div></div>
+          <div class="bar-pct">92%</div>
+        </div>
+        <!-- SQL -->
+        <div class="bar-row">
+          <div class="bar-skill-name">SQL</div>
+          <div class="bar-track"><div class="bar-fill bar-green" data-pct="90"></div></div>
+          <div class="bar-pct">90%</div>
+        </div>
+        <!-- Jupyter -->
+        <div class="bar-row">
+          <div class="bar-skill-name">Jupyter</div>
+          <div class="bar-track"><div class="bar-fill bar-amber" data-pct="90"></div></div>
+          <div class="bar-pct">90%</div>
+        </div>
+        <!-- Streamlit -->
+        <div class="bar-row">
+          <div class="bar-skill-name">Streamlit</div>
+          <div class="bar-track"><div class="bar-fill bar-blue" data-pct="88"></div></div>
+          <div class="bar-pct">88%</div>
+        </div>
+        <!-- Plotly -->
+        <div class="bar-row">
+          <div class="bar-skill-name">Plotly</div>
+          <div class="bar-track"><div class="bar-fill bar-purple" data-pct="85"></div></div>
+          <div class="bar-pct">85%</div>
+        </div>
+        <!-- Visualizacion -->
+        <div class="bar-row">
+          <div class="bar-skill-name">Visualizacion datos</div>
+          <div class="bar-track"><div class="bar-fill bar-purple" data-pct="85"></div></div>
+          <div class="bar-pct">85%</div>
+        </div>
+        <!-- Web Scraping -->
+        <div class="bar-row">
+          <div class="bar-skill-name">Web Scraping</div>
+          <div class="bar-track"><div class="bar-fill bar-green" data-pct="82"></div></div>
+          <div class="bar-pct">82%</div>
+        </div>
+        <!-- scikit-learn -->
+        <div class="bar-row">
+          <div class="bar-skill-name">scikit-learn</div>
+          <div class="bar-track"><div class="bar-fill bar-red" data-pct="80"></div></div>
+          <div class="bar-pct">80%</div>
+        </div>
+        <!-- PostgreSQL -->
+        <div class="bar-row">
+          <div class="bar-skill-name">PostgreSQL</div>
+          <div class="bar-track"><div class="bar-fill bar-green" data-pct="78"></div></div>
+          <div class="bar-pct">78%</div>
+        </div>
+        <!-- MariaDB -->
+        <div class="bar-row">
+          <div class="bar-skill-name">MariaDB</div>
+          <div class="bar-track"><div class="bar-fill bar-green" data-pct="75"></div></div>
+          <div class="bar-pct">75%</div>
+        </div>
+        <!-- TensorFlow -->
+        <div class="bar-row">
+          <div class="bar-skill-name">TensorFlow</div>
+          <div class="bar-track"><div class="bar-fill bar-red" data-pct="70"></div></div>
+          <div class="bar-pct">70%</div>
+        </div>
+        <!-- SpaCy -->
+        <div class="bar-row">
+          <div class="bar-skill-name">SpaCy</div>
+          <div class="bar-track"><div class="bar-fill bar-amber" data-pct="70"></div></div>
+          <div class="bar-pct">70%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DONUT CHART: Category distribution -->
+  <div class="card col-4">
+    <div class="card-inner">
+      <div class="card-label">Distribucion por categoria</div>
+      <div class="donut-wrap">
+        <!-- SVG Donut -->
+        <svg width="130" height="130" viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">
+          <!-- Background ring -->
+          <circle cx="65" cy="65" r="50" fill="none" stroke="#1e2130" stroke-width="22"/>
+          <!-- Data Engineering: ~30% = 188.4 deg -->
+          <circle cx="65" cy="65" r="50" fill="none" stroke="#3b82f6" stroke-width="22"
+            stroke-dasharray="94.2 219.9" stroke-dashoffset="0"
+            transform="rotate(-90 65 65)"/>
+          <!-- ML/AI: ~23% = 144.5 deg -->
+          <circle cx="65" cy="65" r="50" fill="none" stroke="#10b981" stroke-width="22"
+            stroke-dasharray="72.3 241.8" stroke-dashoffset="-94.2"
+            transform="rotate(-90 65 65)"/>
+          <!-- Viz: ~23% -->
+          <circle cx="65" cy="65" r="50" fill="none" stroke="#8b5cf6" stroke-width="22"
+            stroke-dasharray="72.3 241.8" stroke-dashoffset="-166.5"
+            transform="rotate(-90 65 65)"/>
+          <!-- Databases: ~24% -->
+          <circle cx="65" cy="65" r="50" fill="none" stroke="#f59e0b" stroke-width="22"
+            stroke-dasharray="75.4 238.7" stroke-dashoffset="-238.8"
+            transform="rotate(-90 65 65)"/>
+          <!-- Center label -->
+          <text x="65" y="61" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="18" font-weight="700" fill="#e2e8f0">13</text>
+          <text x="65" y="75" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#8892a4">skills</text>
+        </svg>
+
+        <div class="donut-legend">
+          <div class="donut-legend-item">
+            <div class="donut-legend-dot" style="background:var(--blue)"></div>
+            <span>Datos</span>
+            <span class="donut-legend-pct" style="color:var(--blue)">30%</span>
+          </div>
+          <div class="donut-legend-item">
+            <div class="donut-legend-dot" style="background:var(--green)"></div>
+            <span>ML / IA</span>
+            <span class="donut-legend-pct" style="color:var(--green)">23%</span>
+          </div>
+          <div class="donut-legend-item">
+            <div class="donut-legend-dot" style="background:var(--purple)"></div>
+            <span>Viz</span>
+            <span class="donut-legend-pct" style="color:var(--purple)">23%</span>
+          </div>
+          <div class="donut-legend-item">
+            <div class="donut-legend-dot" style="background:var(--amber)"></div>
+            <span>Bases datos</span>
+            <span class="donut-legend-pct" style="color:var(--amber)">24%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mini KPI bar -->
+      <div style="margin-top:1.25rem; border-top:1px solid var(--border); padding-top:1rem;">
+        <div class="card-label" style="margin-bottom:0.6rem;">nivel promedio</div>
+        <div style="display:flex; align-items:center; gap:0.75rem;">
+          <div style="flex:1; height:8px; background:var(--bg); border:1px solid var(--border); border-radius:4px; overflow:hidden;">
+            <div class="bar-fill bar-blue" data-pct="82" style="height:100%;"></div>
+          </div>
+          <span style="font-family:var(--font-mono); font-size:13px; font-weight:700; color:var(--blue);">82%</span>
+        </div>
+        <div style="font-family:var(--font-mono); font-size:9px; color:var(--text-mute); margin-top:0.3rem;">media ponderada de 13 habilidades</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ROW 3: GANTT CHART ===== -->
+  <div id="gantt" class="card col-12 section-anchor">
+    <div class="card-inner">
+      <div class="card-label">Trayectoria profesional &mdash; diagrama gantt 2023&ndash;2025</div>
+      <div class="gantt-wrap">
+        <svg class="gantt-svg-area" id="ganttSvg" viewBox="0 0 860 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet">
+
+          <!-- Grid lines vertical (monthly ticks) -->
+          <!-- Jan 2024 = x ~80, Jan 2025 = x ~480 -->
+          <!-- Total span: Dec 2023 to Sep 2025 = 21 months => 1 month ≈ 38px, start x=140, end x=840 -->
+          <!-- x = 140 + (month_index) * 33.3 where month 0 = Dec 2023 -->
+
+          <!-- Vertical grid lines for each quarter -->
+          <line x1="140" y1="20" x2="140" y2="170" stroke="#2d3348" stroke-width="1"/>
+          <!-- Mar 2024: month 3 = 140+3*33.3=240 -->
+          <line x1="240" y1="20" x2="240" y2="170" stroke="#2d3348" stroke-width="0.5" stroke-dasharray="3 3"/>
+          <!-- Jun 2024: month 6 = 140+6*33.3=340 -->
+          <line x1="340" y1="20" x2="340" y2="170" stroke="#2d3348" stroke-width="0.5" stroke-dasharray="3 3"/>
+          <!-- Sep 2024: month 9 = 140+9*33.3=440 -->
+          <line x1="440" y1="20" x2="440" y2="170" stroke="#2d3348" stroke-width="0.5" stroke-dasharray="3 3"/>
+          <!-- Dec 2024: month 12 = 140+12*33.3=540 -->
+          <line x1="540" y1="20" x2="540" y2="170" stroke="#2d3348" stroke-width="1"/>
+          <!-- Mar 2025: month 15 = 140+15*33.3=640 -->
+          <line x1="640" y1="20" x2="640" y2="170" stroke="#2d3348" stroke-width="0.5" stroke-dasharray="3 3"/>
+          <!-- Jun 2025: month 18 = 140+18*33.3=740 -->
+          <line x1="740" y1="20" x2="740" y2="170" stroke="#2d3348" stroke-width="0.5" stroke-dasharray="3 3"/>
+          <!-- Sep 2025: month 21 = 140+21*33.3=840 -->
+          <line x1="840" y1="20" x2="840" y2="170" stroke="#2d3348" stroke-width="1"/>
+
+          <!-- X axis line -->
+          <line x1="140" y1="170" x2="840" y2="170" stroke="#4a5568" stroke-width="1.5"/>
+
+          <!-- Axis labels -->
+          <text x="140" y="185" text-anchor="middle" class="gantt-label">Dic 2023</text>
+          <text x="240" y="185" text-anchor="middle" class="gantt-label">Mar 24</text>
+          <text x="340" y="185" text-anchor="middle" class="gantt-label">Jun 24</text>
+          <text x="440" y="185" text-anchor="middle" class="gantt-label">Sep 24</text>
+          <text x="540" y="185" text-anchor="middle" class="gantt-label">Dic 24</text>
+          <text x="640" y="185" text-anchor="middle" class="gantt-label">Mar 25</text>
+          <text x="740" y="185" text-anchor="middle" class="gantt-label">Jun 25</text>
+          <text x="840" y="185" text-anchor="middle" class="gantt-label">Sep 25</text>
+
+          <!-- ======================== -->
+          <!-- BARS                      -->
+          <!-- Formula: x = 140 + (start_month_offset * 33.3)  -->
+          <!-- width = duration_months * 33.3                   -->
+          <!-- month 0 = Dec 2023                               -->
+          <!-- ======================== -->
+
+          <!-- Row labels -->
+          <text x="130" y="52"  text-anchor="end" class="gantt-label" fill="#8892a4">Asistente Invest.</text>
+          <text x="130" y="87"  text-anchor="end" class="gantt-label" fill="#8892a4">Tec. Datos Avanz.</text>
+          <text x="130" y="122" text-anchor="end" class="gantt-label" fill="#8892a4">Ayud. Catedra</text>
+          <text x="130" y="157" text-anchor="end" class="gantt-label" fill="#8892a4">Practicante</text>
+
+          <!-- 1. Asistente investigacion: Dec 2023 (offset 0) to Sep 2025 (offset 21) = 21 months * 33.3 = 700 -->
+          <!-- x=140, width=700 -->
+          <rect class="gantt-bar" x="140" y="38" width="700" height="22" rx="4" ry="4" fill="#3b82f6" opacity="0.85">
+            <title>Asistente de investigacion | UTEM | Dic 2023 – Sep 2025 (21 meses)</title>
+          </rect>
+          <text x="148" y="53" class="gantt-job-label">Asistente Investigacion UTEM</text>
+
+          <!-- Event markers on bar 1 -->
+          <!-- Ene 2024 = offset 1 = x 173 -->
+          <circle cx="173" cy="49" r="4" fill="#10b981" stroke="#0f1117" stroke-width="1.5">
+            <title>Poster Jornadas Ciencia de Datos, Ene 2024</title>
+          </circle>
+          <!-- Sep 2024 = offset 9 = x 440 -->
+          <circle cx="440" cy="49" r="4" fill="#f59e0b" stroke="#0f1117" stroke-width="1.5">
+            <title>Flash Talk + Poster Carla2024, Sep 2024</title>
+          </circle>
+          <!-- Oct 2024 = offset 10 = x 473 -->
+          <circle cx="473" cy="49" r="4" fill="#8b5cf6" stroke="#0f1117" stroke-width="1.5">
+            <title>Poster III Congreso Vive la Investigacion, Oct 2024</title>
+          </circle>
+          <!-- Nov 2024 = offset 11 = x 507 -->
+          <circle cx="507" cy="49" r="4" fill="#ef4444" stroke="#0f1117" stroke-width="1.5">
+            <title>Poster + Flash Talk Bioinformatica, Nov 2024</title>
+          </circle>
+          <!-- Sep 2025 = offset 21 = x 840 -->
+          <circle cx="840" cy="49" r="5" fill="#f59e0b" stroke="#0f1117" stroke-width="1.5">
+            <title>Premio Mejor Poster Carla2025, Sep 2025</title>
+          </circle>
+          <!-- Trophy star at award marker -->
+          <text x="840" y="37" text-anchor="middle" font-size="9" fill="#f59e0b">★</text>
+
+          <!-- 2. Tecnico analisis: Feb 2025 (offset 14) to Sep 2025 (offset 21) = 7 months * 33.3 = 233 -->
+          <!-- x = 140 + 14*33.3 = 140+466=606, width=233 -->
+          <rect class="gantt-bar" x="606" y="73" width="233" height="22" rx="4" ry="4" fill="#10b981" opacity="0.85">
+            <title>Tecnico Analisis de Datos Avanzado | UTEM | Feb 2025 – Sep 2025 (7 meses)</title>
+          </rect>
+          <text x="614" y="88" class="gantt-job-label">Tec. Datos Avanzado</text>
+
+          <!-- 3. Ayudante Catedra: Mar 2025 (offset 15) to Jul 2025 (offset 19) = 4 months * 33.3 = 133 -->
+          <!-- x = 140 + 15*33.3 = 140+500=640, width=133 -->
+          <rect class="gantt-bar" x="640" y="108" width="133" height="22" rx="4" ry="4" fill="#8b5cf6" opacity="0.85">
+            <title>Ayudante Catedra Visualizacion de Datos | UTEM | Mar 2025 – Jul 2025 (4 meses)</title>
+          </rect>
+          <text x="648" y="123" class="gantt-job-label">Ayudante Catedra</text>
+
+          <!-- 4. Practicante: Aug 2024 (offset 8) to Jan 2025 (offset 13) = 5 months * 33.3 = 166 -->
+          <!-- x = 140 + 8*33.3 = 140+266=406, width=166 -->
+          <rect class="gantt-bar" x="406" y="143" width="166" height="22" rx="4" ry="4" fill="#f59e0b" opacity="0.85">
+            <title>Practicante Profesional | Contraloria General | Ago 2024 – Ene 2025 (5 meses)</title>
+          </rect>
+          <text x="414" y="158" class="gantt-job-label">Practicante Contraloria</text>
+
+        </svg>
+      </div>
+
+      <!-- Legend -->
+      <div class="gantt-legend">
+        <div class="gantt-legend-item">
+          <div class="gantt-legend-dot" style="background:var(--blue)"></div>
+          Asistente de Investigacion &mdash; UTEM
+        </div>
+        <div class="gantt-legend-item">
+          <div class="gantt-legend-dot" style="background:var(--green)"></div>
+          Tecnico Analisis Datos Avanzado &mdash; UTEM
+        </div>
+        <div class="gantt-legend-item">
+          <div class="gantt-legend-dot" style="background:var(--purple)"></div>
+          Ayudante Catedra Viz. Datos &mdash; UTEM
+        </div>
+        <div class="gantt-legend-item">
+          <div class="gantt-legend-dot" style="background:var(--amber)"></div>
+          Practicante Profesional &mdash; Contraloria General
+        </div>
+        <div class="gantt-legend-item">
+          <div class="gantt-legend-dot" style="background:var(--green); border-radius:50%;"></div>
+          <span style="color:var(--green)">●</span>&nbsp;Evento / publicacion academica
+        </div>
+        <div class="gantt-legend-item">
+          <span style="color:var(--amber)">★</span>&nbsp;Premio al mejor poster (Carla2025)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ROW 4: EXPERIENCE DETAILS + RADAR ===== -->
+  <div class="card col-7">
+    <div class="card-inner">
+      <div class="card-label">Detalle de experiencia</div>
+      <div class="exp-detail-list">
+
+        <!-- Asistente investigacion -->
+        <div class="exp-item">
+          <div class="exp-item-header">
+            <div class="exp-item-title">Asistente de investigacion</div>
+            <div class="exp-item-date">2023-12 &rarr; 2025-09</div>
+          </div>
+          <div class="exp-item-org">UTEM &mdash; Universidad Tecnologica Metropolitana</div>
+          <div class="exp-item-bullets">
+            <div class="exp-bullet">6 presentaciones en congresos nacionales e internacionales</div>
+            <div class="exp-bullet">Flash Talk 15 min &mdash; III Reunion Soc. Chilena Bioinformatica (Nov 2024)</div>
+            <div class="exp-bullet">Invitacion a publicar en Bioinformatics Advances (Oxford)</div>
+            <div class="exp-bullet">Premio al mejor poster &mdash; Carla2025 (Sep 2025)</div>
+          </div>
+          <div class="exp-pubs">
+            <a href="https://drive.google.com/file/d/124VDD5x6pBidyC1Wx4ZLehAQixdjZ9dS/view?usp=sharing" target="_blank" class="pub-link pub-link-blue">Cert. Jornadas 2024</a>
+            <a href="https://drive.google.com/file/d/1jHc_2fZiakh2G9t8EkiB7Z3l0iuWBJ7n/view?usp=sharing" target="_blank" class="pub-link pub-link-green">Cert. Carla2024</a>
+            <a href="https://drive.google.com/file/d/1unqW5oOxe5wl84-vmq4Y8AhXmD1sJJL_/view?usp=sharing" target="_blank" class="pub-link pub-link-purple">Cert. III Congreso</a>
+            <a href="https://drive.google.com/file/d/1br_Vv35RmHxvyPScFlhDCJxucFz0ckii/view?usp=sharing" target="_blank" class="pub-link pub-link-amber">Cert. XIV Cong. Arg.</a>
+            <a href="https://drive.google.com/file/d/1-dZ_CdZlYkd58OlGr3v92n8pLshnurje/view?usp=sharing" target="_blank" class="pub-link pub-link-red">Cert. Soc. Chilena</a>
+            <a href="https://drive.google.com/file/d/10tcRQonSWMgKQ8FciWOsCobzQAlWCPr9/view?usp=sharing" target="_blank" class="pub-link pub-link-blue">Cert. Carla2025</a>
+            <a href="https://drive.google.com/file/d/1M_MhsoB8BCUO5LITTVvQw0Hi9l7RU4Vj/view?usp=sharing" target="_blank" class="pub-link pub-link-amber">★ Premio</a>
+          </div>
+        </div>
+
+        <!-- Tecnico -->
+        <div class="exp-item">
+          <div class="exp-item-header">
+            <div class="exp-item-title">Tecnico analisis de datos avanzado</div>
+            <div class="exp-item-date">2025-02 &rarr; 2025-09</div>
+          </div>
+          <div class="exp-item-org">UTEM &mdash; Universidad Tecnologica Metropolitana</div>
+          <div class="exp-item-bullets">
+            <div class="exp-bullet">Web scraping con Selenium y BeautifulSoup</div>
+            <div class="exp-bullet">Dashboards interactivos con Plotly + Streamlit</div>
+            <div class="exp-bullet">Gestion de bases de datos MariaDB / PostgreSQL</div>
+            <div class="exp-bullet">Procesamiento de lenguaje natural (NLP)</div>
+          </div>
+        </div>
+
+        <!-- Ayudante -->
+        <div class="exp-item">
+          <div class="exp-item-header">
+            <div class="exp-item-title">Ayudante Catedra &mdash; Visualizacion de Datos</div>
+            <div class="exp-item-date">2025-03 &rarr; 2025-07</div>
+          </div>
+          <div class="exp-item-org">UTEM &mdash; Universidad Tecnologica Metropolitana</div>
+          <div class="exp-item-bullets">
+            <div class="exp-bullet">Mentoria y ensenanza a estudiantes en tecnicas de visualizacion</div>
+          </div>
+        </div>
+
+        <!-- Practicante -->
+        <div class="exp-item">
+          <div class="exp-item-header">
+            <div class="exp-item-title">Practicante Profesional</div>
+            <div class="exp-item-date">2024-08 &rarr; 2025-01</div>
+          </div>
+          <div class="exp-item-org">Contraloria General de la Republica</div>
+          <div class="exp-item-bullets">
+            <div class="exp-bullet">Analisis de datos con Impala y Oracle</div>
+            <div class="exp-bullet">Consultas SQL avanzadas y automatizacion con Python</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- RADAR: Soft skills -->
+  <div id="soft" class="card col-5 section-anchor">
+    <div class="card-inner">
+      <div class="card-label">Habilidades blandas &mdash; perfil radar</div>
+      <div class="radar-wrap">
+        <svg width="280" height="280" viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+              <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <!-- Center = 140,140; radius levels: 30,55,80,100 -->
+
+          <!-- Grid circles -->
+          <polygon points="140,40 197,69 197,111 140,140 83,111 83,69" fill="none" stroke="#2d3348" stroke-width="1"/>
+          <polygon points="140,65 181,87 181,110 140,125 99,110 99,87" fill="none" stroke="#2d3348" stroke-width="0.7" stroke-dasharray="3 2"/>
+          <polygon points="140,90 165,105 165,120 140,130 115,120 115,105" fill="none" stroke="#2d3348" stroke-width="0.5" stroke-dasharray="2 3"/>
+
+          <!-- 8-sided polygon for 8 skills — center 140,140, adjusted for 8 vertices -->
+          <!-- angle step = 360/8 = 45deg, start from top (270deg) -->
+          <!-- r_max = 100 for 100% score -->
+          <!-- Vertices at r=100: -->
+          <!-- 0:  270deg = (140, 40) -->
+          <!-- 1:  315deg = (140+70.7, 140-70.7) = (210.7, 69.3) -->
+          <!-- 2:    0deg = (240, 140) -->
+          <!-- 3:   45deg = (210.7, 210.7) -->
+          <!-- 4:   90deg = (140, 240) -->
+          <!-- 5:  135deg = (69.3, 210.7) -->
+          <!-- 6:  180deg = (40, 140) -->
+          <!-- 7:  225deg = (69.3, 69.3) -->
+
+          <!-- Outer reference octagon (r=100) -->
+          <polygon points="140,40 210.7,69.3 240,140 210.7,210.7 140,240 69.3,210.7 40,140 69.3,69.3"
+            fill="none" stroke="#2d3348" stroke-width="1"/>
+
+          <!-- Mid octagon (r=50) -->
+          <polygon points="140,90 175.4,104.6 190,140 175.4,175.4 140,190 104.6,175.4 90,140 104.6,104.6"
+            fill="none" stroke="#2d3348" stroke-width="0.5" stroke-dasharray="3 2"/>
+
+          <!-- Axis lines -->
+          <line x1="140" y1="140" x2="140" y2="40"      stroke="#2d3348" stroke-width="0.7"/>
+          <line x1="140" y1="140" x2="210.7" y2="69.3"  stroke="#2d3348" stroke-width="0.7"/>
+          <line x1="140" y1="140" x2="240" y2="140"      stroke="#2d3348" stroke-width="0.7"/>
+          <line x1="140" y1="140" x2="210.7" y2="210.7" stroke="#2d3348" stroke-width="0.7"/>
+          <line x1="140" y1="140" x2="140" y2="240"      stroke="#2d3348" stroke-width="0.7"/>
+          <line x1="140" y1="140" x2="69.3" y2="210.7"  stroke="#2d3348" stroke-width="0.7"/>
+          <line x1="140" y1="140" x2="40" y2="140"       stroke="#2d3348" stroke-width="0.7"/>
+          <line x1="140" y1="140" x2="69.3" y2="69.3"   stroke="#2d3348" stroke-width="0.7"/>
+
+          <!-- Data polygon — each skill gets a score 0–100 mapped to r 0–100 -->
+          <!-- Skills (all rated highly, inner polygon):                                  -->
+          <!-- 0 Resolucion Problemas   90% r=90 → 140, 140-90=50                        -->
+          <!-- 1 Pensamiento Critico    88% r=88 → x=140+88*sin(45)=140+62.2=202.2, y=140-88*cos(45)=140-62.2=77.8 -->
+          <!-- 2 Adaptabilidad          92% r=92 → x=140+92=232, y=140                   -->
+          <!-- 3 Mentoria               80% r=80 → x=140+80*sin(45)=196.6, y=140+80*cos(45)=196.6 -->
+          <!-- 4 Curiosidad intelectual 95% r=95 → x=140, y=140+95=235                   -->
+          <!-- 5 Responsabilidad        90% r=90 → x=140-90*sin(45)=76.4, y=140+90*cos(45)=203.6 -->
+          <!-- 6 Ment. experimentacion  85% r=85 → x=140-85=55, y=140                    -->
+          <!-- 7 Mentalidad analitica   93% r=93 → x=140-93*sin(45)=74.2, y=140-93*cos(45)=74.2 -->
+          <polygon
+            points="140,50 202.2,77.8 232,140 196.6,196.6 140,235 76.4,203.6 55,140 74.2,74.2"
+            class="radar-poly" filter="url(#glow)"/>
+
+          <!-- Data point dots -->
+          <circle cx="140"   cy="50"    r="3.5" class="radar-dot"><title>Resolucion de Problemas: 90%</title></circle>
+          <circle cx="202.2" cy="77.8"  r="3.5" class="radar-dot"><title>Pensamiento Critico: 88%</title></circle>
+          <circle cx="232"   cy="140"   r="3.5" class="radar-dot"><title>Adaptabilidad: 92%</title></circle>
+          <circle cx="196.6" cy="196.6" r="3.5" class="radar-dot"><title>Mentoria: 80%</title></circle>
+          <circle cx="140"   cy="235"   r="3.5" class="radar-dot"><title>Curiosidad Intelectual: 95%</title></circle>
+          <circle cx="76.4"  cy="203.6" r="3.5" class="radar-dot"><title>Responsabilidad: 90%</title></circle>
+          <circle cx="55"    cy="140"   r="3.5" class="radar-dot"><title>Ment. Experimentacion: 85%</title></circle>
+          <circle cx="74.2"  cy="74.2"  r="3.5" class="radar-dot"><title>Mentalidad Analitica: 93%</title></circle>
+
+          <!-- Axis labels -->
+          <text x="140"   y="32"    text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8.5" fill="#8892a4">Resolucion</text>
+          <text x="218"   y="64"    text-anchor="start"  font-family="JetBrains Mono,monospace" font-size="8.5" fill="#8892a4">Pensamiento</text>
+          <text x="248"   y="143"   text-anchor="start"  font-family="JetBrains Mono,monospace" font-size="8.5" fill="#8892a4">Adaptab.</text>
+          <text x="218"   y="218"   text-anchor="start"  font-family="JetBrains Mono,monospace" font-size="8.5" fill="#8892a4">Mentoria</text>
+          <text x="140"   y="254"   text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8.5" fill="#8892a4">Curiosidad</text>
+          <text x="62"    y="218"   text-anchor="end"    font-family="JetBrains Mono,monospace" font-size="8.5" fill="#8892a4">Responsab.</text>
+          <text x="32"    y="143"   text-anchor="end"    font-family="JetBrains Mono,monospace" font-size="8.5" fill="#8892a4">Experim.</text>
+          <text x="62"    y="64"    text-anchor="end"    font-family="JetBrains Mono,monospace" font-size="8.5" fill="#8892a4">Analitica</text>
+
+          <!-- Center dot -->
+          <circle cx="140" cy="140" r="2.5" fill="#3b82f6"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ROW 5: PROJECT CARD + EDUCATION ===== -->
+  <div id="proyecto" class="card col-7 section-anchor">
+    <div class="card-inner">
+      <div class="card-label">Proyecto destacado</div>
+      <div class="project-card-inner">
+        <div>
+          <div class="project-title">Dashboard de avance de proyecto</div>
+          <div class="project-year">// 2025 &mdash; Streamlit</div>
+          <div class="project-desc">
+            Dashboard interactivo para visualizar el avance y estado de los datos del proyecto.
+            Integracion de mapas geograficos (Folium), queries SQL en memoria (DuckDB)
+            y visualizaciones dinamicas con Plotly.
+          </div>
+          <div class="tech-tags">
+            <span class="tech-tag tech-tag-blue">Python</span>
+            <span class="tech-tag tech-tag-blue">Streamlit</span>
+            <span class="tech-tag tech-tag-green">Pandas</span>
+            <span class="tech-tag tech-tag-purple">Plotly</span>
+            <span class="tech-tag tech-tag-amber">DuckDB</span>
+            <span class="tech-tag tech-tag-green">Folium</span>
+          </div>
+        </div>
+        <div>
+          <a href="https://dashboarddatalake-fiut-utem.streamlit.app/" target="_blank" class="project-link-btn">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M10 6.5V10H2V2h3.5V1H2C1.45 1 1 1.45 1 2v8c0 .55.45 1 1 1h8c.55 0 1-.45 1-1V6.5h-1zm-3-5V1h4v4l-1-1-3.29 3.29-.71-.71L9.59 3 8.5 1.5z"/></svg>
+            Ver app
+          </a>
+
+          <!-- Mini donut for tech stack -->
+          <div style="margin-top:1rem; text-align:center;">
+            <svg width="90" height="90" viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="45" cy="45" r="35" fill="none" stroke="#1e2130" stroke-width="16"/>
+              <!-- Python+Streamlit: 2/6 = 33% -->
+              <circle cx="45" cy="45" r="35" fill="none" stroke="#3b82f6" stroke-width="16"
+                stroke-dasharray="73.3 146.6" stroke-dashoffset="0" transform="rotate(-90 45 45)"/>
+              <!-- Pandas+DuckDB: 2/6 = 33% -->
+              <circle cx="45" cy="45" r="35" fill="none" stroke="#10b981" stroke-width="16"
+                stroke-dasharray="73.3 146.6" stroke-dashoffset="-73.3" transform="rotate(-90 45 45)"/>
+              <!-- Plotly+Folium: 2/6 = 33% -->
+              <circle cx="45" cy="45" r="35" fill="none" stroke="#8b5cf6" stroke-width="16"
+                stroke-dasharray="73.3 146.6" stroke-dashoffset="-146.6" transform="rotate(-90 45 45)"/>
+              <text x="45" y="42" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#e2e8f0">6</text>
+              <text x="45" y="54" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="#8892a4">techs</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDUCATION timeline -->
+  <div id="educacion" class="card col-5 section-anchor">
+    <div class="card-inner">
+      <div class="card-label">Formacion academica &mdash; timeline</div>
+      <div class="edu-timeline">
+        <svg width="100%" viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg" style="overflow:visible;">
+
+          <!-- Vertical timeline axis -->
+          <line x1="60" y1="20" x2="60" y2="160" stroke="#2d3348" stroke-width="2"/>
+
+          <!-- Year markers -->
+          <!-- 2020 -->
+          <circle cx="60" cy="30" r="5" fill="#3b82f6" stroke="#0f1117" stroke-width="2"/>
+          <line x1="60" y1="30" x2="75" y2="30" stroke="#3b82f6" stroke-width="1"/>
+          <text x="68" y="26" font-family="JetBrains Mono,monospace" font-size="9" fill="#3b82f6" font-weight="700">2020</text>
+          <text x="68" y="38" font-family="JetBrains Mono,monospace" font-size="8" fill="#8892a4">Ingreso UTEM</text>
+
+          <!-- 2023 midpoint marker -->
+          <circle cx="60" cy="85" r="3" fill="#4a5568" stroke="#0f1117" stroke-width="1.5"/>
+          <text x="68" y="88" font-family="JetBrains Mono,monospace" font-size="8" fill="#4a5568">2023</text>
+
+          <!-- 2025 -->
+          <circle cx="60" cy="150" r="7" fill="#10b981" stroke="#0f1117" stroke-width="2"/>
+          <line x1="60" y1="150" x2="75" y2="150" stroke="#10b981" stroke-width="1"/>
+          <text x="68" y="146" font-family="JetBrains Mono,monospace" font-size="9" fill="#10b981" font-weight="700">2025</text>
+          <text x="68" y="158" font-family="JetBrains Mono,monospace" font-size="8" fill="#10b981">Egreso UTEM</text>
+
+          <!-- Gradient fill bar along axis -->
+          <defs>
+            <linearGradient id="timelineGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%"   stop-color="#3b82f6" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="#10b981" stop-opacity="0.8"/>
+            </linearGradient>
+          </defs>
+          <rect x="58" y="30" width="4" height="120" fill="url(#timelineGrad)" rx="2"/>
+
+          <!-- Degree box -->
+          <rect x="10" y="58" width="42" height="50" rx="4" fill="#1e2130" stroke="#2d3348" stroke-width="1"/>
+          <text x="31" y="80" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="#3b82f6" font-weight="600">Ing.</text>
+          <text x="31" y="90" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="#3b82f6">Civil</text>
+          <text x="31" y="100" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="#8892a4">Cs. Datos</text>
+
+          <!-- Duration badge -->
+          <rect x="150" y="80" width="110" height="40" rx="6" fill="#1e2130" stroke="#2d3348" stroke-width="1"/>
+          <text x="205" y="97" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="#e2e8f0" font-weight="600">Ingeniero Civil</text>
+          <text x="205" y="108" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="#8892a4">Ciencia de Datos</text>
+          <text x="205" y="117" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="#3b82f6">UTEM &mdash; 5 anos</text>
+
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ROW 6: CERTIFICATES ===== -->
+  <div id="certs" class="card col-8 section-anchor">
+    <div class="card-inner">
+      <div class="card-label">Certificaciones verificadas &mdash; 4 credenciales</div>
+      <div class="cert-grid">
+
+        <div class="cert-card">
+          <div class="cert-card-type">Business Intelligence</div>
+          <div class="cert-card-name">Power BI</div>
+          <div class="cert-card-inst">Santander X</div>
+          <div class="cert-card-row">
+            <span class="cert-card-year">2025</span>
+            <a href="https://drive.google.com/file/d/1IOp4gjfLcW8XhqbiwwOd9dzlz8l60P5q/view?usp=drive_link" target="_blank" class="cert-card-link">Ver cert →</a>
+          </div>
+        </div>
+
+        <div class="cert-card">
+          <div class="cert-card-type">Idioma</div>
+          <div class="cert-card-name">Ingles B2 Upper Intermediate</div>
+          <div class="cert-card-inst">Certificacion Internacional</div>
+          <div class="cert-card-row">
+            <span class="cert-card-year">2025</span>
+            <a href="https://drive.google.com/file/d/1KT12-fKSs20wCu_AO6c6nEHYi5_v0mK1/view?usp=sharing" target="_blank" class="cert-card-link">Ver cert →</a>
+          </div>
+        </div>
+
+        <div class="cert-card">
+          <div class="cert-card-type">Cloud / Infraestructura</div>
+          <div class="cert-card-name">AWS Data Center Technician</div>
+          <div class="cert-card-inst">Amazon Web Services</div>
+          <div class="cert-card-row">
+            <span class="cert-card-year">2024</span>
+            <a href="https://drive.google.com/file/d/1pYCaTdbJQAmruxvoknp92QbIys4Bt7Ws/view?usp=sharing" target="_blank" class="cert-card-link">Ver cert →</a>
+          </div>
+        </div>
+
+        <div class="cert-card">
+          <div class="cert-card-type">Ciencia de Datos</div>
+          <div class="cert-card-name">Introduccion a la Ciencia de Datos</div>
+          <div class="cert-card-inst">Santander Open Academy</div>
+          <div class="cert-card-row">
+            <span class="cert-card-year">2025</span>
+            <a href="https://drive.google.com/file/d/1vmeQuzoZEwUTC0Pz7Xl_rlobqXcreX5w/view?usp=sharing" target="_blank" class="cert-card-link">Ver cert →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACT -->
+  <div id="contacto" class="card col-4 section-anchor">
+    <div class="card-inner">
+      <div class="card-label">Datos de contacto</div>
+      <div class="contact-kv">
+
+        <div class="contact-row">
+          <div class="contact-key">email</div>
+          <div class="contact-val">
+            <a href="mailto:dsantibanezo@utem.cl">dsantibanezo@utem.cl</a>
+          </div>
+        </div>
+
+        <div class="contact-row">
+          <div class="contact-key">telefono</div>
+          <div class="contact-val v-amber">+56 9 8434 1477</div>
+        </div>
+
+        <div class="contact-row">
+          <div class="contact-key">linkedin</div>
+          <div class="contact-val v-green">
+            <a href="https://www.linkedin.com/in/diego-santibanez-oyarce/" target="_blank">diego-santibanez-oyarce</a>
+          </div>
+        </div>
+
+        <div class="contact-row">
+          <div class="contact-key">github</div>
+          <div class="contact-val v-purple">
+            <a href="https://github.com/daso42" target="_blank">github.com/daso42</a>
+          </div>
+        </div>
+
+        <div class="contact-row">
+          <div class="contact-key">ubicacion</div>
+          <div class="contact-val" style="color:var(--text-dim);">Santiago, Chile</div>
+        </div>
+
+        <div class="contact-row">
+          <div class="contact-key">estado</div>
+          <div class="contact-val">
+            <span style="color:var(--green); font-weight:600;">● disponible</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="dash-footer">
+    diego_santibanez.ds &mdash; Cientifico de Datos &mdash; UTEM &mdash; Santiago, Chile &mdash; &copy; 2025
+  </div>
+
+</main>
+
+<!-- ===================== SCRIPTS ===================== -->
+<script>
+// Live timestamp
+function updateTimestamp() {
+  const el = document.getElementById('ts');
+  if (!el) return;
+  const now = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  el.textContent = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+}
+updateTimestamp();
+setInterval(updateTimestamp, 1000);
+
+// Animate bar fills
+function animateBars() {
+  const bars = document.querySelectorAll('.bar-fill[data-pct]');
+  bars.forEach((bar, i) => {
+    const pct = parseFloat(bar.getAttribute('data-pct'));
+    bar.style.width = '0';
+    setTimeout(() => {
+      bar.style.transition = `width 1.1s cubic-bezier(0.4,0,0.2,1) ${i * 55}ms`;
+      bar.style.width = pct + '%';
+    }, 120);
+  });
+}
+
+// IntersectionObserver for bars
+const skillsCard = document.getElementById('skills');
+if (skillsCard) {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        animateBars();
+        obs.disconnect();
+      }
+    });
+  }, { threshold: 0.15 });
+  obs.observe(skillsCard);
+} else {
+  animateBars();
+}
+
+// Active nav link on scroll
+const sections = document.querySelectorAll('.section-anchor');
+const navLinks = document.querySelectorAll('.topbar-nav a');
+
+const ioNav = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = e.target.id;
+      navLinks.forEach(l => {
+        l.classList.toggle('active', l.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
+
+sections.forEach(s => ioNav.observe(s));
+</script>
+
+</body>
+</html>
