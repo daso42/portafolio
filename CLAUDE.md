@@ -4,27 +4,34 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Single-file Streamlit portfolio website (Spanish language) for a Data Science professional. Deployed on Streamlit Cloud at https://portafolio-daso.streamlit.app/ with automatic deployment on push to main.
+Static HTML/CSS/JS portfolio website (Spanish language) for a Data Science professional (`index.html`). There is also a Streamlit prototype (`test_main.py`) used for experimentation.
 
-## Running the App
+## Deployment
+
+El sitio se despliega automáticamente en **GitHub Pages** al hacer push a `main`.
+URL: `https://daso42.github.io/portafolio/`
+
+## Running locally
 
 ```bash
-streamlit run main.py
+python -m http.server 8080
 ```
 
-No additional dependencies beyond `streamlit` (no requirements.txt exists). Hot reload is enabled via `.streamlit/config.toml` (`runOnSave = true`).
+Access at `http://localhost:8080`. On the local network use the machine's IPv4 address (e.g. `http://192.168.x.x:8080`).
 
 ## Architecture
 
-**Single entry point:** `main.py` (~484 lines) contains all application logic, data, and styling.
+The site has three files:
 
-- **Navigation:** Sidebar buttons set `st.session_state.seccion`, and an `if/elif` chain renders the corresponding page section (Inicio, Experiencia, Proyectos, Habilidades, Educación & Certificados, Contacto).
-- **Data:** All portfolio content lives in the `PORTFOLIO_DATA` dictionary and `CONTACTO` dictionary at the top of main.py.
-- **Styling:** Custom CSS is injected via `st.markdown` with `unsafe_allow_html=True`. Uses gradient theme (red `#ff4b4b` to orange `#ff8700`).
-- **Fonts:** Quicksand font family (5 weights) served from `assets/` and configured in `.streamlit/config.toml`.
+- **`index.html`** — shell with DOM placeholders and script/style imports.
+- **`data.js`** — single `PORTFOLIO` object with all content (personal info, experience, projects, skills, education, certificates). Edit this file to update portfolio content.
+- **`js/app.js`** — renders all sections from `PORTFOLIO` data into the DOM. Navigation is handled client-side via `showSection()` toggling CSS classes.
+- **`css/styles.css`** — all styling. Uses CSS variables (`--navy`, `--burg`, `--cream`, `--offwhite`, `--gray`). Desktop applies `zoom: 1.3` on `.container`.
 
 ## Key Notes
 
 - All content is in Spanish.
-- There are no tests, linting config, or CI/CD pipelines — deployment is handled entirely by Streamlit Cloud.
-- No `requirements.txt` or `pyproject.toml` exists; the only external dependency is `streamlit`.
+- Fonts: Playfair Display (serif headings) + Quicksand (body), loaded from Google Fonts.
+- Color theme: navy `#2f3a55`, burgundy `#8b3535`, cream `#e7e2de`, off-white `#f5f6f3`.
+- `test_main.py` is a Streamlit version (experimental). Navigation uses `st.button` + `st.session_state.seccion`. To run: `streamlit run test_main.py`.
+- No build step, no dependencies, no CI/CD.

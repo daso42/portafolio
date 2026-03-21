@@ -56,18 +56,32 @@ div[data-testid="stVerticalBlock"] > div { padding-top: 0; }
 }
 
 /* ══ NAV ══ */
-.nav-bar {
-    display: flex; justify-content: center; gap: 0.2rem;
-    padding: 0.9rem 0 1.2rem; flex-wrap: wrap;
+div[data-testid="stHorizontalBlock"]:first-of-type button {
+    font-family: 'Quicksand', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 0.72rem !important;
+    letter-spacing: 0.1em !important;
+    text-transform: uppercase !important;
+    border-radius: 2px !important;
+    padding: 0.38rem 0.5rem !important;
+    box-shadow: none !important;
+    transition: all 0.2s ease !important;
 }
-.nav-bar a {
-    text-decoration: none; color: #6e6f73; font-weight: 700;
-    font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
-    padding: 0.38rem 0.9rem; border-radius: 2px; border: 1px solid transparent;
-    transition: all 0.2s ease;
+div[data-testid="stHorizontalBlock"]:first-of-type button[kind="secondary"] {
+    color: #6e6f73 !important;
+    background: transparent !important;
+    border: 1px solid transparent !important;
 }
-.nav-bar a:hover { color: #2f3a55; background: #e7e2de; border-color: #e7e2de; }
-.nav-bar a.active { color: #f5f6f3; background: #2f3a55; border-color: #2f3a55; }
+div[data-testid="stHorizontalBlock"]:first-of-type button[kind="secondary"]:hover {
+    color: #2f3a55 !important;
+    background: #e7e2de !important;
+    border-color: #e7e2de !important;
+}
+div[data-testid="stHorizontalBlock"]:first-of-type button[kind="primary"] {
+    color: #f5f6f3 !important;
+    background: #2f3a55 !important;
+    border: 1px solid #2f3a55 !important;
+}
 
 /* ══ HERO ══ */
 .hero-panel {
@@ -306,15 +320,6 @@ div[data-testid="stButton"] button:hover {
 .ft-rule { border: none; border-top: 1px solid #e7e2de; margin: 3rem 0 1rem; }
 .ft { text-align: center; font-size: 0.72rem; color: #6e6f73; letter-spacing: 0.06em; padding-bottom: 1rem; }
 
-/* ══ HIDDEN NAV BUTTONS OVERLAY ══ */
-div[data-testid="stHorizontalBlock"]:has(button) {
-    position: absolute; opacity: 0; pointer-events: all;
-    top: 60px; left: 0; right: 0; height: 50px; z-index: 100;
-}
-div[data-testid="stHorizontalBlock"]:has(button) button {
-    height: 50px !important; border: none !important;
-    background: transparent !important; color: transparent !important;
-}
 </style>
 """
 
@@ -547,11 +552,11 @@ def render_exp_card(exp, idx):
             st.rerun()
 
 
+SECCIONES = ['Inicio', 'Experiencia', 'Proyectos', 'Habilidades', 'Educacion', 'Contacto']
+
 # --- Session state ---
 if 'seccion' not in st.session_state:
     st.session_state.seccion = 'Inicio'
-
-SECCIONES = ['Inicio', 'Experiencia', 'Proyectos', 'Habilidades', 'Educacion', 'Contacto']
 
 
 # --- Masthead (always visible) ---
@@ -576,17 +581,11 @@ st.markdown(
 )
 
 # --- Nav ---
-nav_links = ""
-for s in SECCIONES:
-    active = ' class="active"' if s == st.session_state.seccion else ''
-    nav_links += f'<a href="#{s}"{active}>{s}</a>'
-
-st.markdown(f'<div class="nav-bar">{nav_links}</div>', unsafe_allow_html=True)
-
 cols = st.columns(len(SECCIONES))
 for i, s in enumerate(SECCIONES):
     with cols[i]:
-        if st.button(s, key=f"nav_{s}", use_container_width=True):
+        if st.button(s, key=f"nav_{s}", use_container_width=True,
+                     type="primary" if s == st.session_state.seccion else "secondary"):
             st.session_state.seccion = s
             st.rerun()
 

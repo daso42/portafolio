@@ -70,7 +70,7 @@ function renderMasthead() {
 
   document.getElementById('masthead').innerHTML = `
     <div class="masthead">
-      <div class="masthead-name">DIEGO SANTIBANEZ</div>
+      <div class="masthead-name">DIEGO SANTIBÁÑEZ</div>
       <hr class="rule-heavy">
       <div class="masthead-meta">
         <span>${p.ubicacion}</span>
@@ -91,19 +91,14 @@ function renderInicio() {
   const p = PORTFOLIO.personal;
   const c = PORTFOLIO.contacto;
 
-  const numExp   = PORTFOLIO.experiencia.length;
-  const numSkill = PORTFOLIO.habilidades.tecnicas.length;
-  const numProj  = PORTFOLIO.proyectos.length;
-  const numCert  = PORTFOLIO.certificados.length;
+  const numExp  = PORTFOLIO.experiencia.length;
+  const numProj = PORTFOLIO.proyectos.length;
+  const numCert = PORTFOLIO.certificados.length;
 
   document.getElementById('section-inicio').innerHTML = `
     <div class="hero-grid">
       <div class="hero-panel">
-        <div class="hero-status">
-          <span class="status-dot"></span>
-          Disponible para nuevas oportunidades
-        </div>
-        <div class="hero-name">${p.nombre}</div>
+<div class="hero-name">${p.nombre}</div>
         <div class="hero-role">${p.titulo}</div>
         <div class="hero-bio">${p.bio}</div>
         <div class="hero-cta">
@@ -119,12 +114,8 @@ function renderInicio() {
             <span class="stat-label">Experiencias laborales</span>
           </div>
           <div class="stat-cell">
-            <span class="stat-num">${numSkill}</span>
-            <span class="stat-label">Habilidades tecnicas</span>
-          </div>
-          <div class="stat-cell">
             <span class="stat-num">${numProj}</span>
-            <span class="stat-label">Proyecto destacado</span>
+            <span class="stat-label">Proyectos</span>
           </div>
           <div class="stat-cell">
             <span class="stat-num">${numCert}</span>
@@ -167,7 +158,8 @@ function buildBullet(b) {
         `<a href="${l.url}" target="_blank" rel="noopener" class="exp-link">${l.label}</a>`
       ).join('')}</div>`
     : '';
-  return `<div class="exp-bullet"><span class="exp-dash">&mdash;</span> ${prize}${b.texto}</div>${links}`;
+  const cls = b.es_premio ? 'exp-bullet exp-bullet-prize' : 'exp-bullet';
+  return `<div class="${cls}"><span class="exp-dash">&mdash;</span> ${prize}${b.texto}</div>${links}`;
 }
 
 function buildExpCard(exp, idx) {
@@ -196,9 +188,7 @@ function renderExperiencia() {
   document.getElementById('section-experiencia').innerHTML = `
     ${sectionHeader('Trayectoria Profesional')}
     <div class="exp-grid">
-      <div class="exp-col">${buildExpCard(exps[0], 0)}</div>
-      <div class="exp-col">${buildExpCard(exps[1], 1)}${buildExpCard(exps[2], 2)}</div>
-      <div class="exp-col">${buildExpCard(exps[3], 3)}</div>
+      ${exps.map((exp, i) => buildExpCard(exp, i)).join('')}
     </div>
   `;
 
@@ -319,13 +309,7 @@ function renderContacto() {
 
   document.getElementById('section-contacto').innerHTML = `
     ${sectionHeader('Contacto')}
-    <div class="contact-layout">
-      <div class="contact-left">
-        <div class="contact-heading">Hablemos.</div>
-        <div class="contact-intro">Estoy disponible para nuevas oportunidades en ciencia de datos, analisis e inteligencia artificial. No dudes en escribirme.</div>
-      </div>
-      <div class="contact-right">${items}</div>
-    </div>
+    <div class="contact-grid">${items}</div>
   `;
 }
 

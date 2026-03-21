@@ -1,12 +1,12 @@
 const PORTFOLIO = {
   personal: {
-    nombre:           "Diego Santibanez Oyarce",
+    nombre:           "Diego Santibáñez Oyarce",
     titulo:           "Cientifico de Datos",
     subtitulo:        "Egresado UTEM 2025",
     ubicacion:        "Santiago, Chile",
     disponible:       true,
     especializaciones: ["Ciencia de Datos", "Inteligencia Artificial", "Ingenieria"],
-    bio: "Egresado de Ingenieria Civil en Ciencia de Datos en Agosto 2025, apasionado por la tecnologia y con un gran interes en el uso de la inteligencia artificial como herramienta para la resolucion de problemas del mundo real. Mi formacion academica me proporciono una solida comprension de algoritmos de aprendizaje automatico, analisis y visualizacion de datos. Me gusta proponerme desafios donde pueda poner en practica mis conocimientos y donde ademas pueda aprender cosas nuevas."
+    bio: "Ingeniero Civil en Ciencia de Datos titulado en 2025, apasionado por la tecnologia y con un gran interes en el uso de la inteligencia artificial como herramienta para la resolucion de problemas del mundo real. Mi formacion academica me proporciono una solida comprension de algoritmos de aprendizaje automatico, analisis y visualizacion de datos, Me gusta proponerme desafios donde pueda poner en practica mis conocimientos y donde ademas pueda aprender cosas nuevas."
   },
 
   contacto: {
@@ -18,12 +18,27 @@ const PORTFOLIO = {
 
   experiencia: [
     {
+      cargo:         "Data Scientist — NLP & Automatizacion de Datos",
+      empresa:       "Red CUECH",
+      empresa_sigla: "CUECH",
+      categoria:     "CIENCIA DE DATOS",
+      fecha_inicio:  "2025-12",
+      fecha_fin:     "2026-01",
+      bullets: [
+        { texto: "Desarrollo de sistema automatico de clasificacion de textos cientificos usando LLMs (Llama 3.1, GPT-OSS, Qwen3)" },
+        { texto: "Implementacion de prompt engineering con tecnicas de Chain-of-Thought para optimizar la precision de clasificacion" },
+        { texto: "Diseno de pipelines ETL para procesar datos provenientes de 4 fuentes distintas" },
+        { texto: "Desarrollo de RPA (Automatizacion Robotica de Procesos) con navegador headless para extraccion automatica de datos bibliometricos" },
+        { texto: "Creacion de dashboard interactivo con Streamlit y Plotly para analisis de datos" }
+      ]
+    },
+    {
       cargo:         "Asistente de Investigacion",
       empresa:       "Universidad Tecnologica Metropolitana",
       empresa_sigla: "UTEM",
       categoria:     "INVESTIGACION ACADEMICA",
       fecha_inicio:  "2023-12",
-      fecha_fin:     "2025-09",
+      fecha_fin:     "2025-08",
       bullets: [
         {
           texto:     "Poster en CARLA 2025, Septiembre 2025. Obtencion premio al mejor poster",
@@ -122,7 +137,7 @@ const PORTFOLIO = {
   ],
 
   habilidades: {
-    tecnicas: ["Python", "SQL", "TensorFlow", "scikit-learn", "Pandas", "Jupyter Notebooks", "Visualizacion de datos", "Plotly", "Streamlit", "Web Scraping", "PostgreSQL", "MariaDB", "SpaCy"],
+    tecnicas: ["Python", "SQL", "TensorFlow", "scikit-learn", "XGBoost", "Pandas", "NumPy", "Plotly", "Streamlit", "Web Scraping", "PostgreSQL", "DuckDB", "MariaDB", "SpaCy", "NLTK", "Ollama", "Claude API", "Gemini API", "n8n", "Docker", "Git/GitHub"],
     blandas:  ["Resolucion de Problemas", "Pensamiento Critico", "Adaptabilidad", "Mentoria", "Curiosidad intelectual", "Responsabilidad", "Mentalidad de experimentacion", "Mentalidad analitica"]
   },
 
@@ -138,9 +153,10 @@ const PORTFOLIO = {
   ],
 
   certificados: [
+    { nombre: "Claude Code in Action",                        institucion: "Anthropic",             fecha: "2026", link: "https://verify.skilljar.com/c/c4d27tz5j2ue" },
     { nombre: "Power BI",                        institucion: "Santander X",             fecha: "2025", link: "https://drive.google.com/file/d/1IOp4gjfLcW8XhqbiwwOd9dzlz8l60P5q/view?usp=drive_link" },
     { nombre: "Ingles B2 Upper Intermediate",    institucion: "Certificacion Internacional", fecha: "2025", link: "https://drive.google.com/file/d/1KT12-fKSs20wCu_AO6c6nEHYi5_v0mK1/view?usp=sharing" },
-    { nombre: "AWS Data Center Technician",      institucion: "Amazon Web Services",     fecha: "2024", link: "https://drive.google.com/file/d/1pYCaTdbJQAmruxvoknp92QbIys4Bt7Ws/view?usp=sharing" },
-    { nombre: "Introduccion a la Ciencia de Datos", institucion: "Santander Open Academy", fecha: "2025", link: "https://drive.google.com/file/d/1vmeQuzoZEwUTC0Pz7Xl_rlobqXcreX5w/view?usp=sharing" }
+    { nombre: "Introduccion a la Ciencia de Datos", institucion: "Santander Open Academy", fecha: "2025", link: "https://drive.google.com/file/d/1vmeQuzoZEwUTC0Pz7Xl_rlobqXcreX5w/view?usp=sharing" },
+    { nombre: "AWS Data Center Technician",      institucion: "Amazon Web Services",     fecha: "2024", link: "https://drive.google.com/file/d/1pYCaTdbJQAmruxvoknp92QbIys4Bt7Ws/view?usp=sharing" }
   ]
 };

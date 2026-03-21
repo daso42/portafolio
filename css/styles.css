@@ -223,24 +223,28 @@ nav.nav-bar {
 
 .stats-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 0.55rem;
 }
 
 .stat-cell {
   background: var(--offwhite);
   border-radius: 2px;
-  padding: 0.9rem 0.7rem;
-  text-align: center;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 2px solid var(--cream);
 }
+.stat-cell:last-child { border-bottom: none; }
 
 .stat-num {
   font-family: 'Playfair Display', serif;
-  font-size: 2rem;
+  font-size: 2.4rem;
   font-weight: 700;
   color: var(--navy);
   line-height: 1;
-  display: block;
+  flex-shrink: 0;
 }
 
 .stat-label {
@@ -249,8 +253,7 @@ nav.nav-bar {
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  margin-top: 0.2rem;
-  display: block;
+  line-height: 1.4;
 }
 
 /* Contact mini */
@@ -294,13 +297,7 @@ nav.nav-bar {
   align-items: start;
 }
 
-.exp-col { display: flex; flex-direction: column; }
-
 .exp-card { padding-bottom: 1.2rem; }
-.exp-card + .exp-card {
-  padding-top: 1.2rem;
-  border-top: 1px solid var(--cream);
-}
 
 .exp-cat {
   font-size: 0.6rem;
@@ -341,6 +338,11 @@ nav.nav-bar {
   text-indent: -0.75rem;
 }
 
+.exp-bullet-prize {
+  text-indent: 0;
+  padding-left: 0.1rem;
+}
+
 .exp-dash { color: var(--burg); font-weight: 700; }
 
 .exp-prize {
@@ -365,16 +367,18 @@ nav.nav-bar {
 }
 
 .exp-link {
-  font-size: 0.6rem;
+  display: inline-block;
+  background: var(--navy);
+  color: var(--offwhite);
+  font-size: 0.58rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--burg);
-  border-bottom: 1px solid var(--burg);
-  padding-bottom: 1px;
-  transition: all 0.15s;
+  padding: 0.15rem 0.5rem;
+  border-radius: 1px;
+  transition: background 0.15s;
 }
-.exp-link:hover { color: var(--navy); border-color: var(--navy); }
+.exp-link:hover { background: var(--burg); color: var(--offwhite); }
 
 .exp-extra { display: none; }
 .exp-extra.visible { display: block; }
@@ -624,31 +628,12 @@ nav.nav-bar {
 /* ══════════════════════════════════════
    CONTACT
 ══════════════════════════════════════ */
-.contact-layout {
+.contact-grid {
   display: grid;
-  grid-template-columns: 2fr 3fr;
-  gap: 4rem;
-  align-items: start;
-}
-
-.contact-left {}
-
-.contact-right {}
-
-.contact-heading {
-  font-family: 'Playfair Display', serif;
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--navy);
-  margin-bottom: 0.5rem;
-}
-
-.contact-intro {
-  font-size: 0.88rem;
-  color: var(--gray);
-  line-height: 1.8;
-  text-align: justify;
-  margin-bottom: 0;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 4rem;
+  max-width: 640px;
+  margin: 0 auto;
 }
 
 .ct-item { padding: 0.9rem 0; border-bottom: 1px solid var(--cream); }
@@ -685,6 +670,10 @@ footer {
 /* ══════════════════════════════════════
    RESPONSIVE
 ══════════════════════════════════════ */
+@media (min-width: 769px) {
+  .container { zoom: 1.2; }
+}
+
 @media (max-width: 768px) {
   .container { padding: 0 1.2rem 2rem; }
 
@@ -693,7 +682,7 @@ footer {
   .exp-card + .exp-card { border-top: 1px solid var(--cream); }
   .skills-grid { grid-template-columns: 1fr; gap: 2rem; }
   .cert-list { grid-template-columns: 1fr; }
-  .contact-layout { grid-template-columns: 1fr; gap: 2rem; }
+  .contact-grid { grid-template-columns: 1fr; }
 
   .masthead-meta { flex-direction: column; gap: 0.2rem; text-align: center; }
   .masthead-meta em { display: none; }
@@ -701,5 +690,5 @@ footer {
 
 @media (max-width: 480px) {
   .exp-grid { grid-template-columns: 1fr; }
-  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .stats-grid { grid-template-columns: 1fr; }
 }
