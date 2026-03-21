@@ -18,7 +18,7 @@ const PORTFOLIO = {
 
   experiencia: [
     {
-      cargo:         "Data Scientist — NLP & Automatizacion de Datos",
+      cargo:         "Data Scientist — NLP y Automatizacion de Datos",
       empresa:       "Red CUECH",
       empresa_sigla: "CUECH",
       categoria:     "CIENCIA DE DATOS",
