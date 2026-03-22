@@ -153,7 +153,7 @@ const PORTFOLIO = {
   ],
 
   certificados: [
-    { nombre: "Claude Code in Action",                        institucion: "Anthropic",             fecha: "2026", link: "https://verify.skilljar.com/c/c4d27tz5j2ue" },
+    { nombre: "Claude Code in Action",                        institucion: "Anthropic Education",   fecha: "2026", link: "https://verify.skilljar.com/c/c4d27tz5j2ue" },
     { nombre: "Power BI",                        institucion: "Santander X",             fecha: "2025", link: "https://drive.google.com/file/d/1IOp4gjfLcW8XhqbiwwOd9dzlz8l60P5q/view?usp=drive_link" },
     { nombre: "Ingles B2 Upper Intermediate",    institucion: "Certificacion Internacional", fecha: "2025", link: "https://drive.google.com/file/d/1KT12-fKSs20wCu_AO6c6nEHYi5_v0mK1/view?usp=sharing" },
     { nombre: "Introduccion a la Ciencia de Datos", institucion: "Santander Open Academy", fecha: "2025", link: "https://drive.google.com/file/d/1vmeQuzoZEwUTC0Pz7Xl_rlobqXcreX5w/view?usp=sharing" },
