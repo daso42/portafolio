@@ -17,7 +17,7 @@ const PORTFOLIO = {
   },
 
   contacto: {
-    email:    "dsantibanezo@utem.cl",
+    email:    "123diego721@gmail.com",
     telefono: "+56 9 8434 1477",
     linkedin: { url: "https://www.linkedin.com/in/diego-santibanez-oyarce/", handle: "diego-santibanez-oyarce" },
     github:   { url: "https://github.com/daso42",                             handle: "daso42" }
